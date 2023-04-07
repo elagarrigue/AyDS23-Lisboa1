@@ -23,6 +23,8 @@ internal class CursorToSpotifySongMapperImpl : CursorToSpotifySongMapper {
                       releaseDate = getString(getColumnIndexOrThrow(RELEASE_DATE_COLUMN)),
                       spotifyUrl = getString(getColumnIndexOrThrow(SPOTIFY_URL_COLUMN)),
                       imageUrl = getString(getColumnIndexOrThrow(IMAGE_URL_COLUMN)),
+                      releaseDatePrecision = getString(getColumnIndexOrThrow(
+                          RELEASE_DATE_PRECISION_COLUMN))
                     )
                 } else {
                     null

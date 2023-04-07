@@ -18,8 +18,16 @@ internal class SongDescriptionHelperImpl : SongDescriptionHelper {
                 }\n" +
                         "Artist: ${song.artistName}\n" +
                         "Album: ${song.albumName}\n" +
-                        "Year: ${song.year}"
+                        "Release Date: ${formatearReleaseDate(song.releaseDate,song.releaseDatePrecision)}"
             else -> "Song not found"
         }
     }
+
+    private fun formatearReleaseDate(releaseDate: String, precision: String)=
+        when(precision){
+            "year" -> releaseDate.split("-").first()
+            "month" -> releaseDate.split("-").take(2).joinToString("-")
+            else -> releaseDate
+        }
+
 }
