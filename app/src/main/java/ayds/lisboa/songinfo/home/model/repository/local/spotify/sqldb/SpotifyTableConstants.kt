@@ -9,6 +9,7 @@ const val ALBUM_COLUMN = "album"
 const val RELEASE_DATE_COLUMN = "release_date"
 const val SPOTIFY_URL_COLUMN = "spotify_url"
 const val IMAGE_URL_COLUMN = "image_url"
+const val RELEASE_DATE_PRECISION_COLUMN = "release_date_precision"
 
 const val createSongsTableQuery: String =
     "create table $SONGS_TABLE (" +
@@ -19,4 +20,5 @@ const val createSongsTableQuery: String =
             "$ALBUM_COLUMN string, " +
             "$RELEASE_DATE_COLUMN string, " +
             "$SPOTIFY_URL_COLUMN string, " +
-            "$IMAGE_URL_COLUMN string)"
+            "$IMAGE_URL_COLUMN string, " +
+            "$RELEASE_DATE_PRECISION_COLUMN string);"
