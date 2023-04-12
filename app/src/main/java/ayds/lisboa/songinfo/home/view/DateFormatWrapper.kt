@@ -1,14 +1,14 @@
 package ayds.lisboa.songinfo.home.view
 
 object FormatterFactory {
-    /*private val dayWrapper : DateFormatWrapper = DateFormatWrapperDay()
+    private val dayWrapper : DateFormatWrapper = DateFormatWrapperDay()
     private val monthWrapper : DateFormatWrapper = DateFormatWrapperMonth()
-    private val yearWrapper : DateFormatWrapper = DateFormatWrapperYear()*/
+    //private val yearWrapper : DateFormatWrapper = DateFormatWrapperYear()
     fun getWrapper(precision: String): DateFormatWrapper {
         return when (precision) {
-            /*"day" -> dayWrapper
+            "day" -> dayWrapper
             "month" -> monthWrapper
-            "year" -> yearWrapper*/
+            //"year" -> yearWrapper
             else -> error("Invalid precision")
         }
     }
@@ -16,6 +16,16 @@ object FormatterFactory {
 interface DateFormatWrapper {
     fun getReleaseDateFormat(releaseDate: String, precision: String): String
 
+}
+
+internal class DateFormatWrapperDay : DateFormatWrapper {
+    override fun getReleaseDateFormat(releaseDate: String, precision: String): String {
+        val day = releaseDate.split("-")[2]
+        val month = releaseDate.split("-")[1]
+        val year = releaseDate.split("-")[0]
+
+        return day+"/"+month+ "/" + year
+    }
 }
 
 internal class DateFormatWrapperMonth : DateFormatWrapper {
