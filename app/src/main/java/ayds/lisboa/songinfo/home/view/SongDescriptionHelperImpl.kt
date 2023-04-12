@@ -8,7 +8,7 @@ interface SongDescriptionHelper {
     fun getSongDescriptionText(song: Song = EmptySong): String
 }
 
-internal class SongDescriptionHelperImpl () : SongDescriptionHelper {
+internal class SongDescriptionHelperImpl (private val formatterFactory:FormatterFactory) : SongDescriptionHelper {
 
     override fun getSongDescriptionText(song: Song): String {
         return when (song) {
@@ -23,5 +23,4 @@ internal class SongDescriptionHelperImpl () : SongDescriptionHelper {
             else -> "Song not found"
         }
     }
-
 }
