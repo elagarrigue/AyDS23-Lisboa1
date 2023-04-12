@@ -7,12 +7,14 @@ internal class FormatterFactoryImpl : FormatterFactory {
     private val dayWrapper : DateFormatWrapper = DateFormatWrapperDay()
     private val monthWrapper : DateFormatWrapper = DateFormatWrapperMonth()
     private val yearWrapper : DateFormatWrapper = DateFormatWrapperYear()
+    private val defaultWrapper : DateFormatWrapper = DateFormatWrapperDefault()
+
     override fun getWrapper(precision: String): DateFormatWrapper {
         return when (precision) {
             "day" -> dayWrapper
             "month" -> monthWrapper
             "year" -> yearWrapper
-            else -> error("Invalid precision")
+            else -> defaultWrapper
         }
     }
 }
@@ -68,6 +70,13 @@ internal class DateFormatWrapperYear : DateFormatWrapper {
 
     private fun isLeapYear(year: Int): Boolean {
         return (((year % 4) == 0) && (((year % 100) != 0) || ((year % 400) == 0)))
+    }
+
+}
+
+internal class DateFormatWrapperDefault : DateFormatWrapper {
+    override fun getReleaseDateFormat(releaseDate: String): String {
+        return releaseDate
     }
 
 }
