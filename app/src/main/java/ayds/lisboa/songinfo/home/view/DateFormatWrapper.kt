@@ -1,10 +1,13 @@
 package ayds.lisboa.songinfo.home.view
 
-object FormatterFactory {
+interface FormatterFactory {
+    fun getWrapper(precision: String): DateFormatWrapper
+}
+internal class FormatterFactoryImpl : FormatterFactory {
     private val dayWrapper : DateFormatWrapper = DateFormatWrapperDay()
     private val monthWrapper : DateFormatWrapper = DateFormatWrapperMonth()
     private val yearWrapper : DateFormatWrapper = DateFormatWrapperYear()
-    fun getWrapper(precision: String): DateFormatWrapper {
+    override fun getWrapper(precision: String): DateFormatWrapper {
         return when (precision) {
             "day" -> dayWrapper
             "month" -> monthWrapper
