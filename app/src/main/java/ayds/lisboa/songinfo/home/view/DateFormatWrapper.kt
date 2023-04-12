@@ -18,6 +18,33 @@ interface DateFormatWrapper {
 
 }
 
+internal class DateFormatWrapperMonth : DateFormatWrapper {
+    override fun getReleaseDateFormat(releaseDate: String, precision: String): String {
+        val month = releaseDate.split("-")[1]
+        val year = releaseDate.split("-")[0]
+
+        return getMonthName(month) + ", " + year
+    }
+
+    private fun getMonthName(month : String): String? {
+       return when(month) {
+           "01" -> "January"
+           "02" -> "February"
+           "03" -> "March"
+           "04" -> "April"
+           "05" -> "May"
+           "06" -> "June"
+           "07" -> "July"
+           "08" -> "August"
+           "09" -> "September"
+           "10" -> "October"
+           "11" -> "November"
+           "12" -> "December"
+           else -> error("Invalid month number")
+       }
+    }
+}
+
 internal class DateFormatWrapperImpl : DateFormatWrapper {
         override fun getReleaseDateFormat(releaseDate: String, precision: String): String {
             val splitReleaseDate = releaseDate.split("-")
@@ -29,9 +56,6 @@ internal class DateFormatWrapperImpl : DateFormatWrapper {
                             " (Not a leap year)"
                         }
 
-                "month" -> getMonth(splitReleaseDate[1]) +
-                        ", " + splitReleaseDate.first()
-
                 else -> splitReleaseDate[2] + "/" + splitReleaseDate[1] + "/" + splitReleaseDate[0]
             }
         }
@@ -40,20 +64,4 @@ internal class DateFormatWrapperImpl : DateFormatWrapper {
             return (((year % 4) == 0) && (((year % 100) != 0) || ((year % 400) == 0)))
         }
 
-        private fun getMonth(monthNumber: String): String {
-            return when (monthNumber) {
-                "01" -> "January"
-                "02" -> "February"
-                "03" -> "March"
-                "04" -> "April"
-                "05" -> "May"
-                "06" -> "June"
-                "07" -> "July"
-                "08" -> "August"
-                "09" -> "September"
-                "10" -> "October"
-                "11" -> "November"
-                else -> "December"
-            }
-        }
 }
