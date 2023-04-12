@@ -8,9 +8,8 @@ interface SongDescriptionHelper {
     fun getSongDescriptionText(song: Song = EmptySong): String
 }
 
-internal class SongDescriptionHelperImpl (dateFormat: DateFormatWrapper) : SongDescriptionHelper {
+internal class SongDescriptionHelperImpl () : SongDescriptionHelper {
 
-    private val dateFormatWrapper = dateFormat
     override fun getSongDescriptionText(song: Song): String {
         return when (song) {
             is SpotifySong ->
@@ -20,7 +19,7 @@ internal class SongDescriptionHelperImpl (dateFormat: DateFormatWrapper) : SongD
                 }\n" +
                         "Artist: ${song.artistName}\n" +
                         "Album: ${song.albumName}\n" +
-                        "Release Date: ${dateFormatWrapper.releaseDateFormat(song.releaseDate,song.releaseDatePrecision)}"
+                        "Release Date: ${FormatterFactory.getWrapper(song.releaseDatePrecision).getReleaseDateFormat(song.releaseDate)}"
             else -> "Song not found"
         }
     }
