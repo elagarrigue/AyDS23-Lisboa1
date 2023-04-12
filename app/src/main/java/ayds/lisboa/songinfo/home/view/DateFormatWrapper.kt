@@ -3,23 +3,23 @@ package ayds.lisboa.songinfo.home.view
 object FormatterFactory {
     private val dayWrapper : DateFormatWrapper = DateFormatWrapperDay()
     private val monthWrapper : DateFormatWrapper = DateFormatWrapperMonth()
-    //private val yearWrapper : DateFormatWrapper = DateFormatWrapperYear()
+    private val yearWrapper : DateFormatWrapper = DateFormatWrapperYear()
     fun getWrapper(precision: String): DateFormatWrapper {
         return when (precision) {
             "day" -> dayWrapper
             "month" -> monthWrapper
-            //"year" -> yearWrapper
+            "year" -> yearWrapper
             else -> error("Invalid precision")
         }
     }
 }
 interface DateFormatWrapper {
-    fun getReleaseDateFormat(releaseDate: String, precision: String): String
+    fun getReleaseDateFormat(releaseDate: String): String
 
 }
 
 internal class DateFormatWrapperDay : DateFormatWrapper {
-    override fun getReleaseDateFormat(releaseDate: String, precision: String): String {
+    override fun getReleaseDateFormat(releaseDate: String): String {
         val day = releaseDate.split("-")[2]
         val month = releaseDate.split("-")[1]
         val year = releaseDate.split("-")[0]
@@ -29,14 +29,14 @@ internal class DateFormatWrapperDay : DateFormatWrapper {
 }
 
 internal class DateFormatWrapperMonth : DateFormatWrapper {
-    override fun getReleaseDateFormat(releaseDate: String, precision: String): String {
+    override fun getReleaseDateFormat(releaseDate: String): String {
         val month = releaseDate.split("-")[1]
         val year = releaseDate.split("-")[0]
 
         return getMonthName(month) + ", " + year
     }
 
-    private fun getMonthName(month : String): String? {
+    private fun getMonthName(month : String): String {
        return when(month) {
            "01" -> "January"
            "02" -> "February"
@@ -55,23 +55,16 @@ internal class DateFormatWrapperMonth : DateFormatWrapper {
     }
 }
 
-internal class DateFormatWrapperImpl : DateFormatWrapper {
-        override fun getReleaseDateFormat(releaseDate: String, precision: String): String {
-            val splitReleaseDate = releaseDate.split("-")
-            return when (precision) {
-                "year" -> splitReleaseDate.first() +
-                        if (isLeapYear(Integer.parseInt(releaseDate))) {
-                            " (Leap year)"
-                        } else {
-                            " (Not a leap year)"
-                        }
+internal class DateFormatWrapperYear : DateFormatWrapper {
+    override fun getReleaseDateFormat(releaseDate: String): String {
+        val year = releaseDate.split("-")[0]
+        return year + if (isLeapYear(Integer.parseInt(year)))
+            " (Leap year)" else
+            " (Not a leap year)"
+    }
 
-                else -> splitReleaseDate[2] + "/" + splitReleaseDate[1] + "/" + splitReleaseDate[0]
-            }
-        }
-
-        private fun isLeapYear(year: Int): Boolean {
-            return (((year % 4) == 0) && (((year % 100) != 0) || ((year % 400) == 0)))
-        }
+    private fun isLeapYear(year: Int): Boolean {
+        return (((year % 4) == 0) && (((year % 100) != 0) || ((year % 400) == 0)))
+    }
 
 }
