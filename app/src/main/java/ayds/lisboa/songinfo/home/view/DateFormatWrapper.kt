@@ -3,6 +3,11 @@ package ayds.lisboa.songinfo.home.view
 interface FormatterFactory {
     fun getWrapper(precision: String): DateFormatWrapper
 }
+
+private const val DAY = "day"
+private const val MONTH = "month"
+private const val YEAR = "year"
+
 internal class FormatterFactoryImpl : FormatterFactory {
     private val dayWrapper : DateFormatWrapper = DateFormatWrapperDay()
     private val monthWrapper : DateFormatWrapper = DateFormatWrapperMonth()
@@ -11,9 +16,9 @@ internal class FormatterFactoryImpl : FormatterFactory {
 
     override fun getWrapper(precision: String): DateFormatWrapper {
         return when (precision) {
-            "day" -> dayWrapper
-            "month" -> monthWrapper
-            "year" -> yearWrapper
+            DAY -> dayWrapper
+            MONTH -> monthWrapper
+            YEAR -> yearWrapper
             else -> defaultWrapper
         }
     }
@@ -28,8 +33,7 @@ internal class DateFormatWrapperDay : DateFormatWrapper {
         val day = releaseDate.split("-")[2]
         val month = releaseDate.split("-")[1]
         val year = releaseDate.split("-")[0]
-
-        return day+"/"+month+ "/" + year
+        return "$day/$month/$year"
     }
 }
 
