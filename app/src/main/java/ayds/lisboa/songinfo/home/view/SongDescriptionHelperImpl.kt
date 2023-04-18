@@ -19,14 +19,13 @@ internal class SongDescriptionHelperImpl (private val formatterFactory:Formatter
                 }\n" +
                         "Artist: ${song.artistName}\n" +
                         "Album: ${song.albumName}\n" +
-                        "Release Date: ${getReleaseDateString(song.releaseDatePrecision, song.releaseDate)}"
+                        "Release Date: ${song.getReleaseDateString()}"
             else -> "Song not found"
         }
     }
 
-    private fun getReleaseDateString(releaseDatePrecision : String,releaseDate : String) : String{
-        val formatter = formatterFactory.getWrapper(releaseDatePrecision)
-        return formatter.getReleaseDateFormat(releaseDate)
-
+    private fun SpotifySong.getReleaseDateString() : String{
+        val formatter = formatterFactory.getWrapper(this.releaseDatePrecision)
+        return formatter.getReleaseDateFormat(this.releaseDate)
     }
 }
