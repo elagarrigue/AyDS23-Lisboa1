@@ -25,7 +25,6 @@ internal class FormatterFactoryImpl : FormatterFactory {
 }
 interface DateFormatWrapper {
     fun getReleaseDateFormat(releaseDate: String): String
-
 }
 
 internal class DateFormatWrapperDay : DateFormatWrapper {
@@ -41,7 +40,6 @@ internal class DateFormatWrapperMonth : DateFormatWrapper {
     override fun getReleaseDateFormat(releaseDate: String): String {
         val month = releaseDate.split("-")[1]
         val year = releaseDate.split("-")[0]
-
         return getMonthName(month) + ", " + year
     }
 

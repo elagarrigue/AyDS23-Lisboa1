@@ -26,7 +26,7 @@ internal class SongDescriptionHelperImpl (private val formatterFactory:Formatter
 
     private fun getReleaseDateString(releaseDatePrecision : String,releaseDate : String) : String{
         val formatter = formatterFactory.getWrapper(releaseDatePrecision)
-        return formatter.getReleaseDateFormat(releaseDate);
+        return formatter.getReleaseDateFormat(releaseDate)
 
     }
 }
