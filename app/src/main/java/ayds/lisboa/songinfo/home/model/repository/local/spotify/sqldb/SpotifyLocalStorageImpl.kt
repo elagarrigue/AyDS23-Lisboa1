@@ -24,7 +24,8 @@ internal class SpotifyLocalStorageImpl(
         ALBUM_COLUMN,
         RELEASE_DATE_COLUMN,
         SPOTIFY_URL_COLUMN,
-        IMAGE_URL_COLUMN
+        IMAGE_URL_COLUMN,
+        RELEASE_DATE_PRECISION_COLUMN
     )
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -55,6 +56,7 @@ internal class SpotifyLocalStorageImpl(
             put(RELEASE_DATE_COLUMN, song.releaseDate)
             put(SPOTIFY_URL_COLUMN, song.spotifyUrl)
             put(IMAGE_URL_COLUMN, song.imageUrl)
+            put(RELEASE_DATE_PRECISION_COLUMN, song.releaseDatePrecision)
         }
 
         writableDatabase?.insert(SONGS_TABLE, null, values)
