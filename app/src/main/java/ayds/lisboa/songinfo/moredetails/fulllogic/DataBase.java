@@ -13,6 +13,12 @@ import java.util.List;
 
 public class DataBase extends SQLiteOpenHelper {
 
+  private static final String DATABASE_NAME = "dictionary.db";
+  private static final int DATABASE_VERSION = 1;
+
+  public DataBase(Context context) {
+    super(context, DATABASE_NAME, null, DATABASE_VERSION);
+  }
   public static void testDB()
   {
 
@@ -115,10 +121,6 @@ public class DataBase extends SQLiteOpenHelper {
 
     if(items.isEmpty()) return null;
     else return items.get(0);
-  }
-
-  public DataBase(Context context) {
-    super(context, "dictionary.db", null, 1);
   }
 
   @Override
