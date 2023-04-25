@@ -30,12 +30,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     fun getARtistInfo(artistName: String?) {
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://ws.audioscrobbler.com/2.0/")
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-        val lastFMAPI = retrofit.create(LastFMAPI::class.java)
+        val lastFMAPI = retrofitBuilder()
         Log.e("TAG", "artistName $artistName")
         Thread {
             var text = DataBase.getInfo(dataBase, artistName)
@@ -86,6 +81,14 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun open(artist: String?) {
         dataBase = DataBase(this)
         getARtistInfo(artist)
+    }
+
+    private fun retrofitBuilder(): LastFMAPI{
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://ws.audioscrobbler.com/2.0/")
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
+        return  retrofit.create(LastFMAPI::class.java)
     }
 
     companion object {
