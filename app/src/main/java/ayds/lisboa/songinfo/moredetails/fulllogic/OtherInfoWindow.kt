@@ -22,8 +22,6 @@ import java.util.*
 class OtherInfoWindow : AppCompatActivity() {
     private var textPane2: TextView? = null
 
-    //private JPanel imagePanel;
-    // private JLabel posterImageLabel;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
@@ -33,7 +31,6 @@ class OtherInfoWindow : AppCompatActivity() {
 
     fun getARtistInfo(artistName: String?) {
 
-        // create
         val retrofit = Retrofit.Builder()
             .baseUrl("https://ws.audioscrobbler.com/2.0/")
             .addConverterFactory(ScalarsConverterFactory.create())
@@ -42,9 +39,9 @@ class OtherInfoWindow : AppCompatActivity() {
         Log.e("TAG", "artistName $artistName")
         Thread {
             var text = DataBase.getInfo(dataBase, artistName)
-            if (text != null) { // exists in db
+            if (text != null) {
                 text = "[*]$text"
-            } else { // get from service
+            } else {
                 val callResponse: Response<String>
                 try {
                     callResponse = lastFMAPI.getArtistInfo(artistName).execute()
@@ -60,9 +57,6 @@ class OtherInfoWindow : AppCompatActivity() {
                     } else {
                         text = extract.asString.replace("\\n", "\n")
                         text = textToHtml(text, artistName)
-
-
-                        // save to DB  <o/
                         DataBase.saveArtist(dataBase, artistName, text)
                     }
                     val urlString = url.asString
