@@ -30,19 +30,14 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     fun getARtistInfo(artistName: String?) {
-        val lastFMAPI = retrofitBuilder()
         Log.e("TAG", "artistName $artistName")
         Thread {
             var text = DataBase.getInfo(dataBase, artistName)
             if (text != null) {
                 text = "[*]$text"
             } else {
-                val callResponse: Response<String>
                 try {
-                    callResponse = lastFMAPI.getArtistInfo(artistName).execute()
-                    Log.e("TAG", "JSON " + callResponse.body())
-                    val gson = Gson()
-                    val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
+                    val jobj = artistName.getJObjectArtist()
                     val artist = jobj["artist"].asJsonObject
                     val bio = artist["bio"].asJsonObject
                     val extract = bio["content"]
@@ -89,6 +84,14 @@ class OtherInfoWindow : AppCompatActivity() {
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
         return  retrofit.create(LastFMAPI::class.java)
+    }
+
+    private fun String?.getJObjectArtist(): JsonObject{
+        val lastFMAPI = retrofitBuilder()
+        val callResponse: Response<String> = lastFMAPI.getArtistInfo(this).execute()
+        Log.e("TAG", "JSON " + callResponse.body())
+        val gson = Gson()
+        return gson.fromJson(callResponse.body(), JsonObject::class.java)
     }
 
     companion object {
