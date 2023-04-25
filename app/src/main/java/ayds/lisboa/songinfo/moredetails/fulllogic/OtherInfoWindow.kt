@@ -82,11 +82,9 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private var dataBase: DataBase? = null
+
     private fun open(artist: String?) {
         dataBase = DataBase(this)
-        DataBase.saveArtist(dataBase, "test", "sarasa")
-        Log.e("TAG", "" + DataBase.getInfo(dataBase, "test"))
-        Log.e("TAG", "" + DataBase.getInfo(dataBase, "nada"))
         getARtistInfo(artist)
     }
 
