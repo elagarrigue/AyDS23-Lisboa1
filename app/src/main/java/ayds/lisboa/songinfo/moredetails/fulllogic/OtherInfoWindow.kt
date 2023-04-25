@@ -87,11 +87,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun String?.getJObjectArtist(): JsonObject{
-        val lastFMAPI = retrofitBuilder()
-        val callResponse: Response<String> = lastFMAPI.getArtistInfo(this).execute()
-        Log.e("TAG", "JSON " + callResponse.body())
-        val gson = Gson()
-        return gson.fromJson(callResponse.body(), JsonObject::class.java)
+        return Gson().fromJson(retrofitBuilder().getArtistInfo(this).execute().body(), JsonObject::class.java)
     }
 
     companion object {
