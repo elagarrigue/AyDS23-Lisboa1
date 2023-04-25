@@ -36,11 +36,8 @@ class OtherInfoWindow : AppCompatActivity() {
                 text = "[*]$text"
             } else {
                 try {
-                    val jobj = artistName.getJObjectArtist()
-                    val artist = jobj["artist"].asJsonObject
-                    val bio = artist["bio"].asJsonObject
-                    val extract = bio["content"]
-                    val url = artist["url"]
+                    val extract = artistName.getJObjectArtist()["artist"].asJsonObject["bio"].asJsonObject["content"]
+                    val url = artistName.getJObjectArtist()["artist"].asJsonObject["url"]
                     if (extract == null) {
                         text = "No Results"
                     } else {
