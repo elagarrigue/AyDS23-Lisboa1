@@ -18,7 +18,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
 import java.util.*
 
-
 class OtherInfoWindow : AppCompatActivity() {
     private var textPane2: TextView? = null
     private var dataBase: DataBase? = null
@@ -66,32 +65,28 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun retrofitBuilder(): LastFMAPI {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://ws.audioscrobbler.com/2.0/")
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
+        val retrofit = Retrofit.Builder().baseUrl("https://ws.audioscrobbler.com/2.0/")
+            .addConverterFactory(ScalarsConverterFactory.create()).build()
         return retrofit.create(LastFMAPI::class.java)
     }
 
     private fun String?.getJObjectArtist(): JsonObject {
         return Gson().fromJson(
-            retrofitBuilder().getArtistInfo(this).execute().body(),
-            JsonObject::class.java
+            retrofitBuilder().getArtistInfo(this).execute().body(), JsonObject::class.java
         )
     }
 
-    private fun showArtistInfo(infoArtist: String){
+    private fun showArtistInfo(infoArtist: String) {
         val imageUrl =
             "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
         Log.e("TAG", "Get Image from $imageUrl")
         runOnUiThread {
-            Picasso.get().load(imageUrl)
-                .into(findViewById<View>(R.id.imageView) as ImageView)
+            Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView) as ImageView)
             textPane2!!.text = Html.fromHtml(infoArtist)
         }
     }
 
-    private fun initProperties(){
+    private fun initProperties() {
         dataBase = DataBase(this)
         textPane2 = findViewById(R.id.textPane2)
         setContentView(R.layout.activity_other_info)
@@ -103,13 +98,9 @@ class OtherInfoWindow : AppCompatActivity() {
             val builder = StringBuilder()
             builder.append("<html><div width=400>")
             builder.append("<font face=\"arial\">")
-            val textWithBold = text
-                .replace("'", " ")
-                .replace("\n", "<br>")
-                .replace(
-                    "(?i)$term".toRegex(),
-                    "<b>" + term!!.uppercase(Locale.getDefault()) + "</b>"
-                )
+            val textWithBold = text.replace("'", " ").replace("\n", "<br>").replace(
+                "(?i)$term".toRegex(), "<b>" + term!!.uppercase(Locale.getDefault()) + "</b>"
+            )
             builder.append(textWithBold)
             builder.append("</font></div></html>")
             return builder.toString()
