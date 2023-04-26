@@ -27,26 +27,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getArtistInfo(artistName: String?) {
         Thread {
-            var infoArtist = getInfoArtistFromDatabase(artistName)
-            if (infoArtist != null) {
-                infoArtist = "[*]$infoArtist"
-            } else {
-                try {
-                    val extract =
-                        artistName.getJObjectArtist()["artist"].asJsonObject["bio"].asJsonObject["content"]
-                    val url = artistName.getJObjectArtist()["artist"].asJsonObject["url"]
-                    if (extract == null) {
-                        infoArtist = "No Results"
-                    } else {
-                        infoArtist = extract.asString.replace("\\n", "\n")
-                        infoArtist = textToHtml(infoArtist, artistName)
-                        DataBase.saveArtist(dataBase, artistName, infoArtist)
-                    }
-                    url.asString.setOpenUrlButtonClickListener()
-                } catch (e1: IOException) {
-                    e1.printStackTrace()
-                }
-            }
+            val infoArtist = getInfoArtistFromDatabase(artistName) ?: artistName.getInfoArtistFromAPI()
             showArtistInfo(infoArtist)
         }.start()
     }
@@ -59,6 +40,24 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun getInfoArtistFromDatabase(artistName: String?): String? {
         val infoArtist = DataBase.getInfo(dataBase, artistName)
         return if (infoArtist != null) "[*]$infoArtist" else null
+    }
+
+    private fun String?.getInfoArtistFromAPI(): String?{
+        var infoArtist = "No Results"
+        try {
+            val extract =
+                this.getJObjectArtist()["artist"].asJsonObject["bio"].asJsonObject["content"]
+            if (extract != null) {
+                infoArtist = extract.asString.replace("\\n", "\n")
+                infoArtist = textToHtml(infoArtist, this)
+                DataBase.saveArtist(dataBase, this, infoArtist)
+            }
+            this.getJObjectArtist()["artist"].asJsonObject["url"].asString.setOpenUrlButtonClickListener()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return null
+        }
+        return infoArtist
     }
 
     private fun retrofitBuilder(): LastFMAPI {
@@ -76,7 +75,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun showArtistInfo(infoArtist: String?) {
         runOnUiThread {
             Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView) as ImageView)
-            textPane2!!.text = Html.fromHtml(infoArtist)
+            textPane2?.text = Html.fromHtml(infoArtist)
         }
     }
 
@@ -89,9 +88,9 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun initProperties() {
+        setContentView(R.layout.activity_other_info)
         dataBase = DataBase(this)
         textPane2 = findViewById(R.id.textPane2)
-        setContentView(R.layout.activity_other_info)
     }
 
     companion object {
