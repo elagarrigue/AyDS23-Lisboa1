@@ -57,14 +57,14 @@ internal class DataBase(context: Context ) : SQLiteOpenHelper(context, DATABASE_
     return values
   }
 
-  fun getInfo(artist: String): String {
+  fun getInfo(artist: String): String? {
     val artistInfo: String
 
     val artistsCursor = getArtistCursor(artist)
     val artistsInfoList = getInfoFromCursor(artistsCursor)
 
-    artistInfo = artistsInfoList[0]
-    return artistInfo
+
+    return if(artistsInfoList.isEmpty()) null else artistsInfoList[0]
   }
 
   private fun getArtistCursor(artist: String): Cursor {
@@ -80,18 +80,10 @@ internal class DataBase(context: Context ) : SQLiteOpenHelper(context, DATABASE_
   }
 
   private fun getInfoFromCursor(query: Cursor): List<String> {
-    val artistsInfo = ArrayList<String>()
-
-    try {
-      with(query) {
-        while(moveToNext()) {
-          val info = getString(getColumnIndexOrThrow(INFO_COLUMN))
-          artistsInfo.add(info)
-        }
-      }
-    }
-    catch (e: SQLException){
-      e.printStackTrace()
+    val artistsInfo: MutableList<String> = ArrayList()
+    while(query.moveToNext()) {
+      val info = query.getString(query.getColumnIndexOrThrow(INFO_COLUMN))
+      artistsInfo.add(info)
     }
 
     return artistsInfo
