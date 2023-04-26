@@ -16,117 +16,25 @@ public class DataBase extends SQLiteOpenHelper {
   private static final String DATABASE_NAME = "dictionary.db";
   private static final int DATABASE_VERSION = 1;
 
+  private static final String ARTIST_TABLE = "artists";
+  private static final String ID_COLUMN = "id";
+  private static final String ARTIST_COLUMN = "artist";
+  private static final String INFO_COLUMN = "info";
+  private static final String SOURCE_COLUMN = "source";
+  private static final String [] PROYECTION = {
+          ID_COLUMN,
+          ARTIST_COLUMN,
+          INFO_COLUMN
+  };
+
   public DataBase(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
-  }
-  public static void testDB()
-  {
-
-    Connection connection = null;
-    try
-    {
-      // create a database connection
-      connection = DriverManager.getConnection("jdbc:sqlite:./dictionary.db");
-      Statement statement = connection.createStatement();
-      statement.setQueryTimeout(30);  // set timeout to 30 sec.
-
-      //statement.executeUpdate("drop table if exists person");
-      //statement.executeUpdate("create table person (id integer, name string)");
-      //statement.executeUpdate("insert into person values(1, 'leo')");
-      //statement.executeUpdate("insert into person values(2, 'yui')");
-      ResultSet rs = statement.executeQuery("select * from artists");
-      while(rs.next())
-      {
-        // read the result set
-        System.out.println("id = " + rs.getInt("id"));
-        System.out.println("artist = " + rs.getString("artist"));
-        System.out.println("info = " + rs.getString("info"));
-        System.out.println("source = " + rs.getString("source"));
-
-      }
-    }
-    catch(SQLException e)
-    {
-      // if the error message is "out of memory",
-      // it probably means no database file is found
-      System.err.println(e.getMessage());
-    }
-    finally
-    {
-      try
-      {
-        if(connection != null)
-          connection.close();
-      }
-      catch(SQLException e)
-      {
-        // connection close failed.
-        System.err.println(e);
-      }
-    }
-  }
-
-  public static void saveArtist(DataBase dbHelper, String artist, String info)
-  {
-    // Gets the data repository in write mode
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-// Create a new map of values, where column names are the keys
-    ContentValues values = new ContentValues();
-    values.put("artist", artist);
-    values.put("info", info);
-    values.put("source", 1);
-
-// Insert the new row, returning the primary key value of the new row
-    long newRowId = db.insert("artists", null, values);
-  }
-
-  public static String getInfo(DataBase dbHelper, String artist)
-  {
-
-    SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-// Define a projection that specifies which columns from the database
-// you will actually use after this query.
-    String[] projection = {
-            "id",
-            "artist",
-            "info"
-    };
-
-// Filter results WHERE "title" = 'My Title'
-    String selection = "artist  = ?";
-    String[] selectionArgs = { artist };
-
-// How you want the results sorted in the resulting Cursor
-    String sortOrder = "artist DESC";
-
-    Cursor cursor = db.query(
-            "artists",   // The table to query
-            projection,             // The array of columns to return (pass null to get all)
-            selection,              // The columns for the WHERE clause
-            selectionArgs,          // The values for the WHERE clause
-            null,                   // don't group the rows
-            null,                   // don't filter by row groups
-            sortOrder               // The sort order
-    );
-
-    List<String> items = new ArrayList<String>();
-    while(cursor.moveToNext()) {
-      String info = cursor.getString(
-              cursor.getColumnIndexOrThrow("info"));
-      items.add(info);
-    }
-    cursor.close();
-
-    if(items.isEmpty()) return null;
-    else return items.get(0);
   }
 
   @Override
   public void onCreate(SQLiteDatabase db) {
     db.execSQL(
-            "create table artists (id INTEGER PRIMARY KEY AUTOINCREMENT, artist string, info string, source integer)");
+            "create table " + ARTIST_TABLE + " ( " + ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, " + ARTIST_COLUMN + " string, " + INFO_COLUMN + " string, " + SOURCE_COLUMN + " integer)");
 
     Log.i("DB", "DB created");
   }
@@ -134,5 +42,62 @@ public class DataBase extends SQLiteOpenHelper {
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+  }
+
+  public  void saveArtist(String artist, String info) {
+    SQLiteDatabase db = getWritableDatabase();
+    ContentValues artistMap = getArtistInfoMap(artist, info);
+    db.insert(ARTIST_TABLE, null, artistMap);
+  }
+
+  private ContentValues getArtistInfoMap(String artist, String info) {
+    ContentValues values = new ContentValues();
+
+    values.put(ARTIST_COLUMN, artist);
+    values.put(INFO_COLUMN, info);
+    values.put(SOURCE_COLUMN, 1);
+
+    return values;
+  }
+
+  public String getInfo(String artist) {
+    String artistInfo;
+    String sortOrder = "artist DESC";
+
+    Cursor artistsCursor = getArtistCursor(artist, sortOrder);
+    List<String> artistsInfoList = getInfoFromCursor(artistsCursor);
+
+    artistInfo = artistsInfoList.isEmpty()? null : artistsInfoList.get(0);
+    return artistInfo;
+  }
+
+  private Cursor getArtistCursor(String artist, String sortOrder) {
+    String[] selectionArgs = {artist};
+
+    Cursor cursorQuery = getReadableDatabase().query(
+            ARTIST_TABLE,
+            PROYECTION,
+            ARTIST_COLUMN + "= ?",
+            selectionArgs,
+            null,
+            null,
+            sortOrder
+    );
+
+    return cursorQuery;
+  }
+
+  private List<String> getInfoFromCursor(Cursor query) {
+    List<String> artistsInfo = new ArrayList<String>();
+    if(!query.isClosed()) {
+      while(query.moveToNext()) {
+        String info = query.getString(
+                query.getColumnIndexOrThrow(INFO_COLUMN));
+        artistsInfo.add(info);
+      }
+    }
+
+    query.close();
+    return artistsInfo;
   }
 }
