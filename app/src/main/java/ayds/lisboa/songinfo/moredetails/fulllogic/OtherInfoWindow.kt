@@ -18,7 +18,7 @@ import java.io.IOException
 import java.util.*
 
 class OtherInfoWindow : AppCompatActivity() {
-    private var textPane2: TextView? = null
+    private var artistInfoPanel: TextView? = null
     private var dataBase: DataBase? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +79,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun showArtistInfo(infoArtist: String?) {
         runOnUiThread {
             Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView) as ImageView)
-            textPane2?.text = Html.fromHtml(infoArtist)
+            artistInfoPanel?.text = Html.fromHtml(infoArtist)
         }
     }
 
@@ -94,7 +94,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun initProperties() {
         setContentView(R.layout.activity_other_info)
         dataBase = DataBase(this)
-        textPane2 = findViewById(R.id.textPane2)
+        artistInfoPanel = findViewById(R.id.textPane2)
     }
 
     private fun textToHtml(text: String, term: String?): String {
