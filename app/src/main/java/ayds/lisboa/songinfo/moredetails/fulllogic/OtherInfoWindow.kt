@@ -28,7 +28,7 @@ class OtherInfoWindow : AppCompatActivity() {
         open(intent.getStringExtra("artistName"))
     }
 
-    fun getARtistInfo(artistName: String?) {
+    private fun getArtistInfo(artistName: String?) {
         Log.e("TAG", "artistName $artistName")
         Thread {
             var text = DataBase.getInfo(dataBase, artistName)
@@ -70,7 +70,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun open(artist: String?) {
         dataBase = DataBase(this)
-        getARtistInfo(artist)
+        getArtistInfo(artist)
     }
 
     private fun retrofitBuilder(): LastFMAPI {
