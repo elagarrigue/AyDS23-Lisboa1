@@ -44,15 +44,16 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun String?.getInfoArtistFromAPI(): String?{
         var infoArtist = "No Results"
+        val jObjectArtist = this.getJObjectArtist()
         try {
-            val extract =
-                this.getJObjectArtist()["artist"].asJsonObject["bio"].asJsonObject["content"]
-            if (extract != null) {
-                infoArtist = extract.asString.replace("\\n", "\n")
-                infoArtist = textToHtml(infoArtist, this)
+            if (jObjectArtist.getArtistBioContent() != null) {
+                infoArtist = textToHtml(
+                    jObjectArtist.getArtistBioContent().
+                    asString.replace("\\n", "\n"), this
+                )
                 DataBase.saveArtist(dataBase, this, infoArtist)
             }
-            this.getJObjectArtist()["artist"].asJsonObject["url"].asString.setOpenUrlButtonClickListener()
+            jObjectArtist.getArtistURL().asString.setOpenUrlButtonClickListener()
         } catch (e: IOException) {
             e.printStackTrace()
             return null
@@ -60,7 +61,10 @@ class OtherInfoWindow : AppCompatActivity() {
         return infoArtist
     }
 
-    private fun retrofitBuilder(): LastFMAPI {
+    private fun JsonObject.getArtistBioContent() = this["artist"].asJsonObject["bio"].asJsonObject["content"]
+    private fun JsonObject.getArtistURL() = this["artist"].asJsonObject["URL"]
+
+    private fun createLastFMAPI(): LastFMAPI {
         val retrofit = Retrofit.Builder().baseUrl("https://ws.audioscrobbler.com/2.0/")
             .addConverterFactory(ScalarsConverterFactory.create()).build()
         return retrofit.create(LastFMAPI::class.java)
@@ -68,7 +72,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun String?.getJObjectArtist(): JsonObject {
         return Gson().fromJson(
-            retrofitBuilder().getArtistInfo(this).execute().body(), JsonObject::class.java
+            createLastFMAPI().getArtistInfo(this).execute().body(), JsonObject::class.java
         )
     }
 
