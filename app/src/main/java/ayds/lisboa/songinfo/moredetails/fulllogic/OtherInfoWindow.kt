@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -27,9 +26,8 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun getArtistInfo(artistName: String?) {
-        Log.e("TAG", "artistName $artistName")
         Thread {
-            var infoArtist = DataBase.getInfo(dataBase, artistName)
+            var infoArtist = getInfoArtistFromDatabase(artistName)
             if (infoArtist != null) {
                 infoArtist = "[*]$infoArtist"
             } else {
@@ -46,7 +44,6 @@ class OtherInfoWindow : AppCompatActivity() {
                     }
                     url.asString.setOpenUrlButtonClickListener()
                 } catch (e1: IOException) {
-                    Log.e("TAG", "Error $e1")
                     e1.printStackTrace()
                 }
             }
@@ -57,6 +54,11 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun open(artist: String?) {
         initProperties()
         getArtistInfo(artist)
+    }
+
+    private fun getInfoArtistFromDatabase(artistName: String?): String? {
+        val infoArtist = DataBase.getInfo(dataBase, artistName)
+        return if (infoArtist != null) "[*]$infoArtist" else null
     }
 
     private fun retrofitBuilder(): LastFMAPI {
@@ -71,17 +73,16 @@ class OtherInfoWindow : AppCompatActivity() {
         )
     }
 
-    private fun showArtistInfo(infoArtist: String) {
+    private fun showArtistInfo(infoArtist: String?) {
         val imageUrl =
             "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
-        Log.e("TAG", "Get Image from $imageUrl")
         runOnUiThread {
             Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView) as ImageView)
             textPane2!!.text = Html.fromHtml(infoArtist)
         }
     }
 
-    private fun String.setOpenUrlButtonClickListener(){
+    private fun String.setOpenUrlButtonClickListener() {
         findViewById<View>(R.id.openUrlButton).setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(this)
