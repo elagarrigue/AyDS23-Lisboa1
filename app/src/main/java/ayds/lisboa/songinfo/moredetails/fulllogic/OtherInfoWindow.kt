@@ -68,7 +68,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun getInfoArtistFromDatabase(artistName: String?): String? {
-        val infoArtist = DataBase.getInfo(dataBase, artistName)
+        val infoArtist = dataBase?.getInfo(artistName)
         return if (infoArtist != null) "[*]$infoArtist" else null
     }
 
@@ -87,7 +87,7 @@ class OtherInfoWindow : AppCompatActivity() {
         val infoArtist = this.getFormattingDataArtist(artistName) ?: NO_RESULTS
         try {
             if (infoArtist != NO_RESULTS) {
-                DataBase.saveArtist(dataBase, artistName, infoArtist)
+                dataBase?.saveArtist(artistName, infoArtist)
             }
         } catch (e: IOException) {
             e.printStackTrace()
