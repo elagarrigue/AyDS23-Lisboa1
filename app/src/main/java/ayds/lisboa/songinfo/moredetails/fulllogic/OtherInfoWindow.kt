@@ -19,10 +19,8 @@ import java.io.IOException
 import java.util.*
 
 class OtherInfoWindow : AppCompatActivity() {
-
     private var textPane2: TextView? = null
     private var dataBase: DataBase? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
@@ -38,7 +36,8 @@ class OtherInfoWindow : AppCompatActivity() {
                 text = "[*]$text"
             } else {
                 try {
-                    val extract = artistName.getJObjectArtist()["artist"].asJsonObject["bio"].asJsonObject["content"]
+                    val extract =
+                        artistName.getJObjectArtist()["artist"].asJsonObject["bio"].asJsonObject["content"]
                     val url = artistName.getJObjectArtist()["artist"].asJsonObject["url"]
                     if (extract == null) {
                         text = "No Results"
@@ -74,21 +73,24 @@ class OtherInfoWindow : AppCompatActivity() {
         getARtistInfo(artist)
     }
 
-    private fun retrofitBuilder(): LastFMAPI{
+    private fun retrofitBuilder(): LastFMAPI {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://ws.audioscrobbler.com/2.0/")
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
-        return  retrofit.create(LastFMAPI::class.java)
+        return retrofit.create(LastFMAPI::class.java)
     }
 
-    private fun String?.getJObjectArtist(): JsonObject{
-        return Gson().fromJson(retrofitBuilder().getArtistInfo(this).execute().body(), JsonObject::class.java)
+    private fun String?.getJObjectArtist(): JsonObject {
+        return Gson().fromJson(
+            retrofitBuilder().getArtistInfo(this).execute().body(),
+            JsonObject::class.java
+        )
     }
 
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"
-       private fun textToHtml(text: String, term: String?): String {
+        private fun textToHtml(text: String, term: String?): String {
             val builder = StringBuilder()
             builder.append("<html><div width=400>")
             builder.append("<font face=\"arial\">")
