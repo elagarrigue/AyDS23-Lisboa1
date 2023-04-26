@@ -18,6 +18,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
 import java.util.*
 
+
 class OtherInfoWindow : AppCompatActivity() {
     private var textPane2: TextView? = null
     private var dataBase: DataBase? = null
@@ -57,14 +58,7 @@ class OtherInfoWindow : AppCompatActivity() {
                     e1.printStackTrace()
                 }
             }
-            val imageUrl =
-                "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
-            Log.e("TAG", "Get Image from $imageUrl")
-            val finalText = infoArtist
-            runOnUiThread {
-                Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView) as ImageView)
-                textPane2!!.text = Html.fromHtml(finalText)
-            }
+            showArtistInfo(infoArtist)
         }.start()
     }
 
@@ -86,6 +80,17 @@ class OtherInfoWindow : AppCompatActivity() {
             retrofitBuilder().getArtistInfo(this).execute().body(),
             JsonObject::class.java
         )
+    }
+
+    private fun showArtistInfo(infoArtist: String){
+        val imageUrl =
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
+        Log.e("TAG", "Get Image from $imageUrl")
+        runOnUiThread {
+            Picasso.get().load(imageUrl)
+                .into(findViewById<View>(R.id.imageView) as ImageView)
+            textPane2!!.text = Html.fromHtml(infoArtist)
+        }
     }
 
     companion object {
