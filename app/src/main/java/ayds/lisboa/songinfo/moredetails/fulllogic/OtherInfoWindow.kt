@@ -3,11 +3,11 @@ package ayds.lisboa.songinfo.moredetails.fulllogic
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.Html
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.HtmlCompat
 import ayds.lisboa.songinfo.R
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -70,7 +70,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun JsonObject.getArtistURL() = this[ARTIST_CONST].asJsonObject[URL_ARTIST_CONST]
 
     private fun createLastFMAPI(): LastFMAPI {
-        val retrofit = Retrofit.Builder().baseUrl(BASE_URL_RETROFIT)
+        val retrofit = Retrofit.Builder().baseUrl(ARTIST_BASE_URL)
             .addConverterFactory(ScalarsConverterFactory.create()).build()
         return retrofit.create(LastFMAPI::class.java)
     }
@@ -82,8 +82,8 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun showArtistInfo(infoArtist: String?) {
         runOnUiThread {
-            Picasso.get().load(IMAGE_URL_LASTFM_LOGO).into(findViewById<View>(R.id.imageView) as ImageView)
-            artistInfoPanel?.text = Html.fromHtml(infoArtist)
+            Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView) as ImageView)
+            infoArtist?.let { HtmlCompat.fromHtml(it, 0) }
         }
     }
 
@@ -114,14 +114,14 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     companion object {
-        const val NO_RESULTS = "No results"
-        const val BASE_URL_RETROFIT = "https://ws.audioscrobbler.com/2.0/"
-        const val IMAGE_URL_LASTFM_LOGO =
+        const val imageUrl =
             "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
         const val ARTIST_NAME_EXTRA = "artistName"
         const val ARTIST_CONST = "artist"
         const val BIO_ARTIST_CONST = "bio"
         const val CONTENT_ARTIST_CONST = "content"
         const val URL_ARTIST_CONST = "URL"
+        const val NO_RESULTS = "No results"
+        const val ARTIST_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
     }
 }
