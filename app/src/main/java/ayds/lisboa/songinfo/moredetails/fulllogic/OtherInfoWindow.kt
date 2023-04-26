@@ -12,6 +12,7 @@ import ayds.lisboa.songinfo.R
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.squareup.picasso.Picasso
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
@@ -75,9 +76,8 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun String?.getJObjectArtist(): JsonObject {
-        return Gson().fromJson(
-            createLastFMAPI().getArtistInfo(this).execute().body(), JsonObject::class.java
-        )
+        val callResponse: Response<String> = createLastFMAPI().getArtistInfo(this).execute()
+        return Gson().fromJson(callResponse.body(), JsonObject::class.java)
     }
 
     private fun showArtistInfo(infoArtist: String?) {
@@ -123,17 +123,5 @@ class OtherInfoWindow : AppCompatActivity() {
         const val BIO_ARTIST_CONST = "bio"
         const val CONTENT_ARTIST_CONST = "content"
         const val URL_ARTIST_CONST = "URL"
-        private fun textToHtml(text: String, term: String?): String {
-            val builder = StringBuilder()
-            builder.append("<html><div width=400>")
-            builder.append("<font face=\"arial\">")
-            val textWithBold = text.replace("'", " ").replace("\n", "<br>").replace(
-                "(?i)$term".toRegex(), "<b>" + term!!.uppercase(Locale.getDefault()) + "</b>"
-            )
-            builder.append(textWithBold)
-            builder.append("</font></div></html>")
-            return builder.toString()
-        }
     }
-
 }
