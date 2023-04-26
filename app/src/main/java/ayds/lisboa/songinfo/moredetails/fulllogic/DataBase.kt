@@ -3,7 +3,6 @@ package ayds.lisboa.songinfo.moredetails.fulllogic
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
@@ -32,19 +31,16 @@ internal class DataBase(context: Context ) : SQLiteOpenHelper(context, DATABASE_
     INFO_COLUMN
   )
 
-  @Override
   override fun onCreate(db: SQLiteDatabase) {
     db.execSQL(createArtistTableQuery)
   }
 
-  @Override
   override fun onUpgrade(db: SQLiteDatabase ,oldVersion: Int, newVersion: Int) {}
 
   fun saveArtist(artist: String, info: String) {
-    val db: SQLiteDatabase = writableDatabase
     val artistMap = getArtistInfoMap(artist, info)
 
-    db.insert(ARTIST_TABLE, null, artistMap)
+    writableDatabase.insert(ARTIST_TABLE, null, artistMap)
   }
 
   private fun getArtistInfoMap(artist: String, info: String): ContentValues {
@@ -58,13 +54,10 @@ internal class DataBase(context: Context ) : SQLiteOpenHelper(context, DATABASE_
   }
 
   fun getInfo(artist: String): String? {
-    val artistInfo: String
+    val artistCursor = getArtistCursor(artist)
+    val artistInfoList = getInfoFromCursor(artistCursor)
 
-    val artistsCursor = getArtistCursor(artist)
-    val artistsInfoList = getInfoFromCursor(artistsCursor)
-
-
-    return if(artistsInfoList.isEmpty()) null else artistsInfoList[0]
+    return artistInfoList.firstOrNull()
   }
 
   private fun getArtistCursor(artist: String): Cursor {
@@ -79,13 +72,14 @@ internal class DataBase(context: Context ) : SQLiteOpenHelper(context, DATABASE_
     )
   }
 
-  private fun getInfoFromCursor(query: Cursor): List<String> {
-    val artistsInfo: MutableList<String> = ArrayList()
-    while(query.moveToNext()) {
-      val info = query.getString(query.getColumnIndexOrThrow(INFO_COLUMN))
-      artistsInfo.add(info)
+  private fun getInfoFromCursor(artistCursor: Cursor): List<String> {
+    val artistInfo: MutableList<String> = ArrayList()
+
+    while(artistCursor.moveToNext()) {
+      val info = artistCursor.getString(artistCursor.getColumnIndexOrThrow(INFO_COLUMN))
+      artistInfo.add(info)
     }
 
-    return artistsInfo
+    return artistInfo
   }
 }
