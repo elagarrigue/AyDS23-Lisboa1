@@ -22,7 +22,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private var dataBase: DataBase? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        open(intent.getStringExtra("artistName"))
+        open(intent.getStringExtra(ARTIST_NAME_EXTRA))
     }
 
     private fun getArtistInfo(artistName: String?) {
@@ -43,7 +43,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun String?.getInfoArtistFromAPI(): String?{
-        var infoArtist = "No Results"
+        var infoArtist = NO_RESULTS
         val jObjectArtist = this.getJObjectArtist()
         try {
             if (jObjectArtist.getArtistBioContent() != null) {
@@ -61,11 +61,11 @@ class OtherInfoWindow : AppCompatActivity() {
         return infoArtist
     }
 
-    private fun JsonObject.getArtistBioContent() = this["artist"].asJsonObject["bio"].asJsonObject["content"]
-    private fun JsonObject.getArtistURL() = this["artist"].asJsonObject["URL"]
+    private fun JsonObject.getArtistBioContent() = this[ARTIST_CONST].asJsonObject[BIO_ARTIST_CONST].asJsonObject[CONTENT_ARTIST_CONST]
+    private fun JsonObject.getArtistURL() = this[ARTIST_CONST].asJsonObject[URL_ARTIST_CONST]
 
     private fun createLastFMAPI(): LastFMAPI {
-        val retrofit = Retrofit.Builder().baseUrl("https://ws.audioscrobbler.com/2.0/")
+        val retrofit = Retrofit.Builder().baseUrl(BASE_URL_RETROFIT)
             .addConverterFactory(ScalarsConverterFactory.create()).build()
         return retrofit.create(LastFMAPI::class.java)
     }
@@ -78,7 +78,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun showArtistInfo(infoArtist: String?) {
         runOnUiThread {
-            Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView) as ImageView)
+            Picasso.get().load(IMAGE_URL_LASTFM_LOGO).into(findViewById<View>(R.id.imageView) as ImageView)
             artistInfoPanel?.text = Html.fromHtml(infoArtist)
         }
     }
@@ -110,9 +110,26 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     companion object {
-        const val imageUrl =
+        const val NO_RESULTS = "No results"
+        const val BASE_URL_RETROFIT = "https://ws.audioscrobbler.com/2.0/"
+        const val IMAGE_URL_LASTFM_LOGO =
             "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
         const val ARTIST_NAME_EXTRA = "artistName"
+        const val ARTIST_CONST = "artist"
+        const val BIO_ARTIST_CONST = "bio"
+        const val CONTENT_ARTIST_CONST = "content"
+        const val URL_ARTIST_CONST = "URL"
+        private fun textToHtml(text: String, term: String?): String {
+            val builder = StringBuilder()
+            builder.append("<html><div width=400>")
+            builder.append("<font face=\"arial\">")
+            val textWithBold = text.replace("'", " ").replace("\n", "<br>").replace(
+                "(?i)$term".toRegex(), "<b>" + term!!.uppercase(Locale.getDefault()) + "</b>"
+            )
+            builder.append(textWithBold)
+            builder.append("</font></div></html>")
+            return builder.toString()
+        }
     }
 
 }
