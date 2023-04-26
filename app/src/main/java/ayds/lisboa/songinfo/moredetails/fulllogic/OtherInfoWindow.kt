@@ -31,20 +31,20 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun getArtistInfo(artistName: String?) {
         Log.e("TAG", "artistName $artistName")
         Thread {
-            var text = DataBase.getInfo(dataBase, artistName)
-            if (text != null) {
-                text = "[*]$text"
+            var infoArtist = DataBase.getInfo(dataBase, artistName)
+            if (infoArtist != null) {
+                infoArtist = "[*]$infoArtist"
             } else {
                 try {
                     val extract =
                         artistName.getJObjectArtist()["artist"].asJsonObject["bio"].asJsonObject["content"]
                     val url = artistName.getJObjectArtist()["artist"].asJsonObject["url"]
                     if (extract == null) {
-                        text = "No Results"
+                        infoArtist = "No Results"
                     } else {
-                        text = extract.asString.replace("\\n", "\n")
-                        text = textToHtml(text, artistName)
-                        DataBase.saveArtist(dataBase, artistName, text)
+                        infoArtist = extract.asString.replace("\\n", "\n")
+                        infoArtist = textToHtml(infoArtist, artistName)
+                        DataBase.saveArtist(dataBase, artistName, infoArtist)
                     }
                     val urlString = url.asString
                     findViewById<View>(R.id.openUrlButton).setOnClickListener {
@@ -60,7 +60,7 @@ class OtherInfoWindow : AppCompatActivity() {
             val imageUrl =
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
             Log.e("TAG", "Get Image from $imageUrl")
-            val finalText = text
+            val finalText = infoArtist
             runOnUiThread {
                 Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView) as ImageView)
                 textPane2!!.text = Html.fromHtml(finalText)
