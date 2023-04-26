@@ -38,7 +38,8 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun showInfoArtistFromSource(artistName: String?){
-        val infoArtist = getInfoArtistFromDatabase(artistName) ?: artistName.getInfoArtistFromAPI()
+        val infoArtist = getInfoArtistFromDatabase(artistName) ?:
+            artistName.getArtistInfoFromAPIWithButtonInitialization()
         showArtistInfo(infoArtist)
     }
 
@@ -47,28 +48,45 @@ class OtherInfoWindow : AppCompatActivity() {
         return if (infoArtist != null) "[*]$infoArtist" else null
     }
 
-    private fun String?.getInfoArtistFromAPI(): String?{
-        var infoArtist = NO_RESULTS
+    private fun String?.getArtistInfoFromAPIWithButtonInitialization() :String{
         val jObjectArtist = this.getJObjectArtist()
+        jObjectArtist.initilizeButtonToOtherWindow()
+        return jObjectArtist.getInfoArtistFromJsonAPI(this)
+    }
+
+    private fun JsonObject.initilizeButtonToOtherWindow(){
+        val urlArtist = this.getArtistURL()?.asString
+        urlArtist?.setOpenUrlButtonClickListener()
+    }
+
+    private fun JsonObject.getInfoArtistFromJsonAPI(artistName: String?): String{
+        var infoArtist = NO_RESULTS
         try {
-            if (jObjectArtist.getArtistBioContent() != null) {
-                infoArtist = textToHtml(
-                    jObjectArtist.getArtistBioContent().
-                    asString.replace("\\n", "\n"), this
-                )
-                DataBase.saveArtist(dataBase, this, infoArtist)
+            val contentArtist = this.getArtistBioContent()
+            if (contentArtist != null) {
+                infoArtist = contentArtist.getFormattingDataArtist(artistName)
+                DataBase.saveArtist(dataBase, artistName, infoArtist)
             }
-            jObjectArtist.getArtistURL().asString.setOpenUrlButtonClickListener()
         } catch (e: IOException) {
             e.printStackTrace()
-            return null
         }
         return infoArtist
     }
 
-    private fun JsonObject.getArtistBioContent() = this[ARTIST_CONST].asJsonObject[BIO_ARTIST_CONST].asJsonObject[CONTENT_ARTIST_CONST]
-    private fun JsonObject.getArtistURL() = this[ARTIST_CONST].asJsonObject[URL_ARTIST_CONST]
+    private fun JsonObject.getFormattingDataArtist(artistName: String?): String{
+        val dataArtistString =  this.asString.replace("\\n", "\n")
+        return textToHtml(dataArtistString, artistName)
+    }
 
+    private fun JsonObject.getArtistBioContent(): JsonObject? {
+       val artistObj = this.getAsJsonObject(ARTIST_CONST)
+       val bioObj = artistObj?.getAsJsonObject(BIO_ARTIST_CONST)
+       return bioObj?.getAsJsonObject(CONTENT_ARTIST_CONST)
+   }
+    private fun JsonObject.getArtistURL(): JsonObject? {
+        val artistObj = this.getAsJsonObject(ARTIST_CONST)
+        return artistObj.getAsJsonObject(URL_ARTIST_CONST)
+    }
     private fun createLastFMAPI(): LastFMAPI {
         val retrofit = Retrofit.Builder().baseUrl(ARTIST_BASE_URL)
             .addConverterFactory(ScalarsConverterFactory.create()).build()
