@@ -27,14 +27,18 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getArtistInfo(artistName: String?) {
         Thread {
-            val infoArtist = getInfoArtistFromDatabase(artistName) ?: artistName.getInfoArtistFromAPI()
-            showArtistInfo(infoArtist)
+            showInfoArtistFromSource(artistName)
         }.start()
     }
 
     private fun open(artist: String?) {
         initProperties()
         getArtistInfo(artist)
+    }
+
+    private fun showInfoArtistFromSource(artistName: String?){
+        val infoArtist = getInfoArtistFromDatabase(artistName) ?: artistName.getInfoArtistFromAPI()
+        showArtistInfo(infoArtist)
     }
 
     private fun getInfoArtistFromDatabase(artistName: String?): String? {
