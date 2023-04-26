@@ -3,11 +3,11 @@ package ayds.lisboa.songinfo.moredetails.fulllogic
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.Html
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.HtmlCompat
 import ayds.lisboa.songinfo.R
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -83,7 +83,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun showArtistInfo(infoArtist: String?) {
         runOnUiThread {
             Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView) as ImageView)
-            artistInfoPanel?.text = Html.fromHtml(infoArtist)
+            infoArtist?.let { HtmlCompat.fromHtml(it, 0) }
         }
     }
 
