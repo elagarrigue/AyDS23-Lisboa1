@@ -24,8 +24,6 @@ class OtherInfoWindow : AppCompatActivity() {
     private var dataBase: DataBase? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_other_info)
-        textPane2 = findViewById(R.id.textPane2)
         open(intent.getStringExtra("artistName"))
     }
 
@@ -63,7 +61,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun open(artist: String?) {
-        dataBase = DataBase(this)
+        initProperties()
         getArtistInfo(artist)
     }
 
@@ -91,6 +89,12 @@ class OtherInfoWindow : AppCompatActivity() {
                 .into(findViewById<View>(R.id.imageView) as ImageView)
             textPane2!!.text = Html.fromHtml(infoArtist)
         }
+    }
+
+    private fun initProperties(){
+        dataBase = DataBase(this)
+        textPane2 = findViewById(R.id.textPane2)
+        setContentView(R.layout.activity_other_info)
     }
 
     companion object {
