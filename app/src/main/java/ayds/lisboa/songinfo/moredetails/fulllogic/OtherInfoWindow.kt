@@ -19,7 +19,9 @@ import java.io.IOException
 import java.util.*
 
 class OtherInfoWindow : AppCompatActivity() {
+
     private var textPane2: TextView? = null
+    private var dataBase: DataBase? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,8 +68,6 @@ class OtherInfoWindow : AppCompatActivity() {
             }
         }.start()
     }
-
-    private var dataBase: DataBase? = null
 
     private fun open(artist: String?) {
         dataBase = DataBase(this)
