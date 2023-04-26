@@ -45,12 +45,7 @@ class OtherInfoWindow : AppCompatActivity() {
                         infoArtist = textToHtml(infoArtist, artistName)
                         DataBase.saveArtist(dataBase, artistName, infoArtist)
                     }
-                    val urlString = url.asString
-                    findViewById<View>(R.id.openUrlButton).setOnClickListener {
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(urlString)
-                        startActivity(intent)
-                    }
+                    url.asString.setOpenUrlButtonClickListener()
                 } catch (e1: IOException) {
                     Log.e("TAG", "Error $e1")
                     e1.printStackTrace()
@@ -91,7 +86,15 @@ class OtherInfoWindow : AppCompatActivity() {
         }
     }
 
-    private fun initProperties(){
+    private fun String.setOpenUrlButtonClickListener(){
+        findViewById<View>(R.id.openUrlButton).setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(this)
+            startActivity(intent)
+        }
+    }
+
+    private fun initProperties() {
         dataBase = DataBase(this)
         textPane2 = findViewById(R.id.textPane2)
         setContentView(R.layout.activity_other_info)
