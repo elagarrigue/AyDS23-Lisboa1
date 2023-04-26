@@ -74,8 +74,6 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun showArtistInfo(infoArtist: String?) {
-        val imageUrl =
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
         runOnUiThread {
             Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView) as ImageView)
             textPane2!!.text = Html.fromHtml(infoArtist)
@@ -97,6 +95,8 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     companion object {
+        const val imageUrl =
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
         const val ARTIST_NAME_EXTRA = "artistName"
         private fun textToHtml(text: String, term: String?): String {
             val builder = StringBuilder()
