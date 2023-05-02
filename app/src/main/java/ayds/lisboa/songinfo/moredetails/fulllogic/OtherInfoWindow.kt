@@ -37,17 +37,23 @@ class OtherInfoWindow : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        open(intent.getStringExtra(ARTIST_NAME_EXTRA))
+        val artisName = intent.getStringExtra(ARTIST_NAME_EXTRA)
+        open(artisName)
+        setContentView(R.layout.activity_other_info)
+
+        initProperties()
+        initDataBase()
     }
 
     private fun open(artist: String?) {
-        initProperties()
         getArtistInfo(artist)
     }
 
+    private fun initDataBase(){
+        dataBase =  DataBase(this)
+    }
+
     private fun initProperties() {
-        setContentView(R.layout.activity_other_info)
-        dataBase = DataBase(this)
         artistInfoPanel = findViewById(R.id.textPane2)
     }
 
