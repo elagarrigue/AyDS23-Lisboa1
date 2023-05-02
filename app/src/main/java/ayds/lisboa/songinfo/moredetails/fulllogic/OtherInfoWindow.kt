@@ -78,6 +78,10 @@ class OtherInfoWindow : AppCompatActivity() {
         return if (infoArtist != null) "[*]$infoArtist" else null
     }
 
+    private fun markArtistAsLocal(artist: ArtistData) {
+        artist.isLocallyStored = true
+    }
+
     private fun String?.getJObjectArtist(): JsonObject {
         val callResponse: Response<String> = createLastFMAPI().getArtistInfo(this).execute()
         return Gson().fromJson(callResponse.body(), JsonObject::class.java)
@@ -153,7 +157,8 @@ class OtherInfoWindow : AppCompatActivity() {
 }
 
 data class ArtistData(
-    val infoArtist: String,
-    val url: String,
-    val isLocallyStored: Boolean = false
+    var artistName: String,
+    var infoArtist: String,
+    var url: String,
+    var isLocallyStored: Boolean = false
 )
