@@ -145,3 +145,9 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
 }
+
+data class ArtistData(
+    val infoArtist: String,
+    val url: String,
+    val isLocallyStored: Boolean = false
+)
