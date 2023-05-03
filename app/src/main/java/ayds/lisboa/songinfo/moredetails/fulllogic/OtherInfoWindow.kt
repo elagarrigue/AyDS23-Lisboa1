@@ -22,6 +22,7 @@ import java.util.*
 class OtherInfoWindow : AppCompatActivity() {
     private var artistInfoPanel: TextView? = null
     private var dataBase: DataBase? = null
+    private var lastFMAPI: LastFMAPI? = null
 
     companion object {
         const val imageUrl =
@@ -45,6 +46,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
         initProperties()
         initDataBase()
+        initLastFMAPI()
         open(artisName)
     }
 
@@ -54,6 +56,10 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun initDataBase(){
         dataBase =  DataBase(this)
+    }
+
+    private fun initLastFMAPI(){
+        lastFMAPI= createLastFMAPI()
     }
 
     private fun open(artist: String?) {
@@ -115,8 +121,17 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun ArtistData.getJObjectArtist(): JsonObject {
-        val callResponse: Response<String> = createLastFMAPI().getArtistInfo(this.artistName).execute()
-        return Gson().fromJson(callResponse.body(), JsonObject::class.java)
+        val bodyResponse= getResponse()?.body()
+        return stringToJSON(bodyResponse)
+    }
+
+    private fun ArtistData.getResponse(): Response<String>? {
+        val artistInfo= lastFMAPI?.getArtistInfo(artistName)
+        return artistInfo?.execute()
+    }
+
+    private fun stringToJSON(string: String?): JsonObject {
+        return Gson().fromJson(string, JsonObject::class.java)
     }
 
     private fun createLastFMAPI(): LastFMAPI {
