@@ -48,14 +48,13 @@ class OtherInfoWindow : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val artisName = intent.getStringExtra(ARTIST_NAME_EXTRA)
         setContentView(R.layout.activity_other_info)
 
         initProperties()
         initImageLoader()
         initDataBase()
         initLastFMAPI()
-        open(artisName)
+        getMoreDetailsOfAnArtistAsync()
     }
 
     private fun initProperties() {
@@ -76,17 +75,14 @@ class OtherInfoWindow : AppCompatActivity() {
         lastFMAPI = createLastFMAPI()
     }
 
-    private fun open(artist: String?) {
-        getMoreDetailsOfAnArtistAsync(artist)
-    }
-
-    private fun getMoreDetailsOfAnArtistAsync(artistName: String?) {
+    private fun getMoreDetailsOfAnArtistAsync() {
         Thread {
-            getMoreDetailsOfAnArtist(artistName)
+            getMoreDetailsOfAnArtist()
         }.start()
     }
 
-    private fun getMoreDetailsOfAnArtist(artistName: String?) {
+    private fun getMoreDetailsOfAnArtist() {
+        val artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)
         val artistData = getArtistData(artistName)
         checkToInitializeTheButton(artistData)
         showArtistInfo(artistData.infoArtist)
