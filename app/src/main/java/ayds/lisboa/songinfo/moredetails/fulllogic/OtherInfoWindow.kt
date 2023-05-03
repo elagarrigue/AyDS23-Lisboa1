@@ -9,6 +9,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import ayds.lisboa.songinfo.R
+import ayds.lisboa.songinfo.utils.view.ImageLoader
+import ayds.lisboa.songinfo.utils.view.ImageLoaderImpl
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
@@ -20,9 +22,12 @@ import java.io.IOException
 import java.util.*
 
 class OtherInfoWindow : AppCompatActivity() {
-    private var artistInfoPanel: TextView? = null
-    private var dataBase: DataBase? = null
+
     private lateinit var openURLListener: View
+    private lateinit var artistInfoPanel: TextView
+    private lateinit var dataBase: DataBase
+    private lateinit var imageLastFMAPI: ImageView
+    private lateinit var imageLoader : ImageLoader
 
     companion object {
         const val imageUrl =
@@ -45,6 +50,7 @@ class OtherInfoWindow : AppCompatActivity() {
         setContentView(R.layout.activity_other_info)
 
         initProperties()
+        initImageLoader()
         initDataBase()
         open(artisName)
     }
@@ -52,6 +58,11 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun initProperties() {
         artistInfoPanel = findViewById(R.id.textPane2)
         openURLListener = findViewById(R.id.openUrlButton)
+        imageLastFMAPI = findViewById(R.id.imageView)
+    }
+
+    private fun initImageLoader(){
+        imageLoader = ImageLoaderImpl(Picasso.get())
     }
 
     private fun initDataBase(){
@@ -94,7 +105,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun ArtistData.saveInDataBase(){
         try {
             if (this.infoArtist != NO_RESULTS) {
-                dataBase?.saveArtist(artistName, infoArtist)
+                dataBase.saveArtist(artistName, infoArtist)
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -112,7 +123,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun getInfoArtistFromDatabase(artistName: String?): ArtistData {
-        val infoArtist = dataBase?.getInfo(artistName)
+        val infoArtist = dataBase.getInfo(artistName)
         return ArtistData(artistName, infoArtist)
     }
 
@@ -178,8 +189,8 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun showArtistInfo(infoArtist: String?) {
         runOnUiThread {
-            Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView) as ImageView)
-            artistInfoPanel?.text = infoArtist?.let { HtmlCompat.fromHtml(it, 0) }
+            imageLoader.loadImageIntoView(imageUrl,imageLastFMAPI)
+            artistInfoPanel.text = infoArtist?.let { HtmlCompat.fromHtml(it, 0) }
         }
     }
 
