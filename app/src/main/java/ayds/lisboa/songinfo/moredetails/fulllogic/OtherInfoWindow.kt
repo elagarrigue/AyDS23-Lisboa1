@@ -84,8 +84,16 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun getMoreDetailsOfAnArtist() {
         val artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)
         val artistData = getArtistData(artistName)
+
+        artistData.addLocallySavedMarkToInfo()
         initializeIUrlButton(artistData)
         showArtistInfo(artistData.infoArtist)
+    }
+
+    private fun ArtistData.addLocallySavedMarkToInfo() {
+        if(isLocallyStored) {
+            infoArtist = "$LOCALLY_SAVED $infoArtist"
+        }
     }
 
     private fun initializeIUrlButton(artistData : ArtistData) {
