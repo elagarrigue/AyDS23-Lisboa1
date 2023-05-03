@@ -33,6 +33,9 @@ class OtherInfoWindow : AppCompatActivity() {
         const val URL_ARTIST_CONST = "url"
         const val NO_RESULTS = "No results"
         const val ARTIST_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
+        const val HTML_START = "<html><div width=400>"
+        const val HTML_END = "</font></div></html>"
+        const val FONT_FACE = "<font face=\"arial\">"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -144,13 +147,13 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun textToHtml(text: String, term: String?): String {
         val builder = StringBuilder()
-        builder.append("<html><div width=400>")
-        builder.append("<font face=\"arial\">")
+        builder.append(HTML_START)
+        builder.append(FONT_FACE)
         val textWithBold = text.replace("'", " ").replace("\n", "<br>").replace(
             "(?i)$term".toRegex(), "<b>" + term!!.uppercase(Locale.getDefault()) + "</b>"
         )
         builder.append(textWithBold)
-        builder.append("</font></div></html>")
+        builder.append(HTML_END)
         return builder.toString()
     }
 
