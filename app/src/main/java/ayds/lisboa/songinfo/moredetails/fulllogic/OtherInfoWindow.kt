@@ -88,11 +88,11 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getMoreDetailsOfAnArtist(artistName: String?) {
         val artistData = getArtistData(artistName)
-        checkToInitializeTheButton(artistData)
+        initializeIUrlButton(artistData)
         showArtistInfo(artistData.infoArtist)
     }
 
-    private fun checkToInitializeTheButton(artistData : ArtistData) {
+    private fun initializeIUrlButton(artistData : ArtistData) {
         if (!artistData.isLocallyStored) {
             setOpenUrlButtonClickListener(artistData.url)
         }
