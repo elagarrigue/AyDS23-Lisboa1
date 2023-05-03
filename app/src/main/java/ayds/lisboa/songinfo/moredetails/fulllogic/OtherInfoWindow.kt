@@ -23,7 +23,7 @@ import java.util.*
 
 class OtherInfoWindow : AppCompatActivity() {
 
-    private var lastFMAPI: LastFMAPI? = null
+    private lateinit var lastFMAPI: LastFMAPI
     private lateinit var openURLListener: View
     private lateinit var artistInfoPanel: TextView
     private lateinit var dataBase: DataBase
@@ -138,7 +138,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun ArtistData.getResponse(): Response<String>? {
-        val artistInfo = lastFMAPI?.getArtistInfo(artistName)
+        val artistInfo = lastFMAPI.getArtistInfo(artistName)
         return artistInfo?.execute()
     }
 
