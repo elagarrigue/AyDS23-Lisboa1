@@ -38,52 +38,80 @@ class OtherInfoWindow : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val artisName = intent.getStringExtra(ARTIST_NAME_EXTRA)
-        open(artisName)
         setContentView(R.layout.activity_other_info)
 
         initProperties()
         initDataBase()
-    }
-
-    private fun open(artist: String?) {
-        getArtistInfo(artist)
-    }
-
-    private fun initDataBase(){
-        dataBase =  DataBase(this)
+        open(artisName)
     }
 
     private fun initProperties() {
         artistInfoPanel = findViewById(R.id.textPane2)
     }
 
-    private fun getArtistInfo(artistName: String?) {
+    private fun initDataBase(){
+        dataBase =  DataBase(this)
+    }
+
+    private fun open(artist: String?) {
+        moreDetailsOfAnArtist(artist)
+    }
+
+    private fun moreDetailsOfAnArtist(artistName: String?) {
         Thread {
-            showInfoArtistFromSource(artistName)
+            workingWithTheArtistInfo(artistName)
         }.start()
     }
 
-    private fun showInfoArtistFromSource(artistName: String?) {
-        var infoArtist = getInfoArtistFromDatabase(artistName)
-        if (infoArtist == null) {
-            val jObjectArtist = artistName.getJObjectArtist()
-            infoArtist = jObjectArtist.getInfoArtistFromJsonAPI(artistName)
-            jObjectArtist.initializeButtonToOtherWindow()
+    private fun workingWithTheArtistInfo(artistName: String?) {
+        val artistData = getArtistData(artistName)
+        artistData.checkToInitializeTheButton()
+        showArtistInfo(artistData.infoArtist)
+    }
+
+    private fun ArtistData.checkToInitializeTheButton(){
+        if(!this.isLocallyStored){
+            this.url.setOpenUrlButtonClickListener()
         }
-        showArtistInfo(infoArtist)
     }
 
-    private fun getInfoArtistFromDatabase(artistName: String?): String? {
+    private fun getArtistData(artistName: String?): ArtistData{
+        val infoArtistData = getInfoArtistFromDatabase(artistName)
+        if (infoArtistData.infoArtist != null) {
+            infoArtistData.markArtistAsLocal()
+        } else {
+           infoArtistData.getArtistFromAPI()
+           infoArtistData.saveInDataBase()
+        }
+        return infoArtistData
+    }
+
+    private fun ArtistData.saveInDataBase(){
+        try {
+            if (this.infoArtist != NO_RESULTS) {
+                dataBase?.saveArtist(artistName, infoArtist)
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun ArtistData.getArtistFromAPI(){
+        val jObjectArtist = this.getJObjectArtist()
+        jObjectArtist.getInfoArtistFromJsonAPI(this)
+    }
+
+    private fun ArtistData.markArtistAsLocal() {
+        isLocallyStored = true
+    }
+
+    private fun getInfoArtistFromDatabase(artistName: String?): ArtistData {
         val infoArtist = dataBase?.getInfo(artistName)
-        return if (infoArtist != null) "[*]$infoArtist" else null
+        return ArtistData(artistName, infoArtist)
     }
 
-    private fun markArtistAsLocal(artist: ArtistData) {
-        artist.isLocallyStored = true
-    }
-
-    private fun String?.getJObjectArtist(): JsonObject {
-        val callResponse: Response<String> = createLastFMAPI().getArtistInfo(this).execute()
+    private fun ArtistData.getJObjectArtist(): JsonObject {
+        val callResponse: Response<String> = createLastFMAPI().getArtistInfo(this.artistName).execute()
         return Gson().fromJson(callResponse.body(), JsonObject::class.java)
     }
 
@@ -93,16 +121,9 @@ class OtherInfoWindow : AppCompatActivity() {
         return retrofit.create(LastFMAPI::class.java)
     }
 
-    private fun JsonObject.getInfoArtistFromJsonAPI(artistName: String?): String {
-        val infoArtist = this.getFormattingDataArtist(artistName) ?: NO_RESULTS
-        try {
-            if (infoArtist != NO_RESULTS) {
-                dataBase?.saveArtist(artistName, infoArtist)
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return infoArtist
+    private fun JsonObject.getInfoArtistFromJsonAPI(artistData: ArtistData) {
+        artistData.infoArtist = this.getFormattingDataArtist(artistData.artistName) ?: NO_RESULTS
+        artistData.url = this.getArtistURLFromJSON()
     }
 
     private fun JsonObject.getFormattingDataArtist(artistName: String?): String? {
@@ -133,10 +154,9 @@ class OtherInfoWindow : AppCompatActivity() {
         return builder.toString()
     }
 
-    private fun JsonObject.initializeButtonToOtherWindow() {
+    private fun JsonObject.getArtistURLFromJSON(): String {
         val artistObj = this[ARTIST_CONST].asJsonObject
-        val urlArtist = artistObj[URL_ARTIST_CONST].asString
-        urlArtist?.setOpenUrlButtonClickListener()
+        return artistObj[URL_ARTIST_CONST].asString
     }
 
     private fun String.setOpenUrlButtonClickListener() {
@@ -157,8 +177,8 @@ class OtherInfoWindow : AppCompatActivity() {
 }
 
 data class ArtistData(
-    var artistName: String,
-    var infoArtist: String,
-    var url: String,
+    var artistName: String?,
+    var infoArtist: String?,
+    var url: String = "",
     var isLocallyStored: Boolean = false
 )
