@@ -23,6 +23,7 @@ import java.util.*
 
 class OtherInfoWindow : AppCompatActivity() {
 
+    private var lastFMAPI: LastFMAPI? = null
     private lateinit var openURLListener: View
     private lateinit var artistInfoPanel: TextView
     private lateinit var dataBase: DataBase
@@ -52,6 +53,7 @@ class OtherInfoWindow : AppCompatActivity() {
         initProperties()
         initImageLoader()
         initDataBase()
+        initLastFMAPI()
         open(artisName)
     }
 
@@ -65,8 +67,12 @@ class OtherInfoWindow : AppCompatActivity() {
         imageLoader = ImageLoaderImpl(Picasso.get())
     }
 
-    private fun initDataBase(){
-        dataBase =  DataBase(this)
+    private fun initDataBase() {
+        dataBase = DataBase(this)
+    }
+
+    private fun initLastFMAPI() {
+        lastFMAPI = createLastFMAPI()
     }
 
     private fun open(artist: String?) {
@@ -85,24 +91,24 @@ class OtherInfoWindow : AppCompatActivity() {
         showArtistInfo(artistData.infoArtist)
     }
 
-    private fun ArtistData.checkToInitializeTheButton(){
-        if(!this.isLocallyStored){
+    private fun ArtistData.checkToInitializeTheButton() {
+        if (!this.isLocallyStored) {
             this.url.setOpenUrlButtonClickListener()
         }
     }
 
-    private fun getArtistData(artistName: String?): ArtistData{
+    private fun getArtistData(artistName: String?): ArtistData {
         val infoArtistData = getInfoArtistFromDatabase(artistName)
         if (infoArtistData.infoArtist != null) {
             infoArtistData.markArtistAsLocal()
         } else {
-           infoArtistData.getArtistFromAPI()
-           infoArtistData.saveInDataBase()
+            infoArtistData.getArtistFromAPI()
+            infoArtistData.saveInDataBase()
         }
         return infoArtistData
     }
 
-    private fun ArtistData.saveInDataBase(){
+    private fun ArtistData.saveInDataBase() {
         try {
             if (this.infoArtist != NO_RESULTS) {
                 dataBase.saveArtist(artistName, infoArtist)
@@ -112,7 +118,7 @@ class OtherInfoWindow : AppCompatActivity() {
         }
     }
 
-    private fun ArtistData.getArtistFromAPI(){
+    private fun ArtistData.getArtistFromAPI() {
         val jObjectArtist = this.getJObjectArtist()
         jObjectArtist.getInfoArtistFromJsonAPI(this)
     }
@@ -128,8 +134,17 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun ArtistData.getJObjectArtist(): JsonObject {
-        val callResponse: Response<String> = createLastFMAPI().getArtistInfo(this.artistName).execute()
-        return Gson().fromJson(callResponse.body(), JsonObject::class.java)
+        val bodyResponse = getResponse()?.body()
+        return stringToJSON(bodyResponse)
+    }
+
+    private fun ArtistData.getResponse(): Response<String>? {
+        val artistInfo = lastFMAPI?.getArtistInfo(artistName)
+        return artistInfo?.execute()
+    }
+
+    private fun stringToJSON(string: String?): JsonObject {
+        return Gson().fromJson(string, JsonObject::class.java)
     }
 
     private fun createLastFMAPI(): LastFMAPI {
@@ -148,7 +163,7 @@ class OtherInfoWindow : AppCompatActivity() {
         val contentArtist = this.getArtistBioContent()
         if (contentArtist != null) {
             val dataArtistString = contentArtist.asString.replace("\\n", "\n")
-            formattedInfoArtist = artistName?.let{textToHtml(dataArtistString,it)}
+            formattedInfoArtist = artistName?.let { textToHtml(dataArtistString, it) }
         }
         return formattedInfoArtist
     }
