@@ -22,6 +22,7 @@ import java.util.*
 class OtherInfoWindow : AppCompatActivity() {
     private var artistInfoPanel: TextView? = null
     private var dataBase: DataBase? = null
+    private lateinit var openURLListener: View
 
     companion object {
         const val imageUrl =
@@ -50,6 +51,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun initProperties() {
         artistInfoPanel = findViewById(R.id.textPane2)
+        openURLListener = findViewById(R.id.openUrlButton)
     }
 
     private fun initDataBase(){
@@ -164,11 +166,14 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun String.setOpenUrlButtonClickListener() {
-        findViewById<View>(R.id.openUrlButton).setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(this)
-            startActivity(intent)
+        openURLListener.setOnClickListener {
+            openURL(this)
         }
+    }
+
+    private fun openURL(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
     }
 
     private fun showArtistInfo(infoArtist: String?) {
