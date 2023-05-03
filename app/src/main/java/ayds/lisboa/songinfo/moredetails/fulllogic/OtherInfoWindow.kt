@@ -43,6 +43,7 @@ class OtherInfoWindow : AppCompatActivity() {
         const val HTML_START = "<html><div width=400>"
         const val HTML_END = "</font></div></html>"
         const val FONT_FACE = "<font face=\"arial\">"
+        const val LOCALLY_SAVED = "[*]"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,16 +77,16 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun open(artist: String?) {
-        moreDetailsOfAnArtist(artist)
+        getMoreDetailsOfAnArtistAsync(artist)
     }
 
-    private fun moreDetailsOfAnArtist(artistName: String?) {
+    private fun getMoreDetailsOfAnArtistAsync(artistName: String?) {
         Thread {
-            workingWithTheArtistInfo(artistName)
+            getMoreDetailsOfAnArtist(artistName)
         }.start()
     }
 
-    private fun workingWithTheArtistInfo(artistName: String?) {
+    private fun getMoreDetailsOfAnArtist(artistName: String?) {
         val artistData = getArtistData(artistName)
         artistData.checkToInitializeTheButton()
         showArtistInfo(artistData.infoArtist)
@@ -125,7 +126,6 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun ArtistData.markArtistAsLocal() {
         isLocallyStored = true
-        infoArtist = "[*]$infoArtist"
     }
 
     private fun getInfoArtistFromDatabase(artistName: String?): ArtistData {
@@ -135,7 +135,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun ArtistData.getJObjectArtist(): JsonObject {
         val bodyResponse = getResponse()?.body()
-        return stringToJSON(bodyResponse)
+        return artistResponseToJson(bodyResponse)
     }
 
     private fun ArtistData.getResponse(): Response<String>? {
@@ -143,7 +143,7 @@ class OtherInfoWindow : AppCompatActivity() {
         return artistInfo?.execute()
     }
 
-    private fun stringToJSON(string: String?): JsonObject {
+    private fun artistResponseToJson(string: String?): JsonObject {
         return Gson().fromJson(string, JsonObject::class.java)
     }
 
