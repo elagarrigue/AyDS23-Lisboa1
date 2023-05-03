@@ -100,16 +100,15 @@ class OtherInfoWindow : AppCompatActivity() {
             infoArtistData.markArtistAsLocal()
         } else {
             infoArtistData.getArtistFromAPI()
-            infoArtistData.saveInDataBase()
+            if(infoArtistData.infoArtist != NO_RESULTS)
+                infoArtistData.saveInDataBase()
         }
         return infoArtistData
     }
 
     private fun ArtistData.saveInDataBase() {
         try {
-            if (this.infoArtist != NO_RESULTS) {
-                dataBase.saveArtist(artistName, infoArtist)
-            }
+            dataBase.saveArtist(artistName, infoArtist)
         } catch (e: IOException) {
             e.printStackTrace()
         }
