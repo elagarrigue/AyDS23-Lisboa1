@@ -23,6 +23,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private var artistInfoPanel: TextView? = null
     private var dataBase: DataBase? = null
     private var lastFMAPI: LastFMAPI? = null
+    private lateinit var openURLListener: View
 
     companion object {
         const val imageUrl =
@@ -52,14 +53,15 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun initProperties() {
         artistInfoPanel = findViewById(R.id.textPane2)
+        openURLListener = findViewById(R.id.openUrlButton)
     }
 
-    private fun initDataBase(){
-        dataBase =  DataBase(this)
+    private fun initDataBase() {
+        dataBase = DataBase(this)
     }
 
-    private fun initLastFMAPI(){
-        lastFMAPI= createLastFMAPI()
+    private fun initLastFMAPI() {
+        lastFMAPI = createLastFMAPI()
     }
 
     private fun open(artist: String?) {
@@ -78,24 +80,24 @@ class OtherInfoWindow : AppCompatActivity() {
         showArtistInfo(artistData.infoArtist)
     }
 
-    private fun ArtistData.checkToInitializeTheButton(){
-        if(!this.isLocallyStored){
+    private fun ArtistData.checkToInitializeTheButton() {
+        if (!this.isLocallyStored) {
             this.url.setOpenUrlButtonClickListener()
         }
     }
 
-    private fun getArtistData(artistName: String?): ArtistData{
+    private fun getArtistData(artistName: String?): ArtistData {
         val infoArtistData = getInfoArtistFromDatabase(artistName)
         if (infoArtistData.infoArtist != null) {
             infoArtistData.markArtistAsLocal()
         } else {
-           infoArtistData.getArtistFromAPI()
-           infoArtistData.saveInDataBase()
+            infoArtistData.getArtistFromAPI()
+            infoArtistData.saveInDataBase()
         }
         return infoArtistData
     }
 
-    private fun ArtistData.saveInDataBase(){
+    private fun ArtistData.saveInDataBase() {
         try {
             if (this.infoArtist != NO_RESULTS) {
                 dataBase?.saveArtist(artistName, infoArtist)
@@ -105,7 +107,7 @@ class OtherInfoWindow : AppCompatActivity() {
         }
     }
 
-    private fun ArtistData.getArtistFromAPI(){
+    private fun ArtistData.getArtistFromAPI() {
         val jObjectArtist = this.getJObjectArtist()
         jObjectArtist.getInfoArtistFromJsonAPI(this)
     }
@@ -121,12 +123,12 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun ArtistData.getJObjectArtist(): JsonObject {
-        val bodyResponse= getResponse()?.body()
+        val bodyResponse = getResponse()?.body()
         return stringToJSON(bodyResponse)
     }
 
     private fun ArtistData.getResponse(): Response<String>? {
-        val artistInfo= lastFMAPI?.getArtistInfo(artistName)
+        val artistInfo = lastFMAPI?.getArtistInfo(artistName)
         return artistInfo?.execute()
     }
 
@@ -150,7 +152,7 @@ class OtherInfoWindow : AppCompatActivity() {
         val contentArtist = this.getArtistBioContent()
         if (contentArtist != null) {
             val dataArtistString = contentArtist.asString.replace("\\n", "\n")
-            formattedInfoArtist = artistName?.let{textToHtml(dataArtistString,it)}
+            formattedInfoArtist = artistName?.let { textToHtml(dataArtistString, it) }
         }
         return formattedInfoArtist
     }
@@ -179,11 +181,14 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun String.setOpenUrlButtonClickListener() {
-        findViewById<View>(R.id.openUrlButton).setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(this)
-            startActivity(intent)
+        openURLListener.setOnClickListener {
+            openURL(this)
         }
+    }
+
+    private fun openURL(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
     }
 
     private fun showArtistInfo(infoArtist: String?) {
