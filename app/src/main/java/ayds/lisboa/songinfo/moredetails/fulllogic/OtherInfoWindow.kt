@@ -28,7 +28,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private lateinit var artistInfoPanel: TextView
     private lateinit var dataBase: DataBase
     private lateinit var imageLastFMAPI: ImageView
-    private lateinit var imageLoader : ImageLoader
+    private lateinit var imageLoader: ImageLoader
 
     companion object {
         const val imageUrl =
@@ -63,7 +63,7 @@ class OtherInfoWindow : AppCompatActivity() {
         imageLastFMAPI = findViewById(R.id.imageView)
     }
 
-    private fun initImageLoader(){
+    private fun initImageLoader() {
         imageLoader = ImageLoaderImpl(Picasso.get())
     }
 
@@ -73,6 +73,12 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun initLastFMAPI() {
         lastFMAPI = createLastFMAPI()
+    }
+
+    private fun createLastFMAPI(): LastFMAPI {
+        val retrofit = Retrofit.Builder().baseUrl(ARTIST_BASE_URL)
+            .addConverterFactory(ScalarsConverterFactory.create()).build()
+        return retrofit.create(LastFMAPI::class.java)
     }
 
     private fun getMoreDetailsOfAnArtistAsync() {
@@ -90,28 +96,29 @@ class OtherInfoWindow : AppCompatActivity() {
         showArtistInfo(artistData.infoArtist)
     }
 
-    private fun ArtistData.addLocallySavedMarkToInfo() {
-        if(isLocallyStored) {
-            infoArtist = "$LOCALLY_SAVED $infoArtist"
-        }
-    }
-
-    private fun initializeIUrlButton(artistData : ArtistData) {
-        if (!artistData.isLocallyStored) {
-            setOpenUrlButtonClickListener(artistData.url)
-        }
-    }
-
     private fun getArtistData(artistName: String?): ArtistData {
         val infoArtistData = getInfoArtistFromDatabase(artistName)
         if (infoArtistData.infoArtist != null) {
             infoArtistData.markArtistAsLocal()
         } else {
             infoArtistData.getArtistFromAPI()
-            if(infoArtistData.infoArtist != NO_RESULTS)
-                infoArtistData.saveInDataBase()
+            if (infoArtistData.infoArtist != NO_RESULTS) infoArtistData.saveInDataBase()
         }
         return infoArtistData
+    }
+
+    private fun getInfoArtistFromDatabase(artistName: String?): ArtistData {
+        val infoArtist = dataBase.getInfo(artistName)
+        return ArtistData(artistName, infoArtist)
+    }
+
+    private fun ArtistData.markArtistAsLocal() {
+        isLocallyStored = true
+    }
+
+    private fun ArtistData.getArtistFromAPI() {
+        val jObjectArtist = getJObjectArtist()
+        jObjectArtist.getInfoArtistFromJsonAPI(this)
     }
 
     private fun ArtistData.saveInDataBase() {
@@ -122,18 +129,34 @@ class OtherInfoWindow : AppCompatActivity() {
         }
     }
 
-    private fun ArtistData.getArtistFromAPI() {
-        val jObjectArtist = this.getJObjectArtist()
-        jObjectArtist.getInfoArtistFromJsonAPI(this)
+    private fun ArtistData.addLocallySavedMarkToInfo() {
+        if (isLocallyStored) {
+            infoArtist = "$LOCALLY_SAVED $infoArtist"
+        }
     }
 
-    private fun ArtistData.markArtistAsLocal() {
-        isLocallyStored = true
+    private fun initializeIUrlButton(artistData: ArtistData) {
+        if (!artistData.isLocallyStored) {
+            setOpenUrlButtonClickListener(artistData.url)
+        }
     }
 
-    private fun getInfoArtistFromDatabase(artistName: String?): ArtistData {
-        val infoArtist = dataBase.getInfo(artistName)
-        return ArtistData(artistName, infoArtist)
+    private fun setOpenUrlButtonClickListener(artistURL: String) {
+        openURLListener.setOnClickListener {
+            openURL(artistURL)
+        }
+    }
+
+    private fun openURL(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
+    }
+
+    private fun showArtistInfo(infoArtist: String?) {
+        runOnUiThread {
+            imageLoader.loadImageIntoView(imageUrl, imageLastFMAPI)
+            artistInfoPanel.text = infoArtist?.let { HtmlCompat.fromHtml(it, 0) }
+        }
     }
 
     private fun ArtistData.getJObjectArtist(): JsonObject {
@@ -150,20 +173,14 @@ class OtherInfoWindow : AppCompatActivity() {
         return Gson().fromJson(string, JsonObject::class.java)
     }
 
-    private fun createLastFMAPI(): LastFMAPI {
-        val retrofit = Retrofit.Builder().baseUrl(ARTIST_BASE_URL)
-            .addConverterFactory(ScalarsConverterFactory.create()).build()
-        return retrofit.create(LastFMAPI::class.java)
-    }
-
     private fun JsonObject.getInfoArtistFromJsonAPI(artistData: ArtistData) {
-        artistData.infoArtist = this.getFormattingDataArtist(artistData.artistName) ?: NO_RESULTS
-        artistData.url = this.getArtistURLFromJSON()
+        artistData.infoArtist = getFormattingDataArtist(artistData.artistName) ?: NO_RESULTS
+        artistData.url = getArtistURLFromJSON()
     }
 
     private fun JsonObject.getFormattingDataArtist(artistName: String?): String? {
         var formattedInfoArtist: String? = null
-        val contentArtist = this.getArtistBioContent()
+        val contentArtist = getArtistBioContent()
         if (contentArtist != null) {
             val dataArtistString = contentArtist.asString.replace("\\n", "\n")
             formattedInfoArtist = artistName?.let { textToHtml(dataArtistString, it) }
@@ -192,24 +209,6 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun JsonObject.getArtistURLFromJSON(): String {
         val artistObj = this[ARTIST_CONST].asJsonObject
         return artistObj[URL_ARTIST_CONST].asString
-    }
-
-    private fun setOpenUrlButtonClickListener(artistURL: String) {
-        openURLListener.setOnClickListener {
-            openURL(artistURL)
-        }
-    }
-
-    private fun openURL(url: String) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        startActivity(intent)
-    }
-
-    private fun showArtistInfo(infoArtist: String?) {
-        runOnUiThread {
-            imageLoader.loadImageIntoView(imageUrl,imageLastFMAPI)
-            artistInfoPanel.text = infoArtist?.let { HtmlCompat.fromHtml(it, 0) }
-        }
     }
 
 }
