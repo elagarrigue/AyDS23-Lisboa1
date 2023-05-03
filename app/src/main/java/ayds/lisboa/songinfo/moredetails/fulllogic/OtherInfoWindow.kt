@@ -135,7 +135,7 @@ class OtherInfoWindow : AppCompatActivity() {
         val contentArtist = this.getArtistBioContent()
         if (contentArtist != null) {
             val dataArtistString = contentArtist.asString.replace("\\n", "\n")
-            formattedInfoArtist = textToHtml(dataArtistString, artistName)
+            formattedInfoArtist = artistName?.let{textToHtml(dataArtistString,it)}
         }
         return formattedInfoArtist
     }
@@ -146,12 +146,12 @@ class OtherInfoWindow : AppCompatActivity() {
         return bioObj[CONTENT_ARTIST_CONST]
     }
 
-    private fun textToHtml(text: String, term: String?): String {
+    private fun textToHtml(text: String, term: String): String {
         val builder = StringBuilder()
         builder.append(HTML_START)
         builder.append(FONT_FACE)
         val textWithBold = text.replace("'", " ").replace("\n", "<br>").replace(
-            "(?i)$term".toRegex(), "<b>" + term!!.uppercase(Locale.getDefault()) + "</b>"
+            "(?i)$term".toRegex(), "<b>" + term.uppercase(Locale.getDefault()) + "</b>"
         )
         builder.append(textWithBold)
         builder.append(HTML_END)
