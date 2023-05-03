@@ -88,13 +88,13 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getMoreDetailsOfAnArtist(artistName: String?) {
         val artistData = getArtistData(artistName)
-        artistData.checkToInitializeTheButton()
+        checkToInitializeTheButton(artistData)
         showArtistInfo(artistData.infoArtist)
     }
 
-    private fun ArtistData.checkToInitializeTheButton() {
-        if (!this.isLocallyStored) {
-            this.url.setOpenUrlButtonClickListener()
+    private fun checkToInitializeTheButton(artistData : ArtistData) {
+        if (!artistData.isLocallyStored) {
+            setOpenUrlButtonClickListener(artistData.url)
         }
     }
 
@@ -191,9 +191,9 @@ class OtherInfoWindow : AppCompatActivity() {
         return artistObj[URL_ARTIST_CONST].asString
     }
 
-    private fun String.setOpenUrlButtonClickListener() {
+    private fun setOpenUrlButtonClickListener(artistURL: String) {
         openURLListener.setOnClickListener {
-            openURL(this)
+            openURL(artistURL)
         }
     }
 
