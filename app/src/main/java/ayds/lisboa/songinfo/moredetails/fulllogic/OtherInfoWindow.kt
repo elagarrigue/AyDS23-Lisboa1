@@ -48,12 +48,12 @@ class OtherInfoWindow : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_other_info)
 
         initProperties()
         initImageLoader()
         initDataBase()
         initLastFMAPI()
+        setContentView(R.layout.activity_other_info)
         getMoreDetailsOfAnArtistAsync()
     }
 
