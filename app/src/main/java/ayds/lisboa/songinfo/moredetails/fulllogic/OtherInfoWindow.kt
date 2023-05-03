@@ -106,6 +106,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun ArtistData.markArtistAsLocal() {
         isLocallyStored = true
+        infoArtist = "[*]$infoArtist"
     }
 
     private fun getInfoArtistFromDatabase(artistName: String?): ArtistData {
