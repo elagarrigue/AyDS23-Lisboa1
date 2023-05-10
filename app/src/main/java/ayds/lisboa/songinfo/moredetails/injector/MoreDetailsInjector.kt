@@ -23,7 +23,7 @@ object MoreDetailsInjector {
     private lateinit var moreDetailsPresenter : MoreDetailsPresenter
     fun getPresenter(): MoreDetailsPresenter = moreDetailsPresenter
 
-    fun initMoreDetailsModel(view: MoreDetailsView) {
+    fun initMoreDetailsPresenter(view: MoreDetailsView) {
         val artistLocalStorage : ArtistLocalStorage =
             ArtistLocalStorageImpl(view as Context, CursorToArtistDataMapperImpl())
 

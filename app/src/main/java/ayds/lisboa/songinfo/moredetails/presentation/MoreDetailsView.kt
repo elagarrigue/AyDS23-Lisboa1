@@ -57,7 +57,7 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun initModule() {
-        MoreDetailsInjector.initMoreDetailsModel(this)
+        MoreDetailsInjector.initMoreDetailsPresenter(this)
         moreDetailsPresenter = MoreDetailsInjector.getPresenter()
     }
 
