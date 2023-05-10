@@ -1,31 +1,25 @@
 package ayds.lisboa.songinfo.moredetails.presentation
 
+import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
 import ayds.lisboa.songinfo.moredetails.domain.repositoryInterface.ArtistRepository
-import ayds.observer.Observer
+import ayds.observer.Observable
+import ayds.observer.Subject
 
 interface MoreDetailsPresenter {
-    fun setMoreDetailsView(moreDetailsView: MoreDetailsView)
+    val artistObservable: Observable<Artist>
+    fun getArtistMoreInformation(artistName: String)
 }
 
-internal class MoreDetailsPresenterImpl(
-    private val repository: ArtistRepository) : MoreDetailsPresenter {
+internal class MoreDetailsPresenterImpl(private val repository: ArtistRepository) :
+    MoreDetailsPresenter {
 
-    private lateinit var moreDetailsView: MoreDetailsView
+    override val artistObservable = Subject<Artist>()
 
-    override fun setMoreDetailsView(moreDetailsView: MoreDetailsView) {
-        this.moreDetailsView = moreDetailsView
-        moreDetailsView.uiEventObservable.subscribe(observer)
+    override fun getArtistMoreInformation(artistName: String) {
+        val artistData: Artist = repository.getArtistData(artistName)
+        artistObservable.notify(artistData)
     }
 
-    private val observer: Observer<MoreDetailsUiEvent> =
-        Observer { value ->
-            when (value) {
-                MoreDetailsUiEvent.ViewFullArticle -> getArtistMoreInformation()
-            }
-        }
+}
 
-    private fun getArtistMoreInformation() {
-            repository.getArtistData(moreDetailsView.uiState.artistName)
-    }
 
-    }

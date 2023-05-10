@@ -1,8 +1,9 @@
 package ayds.lisboa.songinfo.moredetails.presentation
-class MoreDetailsUiState (
+data class MoreDetailsUiState (
     val artistName: String = "",
-    val artistUrl: String = "",
-    val artistDescription: String = "",
+    val infoArtist: String = "",
+    val url: String = "",
+    val isLocallyStored: Boolean = false,
     val imageUrl: String = DEFAULT_IMAGE
 ){
     companion object {
