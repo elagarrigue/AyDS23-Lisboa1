@@ -1,4 +1,4 @@
-package ayds.lisboa.songinfo.moredetails.fulllogic.presentation
+package ayds.lisboa.songinfo.moredetails.presentation
 
 import android.os.Bundle
 import android.view.View
@@ -9,7 +9,7 @@ import ayds.lisboa.songinfo.R
 import ayds.observer.Observable
 import ayds.observer.Subject
 
-interface MoreDetailsView{
+interface MoreDetailsView {
     val uiEventObservable: Observable<MoreDetailsUiEvent>
     val uiState: MoreDetailsUiState
 }
@@ -17,6 +17,7 @@ interface MoreDetailsView{
 class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     private val onActionSubject = Subject<MoreDetailsUiEvent>()
 
+    private val onActionSubject = Subject<MoreDetailsUiEvent>()
     private lateinit var artistInfoPanel: TextView
     private lateinit var openURLListener: View
     private lateinit var imageLastFMAPI: ImageView

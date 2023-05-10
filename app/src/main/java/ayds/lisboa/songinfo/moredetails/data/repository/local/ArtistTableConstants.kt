@@ -1,4 +1,4 @@
-package ayds.lisboa.songinfo.moredetails.fulllogic.data.repository.local
+package ayds.lisboa.songinfo.moredetails.data.repository.local
 
 const val ARTIST_TABLE = "artists"
 const val ID_COLUMN = "id"

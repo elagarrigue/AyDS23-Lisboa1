@@ -1,7 +1,7 @@
-package ayds.lisboa.songinfo.moredetails.fulllogic.data.repository.external
+package ayds.lisboa.songinfo.moredetails.data.repository.external
 
-import ayds.lisboa.songinfo.moredetails.fulllogic.ArtistData
-import ayds.lisboa.songinfo.moredetails.fulllogic.OtherInfoWindow
+import ayds.lisboa.songinfo.moredetails.OtherInfoWindow
+import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.ArtistData
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
@@ -14,21 +14,25 @@ const val URL_ARTIST_CONST = "url"
 const val NO_RESULTS = "No results"
 
 interface LastFMToArtistDataResolver {
-    fun getArtistFromExternalData(artistName: String?): ArtistData
+    fun getArtistFromExternalData(artistName: String?): ArtistData?
 }
 
 internal class JSONToArtistDataResolver : LastFMToArtistDataResolver {
 
-    override fun getArtistFromExternalData(artistName: String?): ArtistData {
-        val jObjectArtist = artistResponseToJson(artistName)
-        return ArtistData(artistName, jObjectArtist.getFormattingDataArtist(artistName), jObjectArtist.getArtistURL())
-    }
+    override fun getArtistFromExternalData(artistName: String?): ArtistData? =
+        try {
+            artistName?.let {
+                val jObjectArtist = artistResponseToJson(artistName)
+                ArtistData(artistName, jObjectArtist.getFormattingDataArtist(artistName), jObjectArtist.getArtistURL()) }
+        } catch (e: Exception) {
+            null
+        }
 
-    private fun artistResponseToJson(string: String?): JsonObject {
+    private fun artistResponseToJson(string: String): JsonObject {
         return Gson().fromJson(string, JsonObject::class.java)
     }
 
-    private fun JsonObject.getFormattingDataArtist(artistName: String?): String {
+    private fun JsonObject.getFormattingDataArtist(artistName: String): String {
         var formattedInfoArtist: String? = null
         val contentArtist = getArtistBioContent()
         if (contentArtist != null) {

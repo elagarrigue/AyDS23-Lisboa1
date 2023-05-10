@@ -1,5 +1,6 @@
-package ayds.lisboa.songinfo.moredetails.fulllogic.presentation
-import ayds.lisboa.songinfo.moredetails.fulllogic.domain.repositoryInterface.ArtistRepository
+package ayds.lisboa.songinfo.moredetails.presentation
+
+import ayds.lisboa.songinfo.moredetails.domain.repositoryInterface.ArtistRepository
 import ayds.observer.Observer
 
 interface MoreDetailsPresenter {

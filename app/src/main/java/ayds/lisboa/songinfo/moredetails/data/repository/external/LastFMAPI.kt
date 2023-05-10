@@ -1,4 +1,4 @@
-package ayds.lisboa.songinfo.moredetails.fulllogic.data.repository.external;
+package ayds.lisboa.songinfo.moredetails.data.repository.external;
 
 import retrofit2.Call
 import retrofit2.http.GET

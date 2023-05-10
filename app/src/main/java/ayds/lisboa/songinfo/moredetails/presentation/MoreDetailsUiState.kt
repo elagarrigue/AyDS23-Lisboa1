@@ -1,4 +1,4 @@
-package ayds.lisboa.songinfo.moredetails.fulllogic.presentation
+package ayds.lisboa.songinfo.moredetails.presentation
 class MoreDetailsUiState (
     val artistName: String = "",
     val artistUrl: String = "",
