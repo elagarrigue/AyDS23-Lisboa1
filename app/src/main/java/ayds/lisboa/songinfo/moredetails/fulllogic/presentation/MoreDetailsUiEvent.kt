@@ -1,3 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.fulllogic.presentation
 
-class MoreDetailsUiEvent {}
+sealed class MoreDetailsUiEvent {
+    object ViewFullArticle: MoreDetailsUiEvent()
+
+}
