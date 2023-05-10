@@ -28,8 +28,9 @@ internal class MoreDetailsPresenterImpl(private val repository: ArtistRepository
     }
 
     private fun Artist.getFormattingInfoArtist(artistName: String) {
-        val infoToFormat = (this as ArtistData).infoArtist
-        this.infoArtist = textToHtml(infoToFormat, artistName)
+        if( this is ArtistData){
+            this.infoArtist = textToHtml(this.infoArtist, artistName)
+        }
     }
 
     private fun textToHtml(text: String, term: String): String {
