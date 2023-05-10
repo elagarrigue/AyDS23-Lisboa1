@@ -1,7 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.injector
 
 import android.content.Context
-import ayds.lisboa.songinfo.moredetails.OtherInfoWindow
 import ayds.lisboa.songinfo.moredetails.domain.repositoryInterface.ArtistRepository
 import ayds.lisboa.songinfo.moredetails.data.repository.ArtistRepositoryImpl
 import ayds.lisboa.songinfo.moredetails.data.repository.external.LastFMServiceImpl
@@ -16,6 +15,8 @@ import ayds.lisboa.songinfo.moredetails.presentation.MoreDetailsPresenter
 import ayds.lisboa.songinfo.moredetails.presentation.MoreDetailsPresenterImpl
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
+
+private const val ARTIST_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
 
 object MoreDetailsInjector {
 
@@ -35,7 +36,7 @@ object MoreDetailsInjector {
     }
 
     private fun createLastFMAPI(): LastFMAPI {
-        val retrofit = Retrofit.Builder().baseUrl(OtherInfoWindow.ARTIST_BASE_URL)
+        val retrofit = Retrofit.Builder().baseUrl(ARTIST_BASE_URL)
             .addConverterFactory(ScalarsConverterFactory.create()).build()
         return retrofit.create(LastFMAPI::class.java)
     }

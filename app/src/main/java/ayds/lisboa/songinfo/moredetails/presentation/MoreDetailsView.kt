@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import ayds.lisboa.songinfo.R
-import ayds.lisboa.songinfo.moredetails.OtherInfoWindow
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
 import ayds.lisboa.songinfo.moredetails.injector.MoreDetailsInjector
 import ayds.lisboa.songinfo.utils.UtilsInjector
@@ -47,7 +46,7 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun showArtistInfo(infoArtist: String?) {
         runOnUiThread {
-            imageLoader.loadImageIntoView(OtherInfoWindow.imageUrl, imageLastFMAPI)
+            imageLoader.loadImageIntoView(uiState.imageUrl, imageLastFMAPI)
             artistInfoPanel.text = infoArtist?.let { HtmlCompat.fromHtml(it, 0) }
         }
     }
