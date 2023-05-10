@@ -23,10 +23,14 @@ internal class MoreDetailsPresenterImpl(private val repository: ArtistRepository
     override val artistObservable = Subject<Artist>()
 
     override fun getArtistMoreInformation(artistName: String) {
+        Thread {
+            startThread(artistName)
+        }.start()
+    }
+
+    private fun startThread(artistName: String){
         val artistData: Artist = repository.getArtistData(artistName)
         artistData.getFormattingInfoArtist(artistName)
-        val infoArtist: String = (artistData as ArtistData).infoArtist
-        Log.d("Error",infoArtist)
         artistObservable.notify(artistData)
     }
 
