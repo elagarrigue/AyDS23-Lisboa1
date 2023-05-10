@@ -23,11 +23,11 @@ internal class MoreDetailsPresenterImpl(private val repository: ArtistRepository
 
     override fun getArtistMoreInformation(artistName: String) {
         val artistData: Artist = repository.getArtistData(artistName)
-        artistData.geFormattingInfoArtist(artistName)
+        artistData.getFormattingInfoArtist(artistName)
         artistObservable.notify(artistData)
     }
 
-    private fun Artist.geFormattingInfoArtist(artistName: String) {
+    private fun Artist.getFormattingInfoArtist(artistName: String) {
         val infoToFormat = (this as ArtistData).infoArtist
         this.infoArtist = textToHtml(infoToFormat, artistName)
     }

@@ -1,7 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.injector
 
 import android.content.Context
-import ayds.lisboa.songinfo.moredetails.OtherInfoWindow
 import ayds.lisboa.songinfo.moredetails.domain.repositoryInterface.ArtistRepository
 import ayds.lisboa.songinfo.moredetails.data.repository.ArtistRepositoryImpl
 import ayds.lisboa.songinfo.moredetails.data.repository.external.LastFMServiceImpl
