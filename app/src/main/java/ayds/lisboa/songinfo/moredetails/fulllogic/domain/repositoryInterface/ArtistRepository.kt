@@ -1,6 +1,7 @@
-package ayds.lisboa.songinfo.moredetails.fulllogic.domain.repositoryInterface;
-import ayds.lisboa.songinfo.moredetails.fulllogic.ArtistData;
+package ayds.lisboa.songinfo.moredetails.fulllogic.domain.repositoryInterface
 
-public interface ArtistRepository {
+import ayds.lisboa.songinfo.moredetails.fulllogic.ArtistData
+
+interface ArtistRepository {
     fun getArtistData(artistName: String) : ArtistData
 }

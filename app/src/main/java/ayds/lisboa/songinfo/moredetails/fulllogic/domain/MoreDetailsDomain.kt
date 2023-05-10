@@ -6,7 +6,7 @@ import ayds.observer.Subject
 
 interface MoreDetailsDomain {
     val moreInformationObservable: Observable<ArtistData>
-    fun getArtistMoreInformation(term: String)
+    fun getArtistMoreInformation(artistName: String)
 }
 
 internal class MoreDetailsDomainImpl(private val repository: ArtistRepository): MoreDetailsDomain {

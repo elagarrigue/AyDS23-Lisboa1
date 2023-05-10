@@ -1,5 +1,5 @@
 package ayds.lisboa.songinfo.moredetails.fulllogic.presentation
 
-interface MoreDetailsPresenter {}
+interface MoreDetailsPresenter
 
-internal class MoreDetailsPresenterImpl : MoreDetailsPresenter {}
+internal class MoreDetailsPresenterImpl : MoreDetailsPresenter
