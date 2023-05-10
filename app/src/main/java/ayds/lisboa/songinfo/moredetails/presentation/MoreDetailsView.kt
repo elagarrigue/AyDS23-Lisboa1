@@ -74,7 +74,7 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     private fun updateArtistInfo(artist: Artist) {
         updateUIState(artist)
         uiState.addLocallySavedMarkToInfo()
-        initializeIUrlButton()
+        setOpenUrlButtonClickListener(uiState.url)
         showArtistInfo(uiState.infoArtist)
     }
 
@@ -110,11 +110,6 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         }
     }
 
-    private fun initializeIUrlButton() {
-        if (uiState.isLocallyStored) {
-            setOpenUrlButtonClickListener(uiState.url)
-        }
-    }
 
     private fun setOpenUrlButtonClickListener(artistURL: String) {
         openURLListener.setOnClickListener {

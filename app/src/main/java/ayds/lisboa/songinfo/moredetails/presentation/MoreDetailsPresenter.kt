@@ -24,11 +24,11 @@ internal class MoreDetailsPresenterImpl(private val repository: ArtistRepository
 
     override fun getArtistMoreInformation(artistName: String) {
         Thread {
-            startThread(artistName)
+            notifyArtist(artistName)
         }.start()
     }
 
-    private fun startThread(artistName: String){
+    private fun notifyArtist(artistName: String){
         val artistData: Artist = repository.getArtistData(artistName)
         artistData.getFormattingInfoArtist(artistName)
         artistObservable.notify(artistData)
