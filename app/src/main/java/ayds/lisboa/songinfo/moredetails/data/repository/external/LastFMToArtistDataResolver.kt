@@ -1,11 +1,8 @@
 package ayds.lisboa.songinfo.moredetails.data.repository.external
 
-import ayds.lisboa.songinfo.moredetails.OtherInfoWindow
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.ArtistData
 import com.google.gson.Gson
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import java.util.*
 
 const val ARTIST_CONST = "artist"
 const val BIO_ARTIST_CONST = "bio"
@@ -23,7 +20,7 @@ internal class JSONToArtistDataResolver : LastFMToArtistDataResolver {
         try {
             artistName?.let {
                 val jObjectArtist = artistResponseToJson(artistName)
-                ArtistData(artistName, jObjectArtist.getFormattingDataArtist(artistName), jObjectArtist.getArtistURL()) }
+                ArtistData(artistName, jObjectArtist.getFormattingDataArtist(), jObjectArtist.getArtistURL()) }
         } catch (e: Exception) {
             null
         }
@@ -32,32 +29,16 @@ internal class JSONToArtistDataResolver : LastFMToArtistDataResolver {
         return Gson().fromJson(string, JsonObject::class.java)
     }
 
-    private fun JsonObject.getFormattingDataArtist(artistName: String): String {
-        var formattedInfoArtist: String? = null
-        val contentArtist = getArtistBioContent()
-        if (contentArtist != null) {
-            val dataArtistString = contentArtist.asString.replace("\\n", "\n")
-            formattedInfoArtist = artistName?.let { textToHtml(dataArtistString, it) }
-        }
-        return formattedInfoArtist ?: NO_RESULTS
+    private fun JsonObject.getFormattingDataArtist(): String {
+        val dataArtistString = getArtistBioContentToString()
+        return dataArtistString ?: NO_RESULTS
     }
 
-    private fun JsonObject.getArtistBioContent(): JsonElement? {
+    private fun JsonObject.getArtistBioContentToString(): String? {
         val artistObj = this[ARTIST_CONST].asJsonObject
         val bioObj = artistObj[BIO_ARTIST_CONST].asJsonObject
-        return bioObj[CONTENT_ARTIST_CONST]
-    }
-
-    private fun textToHtml(text: String, term: String): String {
-        val builder = StringBuilder()
-        builder.append(OtherInfoWindow.HTML_START)
-        builder.append(OtherInfoWindow.FONT_FACE)
-        val textWithBold = text.replace("'", " ").replace("\n", "<br>").replace(
-            "(?i)$term".toRegex(), "<b>" + term.uppercase(Locale.getDefault()) + "</b>"
-        )
-        builder.append(textWithBold)
-        builder.append(OtherInfoWindow.HTML_END)
-        return builder.toString()
+        val contentArtist = bioObj[CONTENT_ARTIST_CONST]
+        return contentArtist.asString.replace("\\n", "\n")
     }
 
     private fun JsonObject.getArtistURL(): String {
