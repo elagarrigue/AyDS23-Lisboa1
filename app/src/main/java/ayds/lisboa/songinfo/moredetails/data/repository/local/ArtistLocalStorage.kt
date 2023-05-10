@@ -12,11 +12,8 @@ private const val DATABASE_VERSION = 1
 private const val SORT_ORDER = "artist DESC"
 
 interface ArtistLocalStorage {
-
     fun saveArtist(artist: ArtistData)
     fun getArtist(artist: String): ArtistData?
-
-
 }
 
 internal class ArtistLocalStorageImpl(
@@ -28,7 +25,8 @@ internal class ArtistLocalStorageImpl(
     private val projection = arrayOf(
         ID_COLUMN,
         ARTIST_COLUMN,
-        INFO_COLUMN
+        INFO_COLUMN,
+        URL_COLUMN
     )
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -47,6 +45,7 @@ internal class ArtistLocalStorageImpl(
         val values = ContentValues()
 
         values.put(ARTIST_COLUMN, artist.artistName)
+        values.put(INFO_COLUMN, artist.infoArtist)
         values.put(URL_COLUMN, artist.url)
         values.put(SOURCE_COLUMN, 1)
 
