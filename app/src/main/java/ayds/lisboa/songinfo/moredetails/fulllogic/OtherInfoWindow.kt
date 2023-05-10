@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import ayds.lisboa.songinfo.R
+import ayds.lisboa.songinfo.moredetails.fulllogic.data.repository.external.LastFMAPI
 import ayds.lisboa.songinfo.utils.view.ImageLoader
 import ayds.lisboa.songinfo.utils.view.ImageLoaderImpl
 import com.google.gson.Gson
