@@ -1,5 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.presentation
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -50,7 +52,7 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         }
     }
 
-    private fun initArtistName(){
+    private fun initArtistName() {
         val artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)
         artistName?.let { moreDetailsPresenter.getArtistMoreInformation(it) }
     }
@@ -73,6 +75,7 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     private fun updateArtistInfo(artist: Artist) {
         updateUIState(artist)
         uiState.addLocallySavedMarkToInfo()
+        initializeIUrlButton()
         showArtistInfo(uiState.infoArtist)
     }
 
@@ -106,4 +109,22 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
             infoArtist = "$LOCALLY_SAVED $infoArtist"
         }
     }
+
+    private fun initializeIUrlButton() {
+        if (uiState.isLocallyStored) {
+            setOpenUrlButtonClickListener(uiState.url)
+        }
+    }
+
+    private fun setOpenUrlButtonClickListener(artistURL: String) {
+        openURLListener.setOnClickListener {
+            openURL(artistURL)
+        }
+    }
+
+    private fun openURL(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
+    }
+
 }
