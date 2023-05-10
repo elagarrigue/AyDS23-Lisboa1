@@ -86,6 +86,7 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun updateArtistUIState(artist: Artist.ArtistData) {
+
         uiState = uiState.copy(
             artistName = artist.artistName,
             infoArtist = artist.infoArtist,

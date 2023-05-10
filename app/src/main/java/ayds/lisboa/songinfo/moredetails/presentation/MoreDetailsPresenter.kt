@@ -1,5 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.presentation
 
+import android.util.Log
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.ArtistData
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
 import ayds.lisboa.songinfo.moredetails.domain.repositoryInterface.ArtistRepository
@@ -24,6 +25,8 @@ internal class MoreDetailsPresenterImpl(private val repository: ArtistRepository
     override fun getArtistMoreInformation(artistName: String) {
         val artistData: Artist = repository.getArtistData(artistName)
         artistData.getFormattingInfoArtist(artistName)
+        val infoArtist: String = (artistData as ArtistData).infoArtist
+        Log.d("Error",infoArtist)
         artistObservable.notify(artistData)
     }
 

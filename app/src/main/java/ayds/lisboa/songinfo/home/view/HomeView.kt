@@ -51,7 +51,7 @@ class HomeViewActivity : AppCompatActivity(), HomeView {
     override var uiState: HomeUiState = HomeUiState()
 
     override fun navigateToOtherDetails(artistName: String) {
-        val intent = Intent(this, MoreDetailsView::class.java)
+        val intent = Intent(this, MoreDetailsActivity::class.java)
         intent.putExtra(MoreDetailsActivity.ARTIST_NAME_EXTRA, artistName)
         startActivity(intent)
     }
