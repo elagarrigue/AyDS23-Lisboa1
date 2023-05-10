@@ -8,4 +8,5 @@ class MoreDetailsUiState (
     companion object {
         const val DEFAULT_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
     }
+
 }
