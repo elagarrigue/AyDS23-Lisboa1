@@ -2,8 +2,8 @@ package ayds.lisboa.songinfo.moredetails.fulllogic.injector
 
 import android.content.Context
 import ayds.lisboa.songinfo.moredetails.fulllogic.OtherInfoWindow
-import ayds.lisboa.songinfo.moredetails.fulllogic.data.ArtistRepository
-import ayds.lisboa.songinfo.moredetails.fulllogic.data.ArtistRepositoryImpl
+import ayds.lisboa.songinfo.moredetails.fulllogic.domain.repositoryInterface.ArtistRepository
+import ayds.lisboa.songinfo.moredetails.fulllogic.data.repository.ArtistRepositoryImpl
 import ayds.lisboa.songinfo.moredetails.fulllogic.data.repository.external.*
 import ayds.lisboa.songinfo.moredetails.fulllogic.data.repository.external.LastFMServiceImpl
 import ayds.lisboa.songinfo.moredetails.fulllogic.data.repository.local.ArtistLocalStorage

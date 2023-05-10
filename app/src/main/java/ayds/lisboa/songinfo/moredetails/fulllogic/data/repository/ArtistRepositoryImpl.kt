@@ -1,12 +1,9 @@
-package ayds.lisboa.songinfo.moredetails.fulllogic.data
+package ayds.lisboa.songinfo.moredetails.fulllogic.data.repository
 
+import ayds.lisboa.songinfo.moredetails.fulllogic.domain.repositoryInterface.ArtistRepository
 import ayds.lisboa.songinfo.moredetails.fulllogic.ArtistData
 import ayds.lisboa.songinfo.moredetails.fulllogic.data.repository.external.LastFMService
 import ayds.lisboa.songinfo.moredetails.fulllogic.data.repository.local.ArtistLocalStorage
-
-interface ArtistRepository {
-    fun getArtistData(artistName: String): ArtistData
-}
 
 private const val NO_RESULTS = "No results"
 
@@ -41,8 +38,6 @@ class ArtistRepositoryImpl(
     private fun ArtistData.markArtistAsLocal() {
         isLocallyStored = true
     }
-
-
-
-
 }
+
+
