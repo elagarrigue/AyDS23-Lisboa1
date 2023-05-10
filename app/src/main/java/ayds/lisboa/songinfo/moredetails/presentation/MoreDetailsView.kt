@@ -17,6 +17,7 @@ interface MoreDetailsView {
     var uiState: MoreDetailsUiState
 }
 
+private const val LOCALLY_SAVED = "[*]"
 class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
 
     private lateinit var artistInfoPanel: TextView
@@ -66,24 +67,29 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun initObservers() {
-        moreDetailsPresenter.artistObservable.subscribe { value -> updateUIState(value) }
+        moreDetailsPresenter.artistObservable.subscribe { value -> updateArtistInfo(value) }
     }
 
-    private fun updateUIState(artistData: Artist) {
-        when (artistData) {
-            is Artist.ArtistData -> updateArtistUIState(artistData)
+    private fun updateArtistInfo(artist: Artist) {
+        updateUIState(artist)
+        uiState.addLocallySavedMarkToInfo()
+        showArtistInfo(uiState.infoArtist)
+    }
+
+    private fun updateUIState(artist: Artist) {
+        when (artist) {
+            is Artist.ArtistData -> updateArtistUIState(artist)
             Artist.EmptyArtist -> updateNoResultsUiState()
         }
     }
 
-    private fun updateArtistUIState(artistData: Artist.ArtistData) {
+    private fun updateArtistUIState(artist: Artist.ArtistData) {
         uiState = uiState.copy(
-            artistName = artistData.artistName,
-            infoArtist = artistData.infoArtist,
-            url = artistData.url,
-            isLocallyStored = artistData.isLocallyStored,
+            artistName = artist.artistName,
+            infoArtist = artist.infoArtist,
+            url = artist.url,
+            isLocallyStored = artist.isLocallyStored,
         )
-        showArtistInfo(uiState.infoArtist)
     }
 
     private fun updateNoResultsUiState() {
@@ -95,4 +101,9 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         )
     }
 
+    private fun MoreDetailsUiState.addLocallySavedMarkToInfo() {
+        if (isLocallyStored) {
+            infoArtist = "$LOCALLY_SAVED $infoArtist"
+        }
+    }
 }

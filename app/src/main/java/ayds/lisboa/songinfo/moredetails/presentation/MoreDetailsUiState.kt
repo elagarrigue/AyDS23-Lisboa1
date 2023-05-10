@@ -1,7 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.presentation
 data class MoreDetailsUiState (
     val artistName: String = "",
-    val infoArtist: String = "",
+    var infoArtist: String = "",
     val url: String = "",
     val isLocallyStored: Boolean = false,
     val imageUrl: String = DEFAULT_IMAGE
