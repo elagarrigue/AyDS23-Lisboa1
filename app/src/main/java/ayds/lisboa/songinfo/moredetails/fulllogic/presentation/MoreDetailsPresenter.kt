@@ -1,5 +1,5 @@
 package ayds.lisboa.songinfo.moredetails.fulllogic.presentation
-import ayds.lisboa.songinfo.moredetails.fulllogic.domain.MoreDetailsDomain
+import ayds.lisboa.songinfo.moredetails.fulllogic.domain.repositoryInterface.ArtistRepository
 import ayds.observer.Observer
 
 interface MoreDetailsPresenter {
@@ -7,7 +7,7 @@ interface MoreDetailsPresenter {
 }
 
 internal class MoreDetailsPresenterImpl(
-    private val moreDetailsDomain: MoreDetailsDomain) : MoreDetailsPresenter {
+    private val repository: ArtistRepository) : MoreDetailsPresenter {
 
     private lateinit var moreDetailsView: MoreDetailsView
 
@@ -24,7 +24,7 @@ internal class MoreDetailsPresenterImpl(
         }
 
     private fun getArtistMoreInformation() {
-            moreDetailsDomain.getArtistMoreInformation(moreDetailsView.uiState.artistName)
+            repository.getArtistData(moreDetailsView.uiState.artistName)
     }
 
     }

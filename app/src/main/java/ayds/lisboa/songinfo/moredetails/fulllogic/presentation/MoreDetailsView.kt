@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.lisboa.songinfo.R
 import ayds.observer.Observable
+import ayds.observer.Subject
 
 interface MoreDetailsView{
     val uiEventObservable: Observable<MoreDetailsUiEvent>
@@ -14,10 +15,14 @@ interface MoreDetailsView{
 }
 
 class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
+    private val onActionSubject = Subject<MoreDetailsUiEvent>()
 
     private lateinit var artistInfoPanel: TextView
     private lateinit var openURLListener: View
     private lateinit var imageLastFMAPI: ImageView
+
+    override val uiEventObservable: Observable<MoreDetailsUiEvent> = onActionSubject
+    override val uiState: MoreDetailsUiState = MoreDetailsUiState()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

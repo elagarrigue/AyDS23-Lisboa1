@@ -10,14 +10,16 @@ import ayds.lisboa.songinfo.moredetails.fulllogic.data.repository.local.ArtistLo
 import ayds.lisboa.songinfo.moredetails.fulllogic.data.repository.local.ArtistLocalStorageImpl
 import ayds.lisboa.songinfo.moredetails.fulllogic.domain.MoreDetailsDomain
 import ayds.lisboa.songinfo.moredetails.fulllogic.domain.MoreDetailsDomainImpl
+import ayds.lisboa.songinfo.moredetails.fulllogic.presentation.MoreDetailsPresenter
+import ayds.lisboa.songinfo.moredetails.fulllogic.presentation.MoreDetailsPresenterImpl
 import ayds.lisboa.songinfo.moredetails.fulllogic.presentation.MoreDetailsView
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 object MoreDetailsInjector {
 
-    private lateinit var moreDetailsDomain : MoreDetailsDomain
-    fun getDomain(): MoreDetailsDomain = moreDetailsDomain
+    private lateinit var moreDetailsPresenter : MoreDetailsPresenter
+    fun getPresenter(): MoreDetailsPresenter = moreDetailsPresenter
 
     fun initMoreDetailsModel(view: MoreDetailsView) {
         val artistLocalStorage : ArtistLocalStorage = ArtistLocalStorageImpl(view as Context)
@@ -27,7 +29,7 @@ object MoreDetailsInjector {
 
         val repository : ArtistRepository = ArtistRepositoryImpl(artistLocalStorage, lastFMService)
 
-        moreDetailsDomain = MoreDetailsDomainImpl(repository)
+        moreDetailsPresenter = MoreDetailsPresenterImpl(repository)
     }
 
     private fun createLastFMAPI(): LastFMAPI {
