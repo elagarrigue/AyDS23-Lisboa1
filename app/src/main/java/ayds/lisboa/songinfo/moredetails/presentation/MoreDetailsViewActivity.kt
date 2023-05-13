@@ -10,16 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import ayds.lisboa.songinfo.R
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
+import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.ArtistData
 import ayds.lisboa.songinfo.moredetails.injector.MoreDetailsInjector
 import ayds.lisboa.songinfo.utils.UtilsInjector
 import ayds.lisboa.songinfo.utils.view.ImageLoader
 
-interface MoreDetailsView {
-    var uiState: MoreDetailsUiState
-}
-
 private const val LOCALLY_SAVED = "[*]"
-class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
+class MoreDetailsViewActivity : AppCompatActivity() {
 
     private lateinit var artistInfoPanel: TextView
     private lateinit var openURLListener: View
@@ -27,8 +24,7 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
     private val imageLoader: ImageLoader = UtilsInjector.imageLoader
 
-
-    override var uiState: MoreDetailsUiState = MoreDetailsUiState()
+    private var uiState: MoreDetailsUiState = MoreDetailsUiState()
 
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"
@@ -80,18 +76,17 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun updateUIState(artist: Artist) {
         when (artist) {
-            is Artist.ArtistData -> updateArtistUIState(artist)
+            is ArtistData -> updateArtistUIState(artist)
             Artist.EmptyArtist -> updateNoResultsUiState()
         }
     }
 
-    private fun updateArtistUIState(artist: Artist.ArtistData) {
+    private fun updateArtistUIState(artist: ArtistData) {
 
         uiState = uiState.copy(
             artistName = artist.artistName,
             infoArtist = artist.infoArtist,
-            url = artist.url,
-            isLocallyStored = artist.isLocallyStored,
+            url = artist.url
         )
     }
 
@@ -99,8 +94,7 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         uiState = uiState.copy(
             artistName = "",
             infoArtist = "",
-            url = "",
-            isLocallyStored = false,
+            url = ""
         )
     }
 
@@ -109,7 +103,6 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
             infoArtist = "$LOCALLY_SAVED $infoArtist"
         }
     }
-
 
     private fun setOpenUrlButtonClickListener(artistURL: String) {
         openURLListener.setOnClickListener {

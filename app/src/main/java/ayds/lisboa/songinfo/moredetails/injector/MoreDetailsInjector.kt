@@ -6,7 +6,6 @@ import ayds.lisboa.songinfo.moredetails.data.repository.ArtistRepositoryImpl
 import ayds.lisboa.songinfo.moredetails.data.repository.external.LastFMServiceImpl
 import ayds.lisboa.songinfo.moredetails.data.repository.local.ArtistLocalStorage
 import ayds.lisboa.songinfo.moredetails.data.repository.local.ArtistLocalStorageImpl
-import ayds.lisboa.songinfo.moredetails.presentation.MoreDetailsView
 import ayds.lisboa.songinfo.moredetails.data.repository.external.JSONToArtistDataResolver
 import ayds.lisboa.songinfo.moredetails.data.repository.external.LastFMAPI
 import ayds.lisboa.songinfo.moredetails.data.repository.external.LastFMService
@@ -23,9 +22,9 @@ object MoreDetailsInjector {
     private lateinit var moreDetailsPresenter : MoreDetailsPresenter
     fun getPresenter(): MoreDetailsPresenter = moreDetailsPresenter
 
-    fun initMoreDetailsPresenter(view: MoreDetailsView) {
+    fun initMoreDetailsPresenter(context: Context) {
         val artistLocalStorage : ArtistLocalStorage =
-            ArtistLocalStorageImpl(view as Context, CursorToArtistDataMapperImpl())
+            ArtistLocalStorageImpl(context, CursorToArtistDataMapperImpl())
 
         val lastFMAPI = createLastFMAPI()
         val lastFMService : LastFMService = LastFMServiceImpl(lastFMAPI, JSONToArtistDataResolver())
