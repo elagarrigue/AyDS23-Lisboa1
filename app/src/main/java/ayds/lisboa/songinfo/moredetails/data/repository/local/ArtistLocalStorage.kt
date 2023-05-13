@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.ArtistData
 
 private const val DATABASE_NAME = "dictionary.db"
-private const val DATABASE_VERSION = 1
+private const val DATABASE_VERSION = 2
 private const val SORT_ORDER = "artist DESC"
 
 interface ArtistLocalStorage {
@@ -25,26 +25,31 @@ internal class ArtistLocalStorageImpl(
     private val projection = arrayOf(
         ID_COLUMN,
         ARTIST_COLUMN,
-        INFO_COLUMN
+        INFO_COLUMN,
+        URL_COLUMN
     )
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(createArtistTableQuery)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        db.execSQL("DROP TABLE IF EXISTS $ARTIST_TABLE")
+        onCreate(db)
+    }
 
     override fun saveArtist(artist: ArtistData) {
-        val artistMap = getArtistInfoMap(artist)
+        val artistMap = getArtistDataMap(artist)
 
         writableDatabase.insert(ARTIST_TABLE, null, artistMap)
     }
 
-    private fun getArtistInfoMap(artist: ArtistData): ContentValues {
+    private fun getArtistDataMap(artist: ArtistData): ContentValues {
         val values = ContentValues()
 
         values.put(ARTIST_COLUMN, artist.artistName)
         values.put(INFO_COLUMN, artist.infoArtist)
+        values.put(URL_COLUMN, artist.url)
         values.put(SOURCE_COLUMN, 1)
 
         return values
