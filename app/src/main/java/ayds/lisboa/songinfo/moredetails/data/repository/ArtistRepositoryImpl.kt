@@ -23,7 +23,7 @@ class ArtistRepositoryImpl(
                 try {
                     artistData = lastFMService.getArtist(artistName)
 
-                    (artistData as? ArtistData)?.let {
+                    artistData?.let {
                         if (it.infoArtist != NO_RESULTS)
                             artistLocalStorage.saveArtist(it)
 
