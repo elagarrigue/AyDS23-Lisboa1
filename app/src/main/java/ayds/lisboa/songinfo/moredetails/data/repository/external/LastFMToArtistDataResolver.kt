@@ -17,10 +17,10 @@ interface LastFMToArtistDataResolver {
 
 internal class JSONToArtistDataResolver : LastFMToArtistDataResolver {
 
-    override fun getArtistFromExternalData(serviceData: String?): ArtistData? =
+    override fun getArtistFromExternalData(artistName: String?): ArtistData? =
         try {
-            serviceData?.let {
-                val jObjectArtist = artistResponseToJson(serviceData)
+            artistName?.let {
+                val jObjectArtist = artistResponseToJson(artistName)
                 ArtistData(jObjectArtist.getArtistName(), jObjectArtist.getFormattingDataArtist(), jObjectArtist.getArtistURL()) }
         } catch (e: Exception) {
             null
