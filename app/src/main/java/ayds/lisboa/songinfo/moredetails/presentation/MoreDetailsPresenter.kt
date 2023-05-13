@@ -29,11 +29,11 @@ internal class MoreDetailsPresenterImpl(private val repository: ArtistRepository
 
     private fun notifyArtist(artistName: String){
         val artistData: Artist = repository.getArtistData(artistName)
-        artistData.getFormattingInfoArtist(artistName)
+        artistData.applyFormattingInfoArtist(artistName)
         artistObservable.notify(artistData)
     }
 
-    private fun Artist.getFormattingInfoArtist(artistName: String) {
+    private fun Artist.applyFormattingInfoArtist(artistName: String) {
         if( this is ArtistData){
             this.infoArtist = textToHtml(this.infoArtist, artistName)
         }
