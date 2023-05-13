@@ -58,7 +58,7 @@ class MoreDetailsViewActivity : AppCompatActivity() {
     }
 
     private fun initProperties() {
-        artistInfoPanel = findViewById(R.id.textPane2)
+        artistInfoPanel = findViewById(R.id.artistInfoPanel)
         openURLListener = findViewById(R.id.openUrlButton)
         imageLastFMAPI = findViewById(R.id.imageView)
     }
