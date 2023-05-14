@@ -3,13 +3,9 @@ package ayds.lisboa.songinfo.moredetails.presentation
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.ArtistData
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
 import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
+import ayds.lisboa.songinfo.moredetails.injector.MoreDetailsInjector
 import ayds.observer.Observable
 import ayds.observer.Subject
-import java.util.*
-
-private const val HTML_START = "<html><div width=400>"
-private const val HTML_END = "</font></div></html>"
-private const val FONT_FACE = "<font face=\"arial\">"
 
 interface MoreDetailsPresenter {
     val artistObservable: Observable<Artist>
@@ -20,6 +16,7 @@ internal class MoreDetailsPresenterImpl(private val repository: ArtistRepository
     MoreDetailsPresenter {
 
     override val artistObservable = Subject<Artist>()
+    private val artistInfoHelper : ArtistInfoHelper = MoreDetailsInjector.artistInfoHelper
 
     override fun getArtistMoreInformation(artistName: String) {
         Thread {
@@ -35,20 +32,8 @@ internal class MoreDetailsPresenterImpl(private val repository: ArtistRepository
 
     private fun Artist.applyFormattingInfoArtist(artistName: String) {
         if( this is ArtistData){
-            this.infoArtist = textToHtml(this.infoArtist, artistName)
+            this.infoArtist = artistInfoHelper.textToHtml(this.infoArtist, artistName)
         }
-    }
-
-    private fun textToHtml(text: String, term: String): String {
-        val builder = StringBuilder()
-        builder.append(HTML_START)
-        builder.append(FONT_FACE)
-        val textWithBold = text.replace("'", " ").replace("\n", "<br>").replace(
-            "(?i)$term".toRegex(), "<b>" + term.uppercase(Locale.getDefault()) + "</b>"
-        )
-        builder.append(textWithBold)
-        builder.append(HTML_END)
-        return builder.toString()
     }
 }
 

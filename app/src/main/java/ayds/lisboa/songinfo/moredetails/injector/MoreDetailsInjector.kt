@@ -10,6 +10,8 @@ import ayds.lisboa.songinfo.moredetails.data.repository.external.JSONToArtistDat
 import ayds.lisboa.songinfo.moredetails.data.repository.external.LastFMAPI
 import ayds.lisboa.songinfo.moredetails.data.repository.external.LastFMService
 import ayds.lisboa.songinfo.moredetails.data.repository.local.CursorToArtistDataMapperImpl
+import ayds.lisboa.songinfo.moredetails.presentation.ArtistInfoHelper
+import ayds.lisboa.songinfo.moredetails.presentation.ArtistInfoHelperImpl
 import ayds.lisboa.songinfo.moredetails.presentation.MoreDetailsPresenter
 import ayds.lisboa.songinfo.moredetails.presentation.MoreDetailsPresenterImpl
 import retrofit2.Retrofit
@@ -20,6 +22,8 @@ private const val ARTIST_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
 object MoreDetailsInjector {
 
     private lateinit var moreDetailsPresenter : MoreDetailsPresenter
+    val artistInfoHelper: ArtistInfoHelper = ArtistInfoHelperImpl()
+
     fun getPresenter(): MoreDetailsPresenter = moreDetailsPresenter
 
     fun initMoreDetailsPresenter(context: Context) {
