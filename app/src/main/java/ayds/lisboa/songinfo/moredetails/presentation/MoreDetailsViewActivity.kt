@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import ayds.lisboa.songinfo.R
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
-import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.ArtistData
 import ayds.lisboa.songinfo.moredetails.injector.MoreDetailsInjector
 import ayds.lisboa.songinfo.utils.UtilsInjector
 import ayds.lisboa.songinfo.utils.view.ImageLoader
@@ -18,7 +17,7 @@ import ayds.lisboa.songinfo.utils.view.ImageLoader
 class MoreDetailsViewActivity : AppCompatActivity() {
 
     private lateinit var artistInfoPanel: TextView
-    private lateinit var openURLListener: View
+    private lateinit var fullArticleButton: View
     private lateinit var imageLastFMAPI: ImageView
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
     private val imageLoader: ImageLoader = UtilsInjector.imageLoader
@@ -58,46 +57,21 @@ class MoreDetailsViewActivity : AppCompatActivity() {
 
     private fun initProperties() {
         artistInfoPanel = findViewById(R.id.artistInfoPanel)
-        openURLListener = findViewById(R.id.openUrlButton)
-        imageLastFMAPI = findViewById(R.id.imageView)
+        fullArticleButton = findViewById(R.id.fullArticleButton)
+        imageLastFMAPI = findViewById(R.id.imageLastFMAPI)
     }
 
     private fun initObservers() {
         moreDetailsPresenter.artistObservable.subscribe { value -> updateArtistInfo(value) }
     }
 
-    private fun updateArtistInfo(artist: Artist) {
-        updateUIState(artist)
-        setOpenUrlButtonClickListener(uiState.url)
+    private fun updateArtistInfo(uiState: MoreDetailsUiState) {
+        setFullArticleButtonListener(uiState.url)
         showArtistInfo(uiState.infoArtist)
     }
 
-    private fun updateUIState(artist: Artist) {
-        when (artist) {
-            is ArtistData -> updateArtistUIState(artist)
-            Artist.EmptyArtist -> updateNoResultsUiState()
-        }
-    }
-
-    private fun updateArtistUIState(artist: ArtistData) {
-
-        uiState = uiState.copy(
-            artistName = artist.artistName,
-            infoArtist = artist.infoArtist,
-            url = artist.url
-        )
-    }
-
-    private fun updateNoResultsUiState() {
-        uiState = uiState.copy(
-            artistName = "",
-            infoArtist = "",
-            url = ""
-        )
-    }
-
-    private fun setOpenUrlButtonClickListener(artistURL: String) {
-        openURLListener.setOnClickListener {
+    private fun setFullArticleButtonListener(artistURL: String) {
+        fullArticleButton.setOnClickListener {
             openURL(artistURL)
         }
     }

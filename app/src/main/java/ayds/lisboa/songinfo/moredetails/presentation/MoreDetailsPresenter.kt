@@ -9,15 +9,17 @@ import ayds.observer.Subject
 
 private const val LOCALLY_SAVED = "[*]"
 interface MoreDetailsPresenter {
-    val artistObservable: Observable<Artist>
+    val artistObservable: Observable<MoreDetailsUiState>
     fun getArtistMoreInformation(artistName: String)
 }
 
-internal class MoreDetailsPresenterImpl(private val repository: ArtistRepository) :
+internal class MoreDetailsPresenterImpl(
+    private val repository: ArtistRepository,
+    private val artistInfoHelper : ArtistInfoHelper) :
     MoreDetailsPresenter {
 
-    override val artistObservable = Subject<Artist>()
-    private val artistInfoHelper : ArtistInfoHelper = MoreDetailsInjector.artistInfoHelper
+    override val artistObservable = Subject<MoreDetailsUiState>()
+    private var uiState: MoreDetailsUiState = MoreDetailsUiState()
 
     override fun getArtistMoreInformation(artistName: String) {
         Thread {
@@ -29,7 +31,31 @@ internal class MoreDetailsPresenterImpl(private val repository: ArtistRepository
         val artistData: Artist = repository.getArtistData(artistName)
         artistData.applyFormattingInfoArtist(artistName)
         artistData.addLocallySavedMarkToInfo()
-        artistObservable.notify(artistData)
+        updateUIState(artistData)
+        artistObservable.notify(uiState)
+    }
+
+    private fun updateUIState(artist: Artist) {
+        when (artist) {
+            is ArtistData -> updateArtistUIState(artist)
+            Artist.EmptyArtist -> updateNoResultsUiState()
+        }
+    }
+    private fun updateArtistUIState(artist: ArtistData) {
+
+        uiState = uiState.copy(
+            artistName = artist.artistName,
+            infoArtist = artist.infoArtist,
+            url = artist.url
+        )
+    }
+
+    private fun updateNoResultsUiState() {
+        uiState = uiState.copy(
+            artistName = "",
+            infoArtist = "",
+            url = ""
+        )
     }
 
     private fun Artist.applyFormattingInfoArtist(artistName: String) {

@@ -22,7 +22,6 @@ private const val ARTIST_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
 object MoreDetailsInjector {
 
     private lateinit var moreDetailsPresenter : MoreDetailsPresenter
-    val artistInfoHelper: ArtistInfoHelper = ArtistInfoHelperImpl()
 
     fun getPresenter(): MoreDetailsPresenter = moreDetailsPresenter
 
@@ -35,7 +34,7 @@ object MoreDetailsInjector {
 
         val repository : ArtistRepository = ArtistRepositoryImpl(artistLocalStorage, lastFMService)
 
-        moreDetailsPresenter = MoreDetailsPresenterImpl(repository)
+        moreDetailsPresenter = MoreDetailsPresenterImpl(repository, ArtistInfoHelperImpl())
     }
 
     private fun createLastFMAPI(): LastFMAPI {
