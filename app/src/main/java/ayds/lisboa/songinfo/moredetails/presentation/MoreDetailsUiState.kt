@@ -3,7 +3,6 @@ data class MoreDetailsUiState (
     val artistName: String = "",
     var infoArtist: String = "",
     val url: String = "",
-    val isLocallyStored: Boolean = false,
     val imageUrl: String = DEFAULT_IMAGE
 ){
     companion object {
