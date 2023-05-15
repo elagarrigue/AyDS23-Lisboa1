@@ -15,7 +15,6 @@ import ayds.lisboa.songinfo.moredetails.injector.MoreDetailsInjector
 import ayds.lisboa.songinfo.utils.UtilsInjector
 import ayds.lisboa.songinfo.utils.view.ImageLoader
 
-private const val LOCALLY_SAVED = "[*]"
 class MoreDetailsViewActivity : AppCompatActivity() {
 
     private lateinit var artistInfoPanel: TextView
@@ -69,7 +68,6 @@ class MoreDetailsViewActivity : AppCompatActivity() {
 
     private fun updateArtistInfo(artist: Artist) {
         updateUIState(artist)
-        uiState.addLocallySavedMarkToInfo()
         setOpenUrlButtonClickListener(uiState.url)
         showArtistInfo(uiState.infoArtist)
     }
@@ -96,12 +94,6 @@ class MoreDetailsViewActivity : AppCompatActivity() {
             infoArtist = "",
             url = ""
         )
-    }
-
-    private fun MoreDetailsUiState.addLocallySavedMarkToInfo() {
-        if (isLocallyStored) {
-            infoArtist = "$LOCALLY_SAVED $infoArtist"
-        }
     }
 
     private fun setOpenUrlButtonClickListener(artistURL: String) {
