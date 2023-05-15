@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import ayds.lisboa.songinfo.R
-import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
 import ayds.lisboa.songinfo.moredetails.injector.MoreDetailsInjector
 import ayds.lisboa.songinfo.utils.UtilsInjector
 import ayds.lisboa.songinfo.utils.view.ImageLoader
@@ -22,7 +21,6 @@ class MoreDetailsViewActivity : AppCompatActivity() {
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
     private val imageLoader: ImageLoader = UtilsInjector.imageLoader
 
-    private var uiState: MoreDetailsUiState = MoreDetailsUiState()
 
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"
@@ -38,10 +36,10 @@ class MoreDetailsViewActivity : AppCompatActivity() {
         initArtistName()
     }
 
-    private fun showArtistInfo(infoArtist: String?) {
+    private fun showArtistInfo(uiState: MoreDetailsUiState) {
         runOnUiThread {
             imageLoader.loadImageIntoView(uiState.imageUrl, imageLastFMAPI)
-            artistInfoPanel.text = infoArtist?.let { HtmlCompat.fromHtml(it, 0) }
+            artistInfoPanel.text = uiState.infoArtist.let { HtmlCompat.fromHtml(it, 0) }
         }
     }
 
@@ -67,7 +65,7 @@ class MoreDetailsViewActivity : AppCompatActivity() {
 
     private fun updateArtistInfo(uiState: MoreDetailsUiState) {
         setFullArticleButtonListener(uiState.url)
-        showArtistInfo(uiState.infoArtist)
+        showArtistInfo(uiState)
     }
 
     private fun setFullArticleButtonListener(artistURL: String) {

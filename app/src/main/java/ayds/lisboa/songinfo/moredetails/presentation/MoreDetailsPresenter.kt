@@ -3,7 +3,6 @@ package ayds.lisboa.songinfo.moredetails.presentation
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.ArtistData
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
 import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
-import ayds.lisboa.songinfo.moredetails.injector.MoreDetailsInjector
 import ayds.observer.Observable
 import ayds.observer.Subject
 
