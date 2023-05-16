@@ -7,8 +7,6 @@ import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.ArtistData
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.EmptyArtist
 
-private const val NO_RESULTS = "No results"
-
 class ArtistRepositoryImpl(
     private val artistLocalStorage: ArtistLocalStorage,
     private val lastFMService: LastFMService
