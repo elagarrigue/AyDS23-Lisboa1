@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageLastFMAPI"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="16dp"
@@ -19,14 +19,14 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/openUrlButton"
+        app:layout_constraintBottom_toTopOf="@id/fullArticleButton"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView"
+        app:layout_constraintTop_toBottomOf="@id/imageLastFMAPI"
         >
 
         <TextView
-            android:id="@+id/textPane2"
+            android:id="@+id/artistInfoPanel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
@@ -38,7 +38,7 @@
 
 
     <Button
-        android:id="@+id/openUrlButton"
+        android:id="@+id/fullArticleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
