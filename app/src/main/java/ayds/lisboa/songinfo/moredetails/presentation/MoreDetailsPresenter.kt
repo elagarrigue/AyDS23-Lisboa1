@@ -7,6 +7,8 @@ import ayds.observer.Observable
 import ayds.observer.Subject
 
 private const val LOCALLY_SAVED = "[*]"
+private const val NO_RESULTS = "No results"
+
 interface MoreDetailsPresenter {
     val artistObservable: Observable<MoreDetailsUiState>
     fun getArtistMoreInformation(artistName: String)
@@ -52,7 +54,7 @@ internal class MoreDetailsPresenterImpl(
     private fun updateNoResultsUiState() {
         uiState = uiState.copy(
             artistName = "",
-            infoArtist = "",
+            infoArtist = NO_RESULTS,
             url = ""
         )
     }

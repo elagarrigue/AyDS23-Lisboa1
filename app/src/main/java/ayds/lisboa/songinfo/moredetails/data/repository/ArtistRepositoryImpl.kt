@@ -24,9 +24,7 @@ class ArtistRepositoryImpl(
                     artistData = lastFMService.getArtist(artistName)
 
                     artistData?.let {
-                        if (it.infoArtist != NO_RESULTS)
-                            artistLocalStorage.saveArtist(it)
-
+                        artistLocalStorage.saveArtist(it)
                     }
                 } catch (e: Exception) {
                     artistData = null
