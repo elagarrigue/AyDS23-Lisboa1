@@ -1,7 +1,7 @@
 package ayds.lisboa.songinfo.home.controller
 
 import ayds.lisboa.songinfo.home.model.HomeModel
-import ayds.lisboa.songinfo.home.model.entities.Song
+import ayds.lisboa.songinfo.home.model.entities.Song.SpotifySong
 import ayds.lisboa.songinfo.home.view.HomeUiEvent
 import ayds.lisboa.songinfo.home.view.HomeUiState
 import ayds.lisboa.songinfo.home.view.HomeView
@@ -43,7 +43,7 @@ class HomeControllerTest {
     @Test
     fun `on more details event should navigate to more details`() {
         every { homeView.uiState } returns HomeUiState(songId = "id")
-        val song: Song = mockk { every { artistName } returns "artist" }
+        val song: SpotifySong = mockk { every { artistName } returns "artist" }
         every { homeModel.getSongById("id") } returns song
 
         onActionSubject.notify(HomeUiEvent.MoreDetails)
