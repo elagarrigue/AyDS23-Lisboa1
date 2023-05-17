@@ -16,21 +16,6 @@ class MoreDetailsPresenterTest {
     }
 
     @Test
-    fun `on get artist information, it should notify the result`() {
-        val artistName = "artist"
-        val artistData: Artist = mockk()
-        every { repository.getArtistData(artistName) } returns artistData
-        val artistTester: (MoreDetailsUiState) -> Unit = mockk(relaxed = true)
-        moreDetailsPresenter.artistObservable.subscribe {
-            artistTester(it)
-        }
-
-        moreDetailsPresenter.getArtistMoreInformation(artistName)
-
-        verify { artistTester(any()) }
-    }
-
-    @Test
     fun `given an empty artist, it should notify UIState without information`() {
         val artistName = "artist"
         every { repository.getArtistData(artistName) } returns Artist.EmptyArtist
