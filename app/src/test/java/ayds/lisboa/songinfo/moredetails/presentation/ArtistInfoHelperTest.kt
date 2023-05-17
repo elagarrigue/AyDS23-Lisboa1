@@ -1,5 +1,5 @@
-import ayds.lisboa.songinfo.moredetails.presentation.ArtistInfoHelper
-import ayds.lisboa.songinfo.moredetails.presentation.ArtistInfoHelperImpl
+package ayds.lisboa.songinfo.moredetails.presentation
+
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

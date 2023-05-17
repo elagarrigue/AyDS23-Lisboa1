@@ -1,18 +1,14 @@
-package moredetails.presentation
+package ayds.lisboa.songinfo.moredetails.presentation
 
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
 import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
-import ayds.lisboa.songinfo.moredetails.presentation.ArtistInfoHelper
-import ayds.lisboa.songinfo.moredetails.presentation.MoreDetailsPresenter
-import ayds.lisboa.songinfo.moredetails.presentation.MoreDetailsPresenterImpl
-import ayds.lisboa.songinfo.moredetails.presentation.MoreDetailsUiState
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 
 class MoreDetailsPresenterTest {
-    private val repository : ArtistRepository = mockk()
+    private val repository : ArtistRepository = mockk(relaxUnitFun = true)
     private val helper: ArtistInfoHelper = mockk(relaxUnitFun = true)
 
     private val moreDetailsPresenter: MoreDetailsPresenter by lazy {
@@ -25,7 +21,7 @@ class MoreDetailsPresenterTest {
         val artistData: Artist = mockk()
         every { repository.getArtistData(artistName) } returns artistData
         val artistTester: (MoreDetailsUiState) -> Unit = mockk(relaxed = true)
-        moreDetailsPresenter.artistObservable.subscribe() {
+        moreDetailsPresenter.artistObservable.subscribe {
             artistTester(it)
         }
 
@@ -45,8 +41,37 @@ class MoreDetailsPresenterTest {
 
         moreDetailsPresenter.getArtistMoreInformation(artistName)
 
-        verify {artistTester(MoreDetailsUiState(infoArtist = "No results"))}
+        verify {artistTester(MoreDetailsUiState("","No results",""))}
     }
 
+    @Test
+    fun `given a not locally stored artist, it should notify UIState with artist information`() {
+        val artistData = Artist.ArtistData("artist", "info", "url", false)
+        every { repository.getArtistData("artist") } returns artistData
+        every { helper.textToHtml("info","artist") } returns "info"
+        val artistTester: (MoreDetailsUiState) -> Unit = mockk(relaxed = true)
+        moreDetailsPresenter.artistObservable.subscribe {
+            artistTester(it)
+        }
+
+        moreDetailsPresenter.getArtistMoreInformation("artist")
+
+        verify {artistTester(MoreDetailsUiState("artist","info","url"))}
+    }
+
+    @Test
+    fun `given a locally stored artist, it should notify UIState with locally stored mark and artist information`() {
+        val artistData = Artist.ArtistData("artist", "info", "url", true)
+        every { repository.getArtistData("artist") } returns artistData
+        every { helper.textToHtml("info","artist") } returns "info"
+        val artistTester: (MoreDetailsUiState) -> Unit = mockk(relaxed = true)
+        moreDetailsPresenter.artistObservable.subscribe {
+            artistTester(it)
+        }
+
+        moreDetailsPresenter.getArtistMoreInformation("artist")
+
+        verify {artistTester(MoreDetailsUiState("artist","[*] info","url"))}
+    }
 
 }
