@@ -9,12 +9,15 @@ import org.junit.Test
 
 class SongDescriptionHelperTest {
 
-    private val formatterFactory : FormatterFactoryImpl = mockk(relaxUnitFun = true)
-    private val songDescriptionHelper by lazy { SongDescriptionHelperImpl(formatterFactory) }
+    private val formatterFactory : FormatterFactory = mockk(relaxUnitFun = true)
+    private val dateFormatWrapper : DateFormatWrapper = mockk()
+
+    private val songDescriptionHelper : SongDescriptionHelper by lazy {
+        SongDescriptionHelperImpl(formatterFactory)
+    }
 
     @Test
     fun `given a local song it should return the description`() {
-        every {formatterFactory.getWrapper("year")} returns DateFormatWrapperYear()
         val song: Song = SpotifySong(
             "id",
             "Plush",
@@ -26,6 +29,9 @@ class SongDescriptionHelperTest {
             "year",
             true,
         )
+
+        every { formatterFactory.getWrapper("year") } returns dateFormatWrapper
+        every { dateFormatWrapper.getReleaseDateFormat("1992-01-01")} returns "1992 (Leap year)"
 
         val result = songDescriptionHelper.getSongDescriptionText(song)
 
@@ -40,7 +46,6 @@ class SongDescriptionHelperTest {
 
     @Test
     fun `given a non local song it should return the description`() {
-        every {formatterFactory.getWrapper("year")} returns DateFormatWrapperYear()
         val song: Song = SpotifySong(
             "id",
             "Plush",
@@ -52,6 +57,9 @@ class SongDescriptionHelperTest {
             "year",
             false,
         )
+
+        every { formatterFactory.getWrapper("year") } returns dateFormatWrapper
+        every { dateFormatWrapper.getReleaseDateFormat("1992-01-01")} returns "1992 (Leap year)"
 
         val result = songDescriptionHelper.getSongDescriptionText(song)
 
