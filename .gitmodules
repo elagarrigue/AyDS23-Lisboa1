@@ -1,0 +1,3 @@
+[submodule "libs/LastFMData"]
+	path = libs/LastFMData
+	url = git@github.com:Federico-manolo/Lisboa-1--Submodule-External-Service.git
