@@ -20,7 +20,7 @@ class ArtistRepositoryImpl(
             artistData != null -> artistData.markArtistAsLocal()
             else -> {
                 try {
-                    var lastFMArtistData = lastFMService.getArtist(artistName)
+                    var lastFMArtistData = lastFMService.getArtistData(artistName)
                     artistData = adaptLastFMArtistData(lastFMArtistData)
                     artistData?.let {
                         artistLocalStorage.saveArtist(it)
