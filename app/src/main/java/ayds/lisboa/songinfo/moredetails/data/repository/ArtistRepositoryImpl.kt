@@ -1,7 +1,8 @@
 package ayds.lisboa.songinfo.moredetails.data.repository
 
 import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
-import ayds.lisboa.songinfo.moredetails.data.repository.external.LastFMService
+import ayds.lisboa1.lastfm.LastFMService
+import ayds.lisboa1.lastfm.LastFMArtistData
 import ayds.lisboa.songinfo.moredetails.data.repository.local.ArtistLocalStorage
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.ArtistData
@@ -19,8 +20,8 @@ class ArtistRepositoryImpl(
             artistData != null -> artistData.markArtistAsLocal()
             else -> {
                 try {
-                    artistData = lastFMService.getArtist(artistName)
-
+                    var lastFMArtistData = lastFMService.getArtist(artistName)
+                    artistData = adaptLastFMArtistData(lastFMArtistData)
                     artistData?.let {
                         artistLocalStorage.saveArtist(it)
                     }
@@ -31,6 +32,10 @@ class ArtistRepositoryImpl(
         }
         return artistData ?: EmptyArtist
     }
+
+    private fun adaptLastFMArtistData(lastFMArtistData: LastFMArtistData?): ArtistData? =
+        lastFMArtistData?.let {ArtistData(lastFMArtistData.artistName,lastFMArtistData.artisInfo,lastFMArtistData.artistUrl)}
+
 
     private fun ArtistData.markArtistAsLocal() {
         isLocallyStored = true
