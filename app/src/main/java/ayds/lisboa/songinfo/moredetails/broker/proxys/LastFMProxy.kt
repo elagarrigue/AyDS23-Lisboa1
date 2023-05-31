@@ -1,6 +1,8 @@
 package ayds.lisboa.songinfo.moredetails.broker.proxys
 
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
+import ayds.lisboa.songinfo.moredetails.domain.entities.Card.CardData
+import ayds.lisboa.songinfo.moredetails.domain.entities.Card.EmptyCard
 import ayds.lisboa1.lastfm.LASTFM_IMAGE
 import ayds.lisboa1.lastfm.LastFMArtistData
 import ayds.lisboa1.lastfm.LastFMService
@@ -10,14 +12,19 @@ internal class LastFMProxy(
 ) : ServiceProxy {
 
     override fun getCardFromService(artist: String): Card {
-        val artistData = lastFMService.getArtistData(artist)
-            ?: throw Exception("Error al obtener los datos del artista")
-
-        return mapLastFMArtistToCard(artistData)
+        val artistCard =
+        try {
+            val artistData = (lastFMService.getArtistData(artist) as LastFMArtistData)
+            mapLastFMArtistToCard(artistData)
+        }
+        catch(e: Exception) {
+            EmptyCard
+        }
+        return artistCard
     }
 
     private fun mapLastFMArtistToCard(lastFMArtistData: LastFMArtistData): Card {
-        return Card.CardData(
+        return CardData(
             artistName = lastFMArtistData.artistName,
             description = lastFMArtistData.artisInfo,
             infoURL = lastFMArtistData.artistUrl,
