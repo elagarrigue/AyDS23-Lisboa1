@@ -5,11 +5,9 @@ import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 import ayds.winchester2.wikipediaexternal.data.wikipedia.WikipediaTrackService
 import ayds.winchester2.wikipediaexternal.data.wikipedia.entity.ArtistInfo
 
-private const val WIKIPEDIASOURCE = "Wikipedia"
-
 class WikipediaProxy(
     private val wikipediaService: WikipediaTrackService
-): ServiceProxy {
+) : ServiceProxy {
 
     override fun getCardFromService(artist: String): Card? {
         val artistData = wikipediaService.getInfo(artist)
@@ -23,7 +21,7 @@ class WikipediaProxy(
             artistName = artist,
             description = wikipediaArtistData.description,
             infoURL = wikipediaArtistData.wikipediaURL,
-            source = WIKIPEDIASOURCE,
+            source = Card.Source.Wikipedia,
             sourceLogoURL = wikipediaArtistData.wikipediaLogoURL,
         )
     }
