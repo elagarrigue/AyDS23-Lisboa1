@@ -52,6 +52,8 @@ internal class ArtistLocalStorageImpl(
         values.put(ARTIST_COLUMN, artist.artistName)
         values.put(DESCRIPTION_COLUMN, artist.description)
         values.put(INFO_URL_COLUMN, artist.infoURL)
+        values.put(SOURCE_COLUMN, artist.source.ordinal)
+        values.put(SOURCE_LOGO_COLUMN, artist.sourceLogoURL)
 
         return values
     }
