@@ -1,6 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.broker.proxys
 
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
+import ayds.lisboa1.lastfm.LASTFM_IMAGE
 import ayds.lisboa1.lastfm.LastFMArtistData
 import ayds.lisboa1.lastfm.LastFMService
 
@@ -19,7 +20,7 @@ internal class LastFMProxy(
             description = lastFMArtistData.artisInfo,
             infoURL = lastFMArtistData.artistUrl,
             source = Card.Source.LastFM,
-            sourceLogoURL = "",
+            sourceLogoURL = LASTFM_IMAGE,
         )
     }
 }
