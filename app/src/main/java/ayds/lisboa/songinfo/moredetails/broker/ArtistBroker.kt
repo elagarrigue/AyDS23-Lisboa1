@@ -4,14 +4,14 @@ import ayds.lisboa.songinfo.moredetails.broker.proxys.ServiceProxy
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 
 interface ArtistBroker {
-    fun getCard(artist: String): MutableList<Card?>
+    fun getCard(artist: String): List<Card?>
 }
 
 internal class ArtistBrokerImpl(
-    private val proxyList: MutableList<ServiceProxy>
+    private val proxyList: List<ServiceProxy>
 ) : ArtistBroker {
 
-    override fun getCard(artist: String): MutableList<Card?> {
+    override fun getCard(artist: String): List<Card?> {
         val artistCards: MutableList<Card?> = ArrayList()
         for (proxyService in proxyList) {
             val card = proxyService.getCardFromService(artist)
