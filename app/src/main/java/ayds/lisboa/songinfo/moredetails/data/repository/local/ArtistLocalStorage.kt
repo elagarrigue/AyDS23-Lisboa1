@@ -13,7 +13,7 @@ private const val SORT_ORDER = "artist DESC"
 
 interface ArtistLocalStorage {
     fun saveArtist(artist: CardData)
-    fun getArtist(artist: String): CardData?
+    fun getArtist(artist: String): List<CardData>?
 }
 
 internal class ArtistLocalStorageImpl(
@@ -58,10 +58,15 @@ internal class ArtistLocalStorageImpl(
         return values
     }
 
-    override fun getArtist(artist: String): CardData? {
+    override fun getArtist(artist: String): List<CardData> {
         val artistCursor = getArtistCursor(artist)
+        val artistCards =  mutableListOf<CardData>()
 
-        return cursorToArtistDataMapper.map(artistCursor)
+        while(artistCursor.moveToNext()){
+            val artistCardData = cursorToArtistDataMapper.map(artistCursor)
+            artistCardData?.let{artistCards.add(it)}
+        }
+        return artistCards
     }
 
     private fun getArtistCursor(artist: String): Cursor {
