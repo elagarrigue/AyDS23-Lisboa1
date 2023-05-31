@@ -2,10 +2,8 @@ package ayds.lisboa.songinfo.moredetails.broker.proxys
 
 import ayds.aknewyork.external.service.data.NYTimesService
 import ayds.aknewyork.external.service.data.entities.ArtistDataExternal
+import ayds.aknewyork.external.service.data.entities.NYT_LOGO_URL
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
-
-private const val NYTIMESLOGO =
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVioI832nuYIXqzySD8cOXRZEcdlAj3KfxA62UEC4FhrHVe0f7oZXp3_mSFG7nIcUKhg&usqp=CAU"
 
 class NYTimesProxy(
     private val nyTimesService: NYTimesService
@@ -23,7 +21,7 @@ class NYTimesProxy(
                 description = nyTimesArtistData.info.toString(),
                 infoURL = nyTimesArtistData.url,
                 source = Card.Source.NYTimes,
-                sourceLogoURL = NYTIMESLOGO,
+                sourceLogoURL = NYT_LOGO_URL,
             )
         }
     }
