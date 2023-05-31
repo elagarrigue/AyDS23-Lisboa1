@@ -1,7 +1,12 @@
 package ayds.lisboa.songinfo.moredetails.presentation
-data class MoreDetailsUiState (
+data class MoreDetailsUiState(
+    val artistCards: List<CardDataState>
+)
+
+data class CardDataState(
     val artistName: String = "",
-    var infoArtist: String = "",
-    val url: String = "",
-    val imageUrl: String = ""
+    val description: String = "",
+    val infoURL: String = "",
+    val source: String = "",
+    val sourceLogo: String = "",
 )
