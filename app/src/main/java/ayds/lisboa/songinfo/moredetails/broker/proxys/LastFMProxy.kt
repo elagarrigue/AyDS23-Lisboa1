@@ -9,9 +9,11 @@ internal class LastFMProxy(
     private val lastFMService: LastFMService
 ) : ServiceProxy {
 
-    override fun getCardFromService(artist: String): Card? {
+    override fun getCardFromService(artist: String): Card {
         val artistData = lastFMService.getArtistData(artist)
-        return artistData?.let { mapLastFMArtistToCard(it) }
+            ?: throw Exception("Error al obtener los datos del artista")
+
+        return mapLastFMArtistToCard(artistData)
     }
 
     private fun mapLastFMArtistToCard(lastFMArtistData: LastFMArtistData): Card {

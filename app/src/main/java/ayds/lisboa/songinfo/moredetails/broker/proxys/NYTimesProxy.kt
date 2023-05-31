@@ -9,7 +9,7 @@ class NYTimesProxy(
     private val nyTimesService: NYTimesService
 ) : ServiceProxy {
 
-    override fun getCardFromService(artist: String): Card? {
+    override fun getCardFromService(artist: String): Card {
         val artistData = nyTimesService.getArtistInfo(artist)
         return mapNYTimesArtistToCard(artistData)
     }

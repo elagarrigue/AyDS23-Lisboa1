@@ -8,11 +8,10 @@ class WikipediaProxy(
     private val wikipediaService: WikipediaTrackService
 ) : ServiceProxy {
 
-    override fun getCardFromService(artist: String): Card? {
+    override fun getCardFromService(artist: String): Card {
         val artistData = wikipediaService.getInfo(artist)
-        return artistData?.let {
-            mapWikipediaArtistToCard(artist, artistData)
-        }
+            ?: throw Exception("Error al obtener los datos del artista")
+        return mapWikipediaArtistToCard(artist, artistData)
     }
 
     private fun mapWikipediaArtistToCard(artist: String, wikipediaArtistData: ArtistInfo): Card {
