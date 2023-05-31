@@ -1,7 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.presentation
 
-import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.ArtistData
-import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
+import ayds.lisboa.songinfo.moredetails.domain.entities.Card.CardData
+import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
 import ayds.observer.Observable
 import ayds.observer.Subject
@@ -29,25 +29,25 @@ internal class MoreDetailsPresenterImpl(
     }
 
     private fun notifyArtist(artistName: String){
-        val artistData: Artist = repository.getArtistData(artistName)
+        val artistData: Card = repository.getArtistData(artistName)
         artistData.applyFormattingInfoArtist(artistName)
         artistData.addLocallySavedMarkToInfo()
         updateUIState(artistData)
         artistObservable.notify(uiState)
     }
 
-    private fun updateUIState(artist: Artist) {
+    private fun updateUIState(artist: Card) {
         when (artist) {
-            is ArtistData -> updateArtistUIState(artist)
-            Artist.EmptyArtist -> updateNoResultsUiState()
+            is CardData -> updateArtistUIState(artist)
+            Card.EmptyCard -> updateNoResultsUiState()
         }
     }
-    private fun updateArtistUIState(artist: ArtistData) {
+    private fun updateArtistUIState(artist: CardData) {
 
         uiState = uiState.copy(
             artistName = artist.artistName,
-            infoArtist = artist.infoArtist,
-            url = artist.url
+            infoArtist = artist.description,
+            url = artist.infoURL
         )
     }
 
@@ -59,16 +59,16 @@ internal class MoreDetailsPresenterImpl(
         )
     }
 
-    private fun Artist.applyFormattingInfoArtist(artistName: String) {
-        if( this is ArtistData){
-            this.infoArtist = artistInfoHelper.textToHtml(this.infoArtist, artistName)
+    private fun Card.applyFormattingInfoArtist(artistName: String) {
+        if( this is CardData){
+            this.description = artistInfoHelper.textToHtml(this.description, artistName)
         }
     }
 
-    private fun Artist.addLocallySavedMarkToInfo() {
-     if (this is ArtistData) {
+    private fun Card.addLocallySavedMarkToInfo() {
+     if (this is CardData) {
          if(isLocallyStored)
-             infoArtist = "$LOCALLY_SAVED $infoArtist"
+             description = "$LOCALLY_SAVED $description"
      }
  }
 }

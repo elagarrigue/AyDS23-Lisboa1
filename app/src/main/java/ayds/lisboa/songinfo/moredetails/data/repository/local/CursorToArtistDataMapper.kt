@@ -1,23 +1,23 @@
 package ayds.lisboa.songinfo.moredetails.data.repository.local
 
 import android.database.Cursor
-import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.ArtistData
+import ayds.lisboa.songinfo.moredetails.domain.entities.Card.CardData
 import java.sql.SQLException
 
 interface CursorToArtistDataMapper {
-    fun map(cursor: Cursor): ArtistData?
+    fun map(cursor: Cursor): CardData?
 }
 
 internal class CursorToArtistDataMapperImpl : CursorToArtistDataMapper {
 
-    override fun map(cursor: Cursor): ArtistData? =
+    override fun map(cursor: Cursor): CardData? =
         try {
             with(cursor) {
                 if(moveToNext()) {
-                    ArtistData(
+                    CardData(
                         artistName = getString(getColumnIndexOrThrow(ARTIST_COLUMN)),
-                        infoArtist = getString(getColumnIndexOrThrow(INFO_COLUMN)),
-                        url = getString(getColumnIndexOrThrow(URL_COLUMN))
+                        description = getString(getColumnIndexOrThrow(INFO_COLUMN)),
+                        infoURL = getString(getColumnIndexOrThrow(URL_COLUMN))
                     )
                 }
                 else {

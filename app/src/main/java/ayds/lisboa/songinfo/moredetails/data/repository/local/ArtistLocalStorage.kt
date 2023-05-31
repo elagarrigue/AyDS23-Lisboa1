@@ -5,15 +5,15 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.ArtistData
+import ayds.lisboa.songinfo.moredetails.domain.entities.Card.CardData
 
 private const val DATABASE_NAME = "dictionary.db"
 private const val DATABASE_VERSION = 2
 private const val SORT_ORDER = "artist DESC"
 
 interface ArtistLocalStorage {
-    fun saveArtist(artist: ArtistData)
-    fun getArtist(artist: String): ArtistData?
+    fun saveArtist(artist: CardData)
+    fun getArtist(artist: String): CardData?
 }
 
 internal class ArtistLocalStorageImpl(
@@ -38,24 +38,24 @@ internal class ArtistLocalStorageImpl(
         onCreate(db)
     }
 
-    override fun saveArtist(artist: ArtistData) {
+    override fun saveArtist(artist: CardData) {
         val artistMap = getArtistDataMap(artist)
 
         writableDatabase.insert(ARTIST_TABLE, null, artistMap)
     }
 
-    private fun getArtistDataMap(artist: ArtistData): ContentValues {
+    private fun getArtistDataMap(artist: CardData): ContentValues {
         val values = ContentValues()
 
         values.put(ARTIST_COLUMN, artist.artistName)
-        values.put(INFO_COLUMN, artist.infoArtist)
-        values.put(URL_COLUMN, artist.url)
+        values.put(INFO_COLUMN, artist.description)
+        values.put(URL_COLUMN, artist.infoURL)
         values.put(SOURCE_COLUMN, 1)
 
         return values
     }
 
-    override fun getArtist(artist: String): ArtistData? {
+    override fun getArtist(artist: String): CardData? {
         val artistCursor = getArtistCursor(artist)
 
         return cursorToArtistDataMapper.map(artistCursor)
