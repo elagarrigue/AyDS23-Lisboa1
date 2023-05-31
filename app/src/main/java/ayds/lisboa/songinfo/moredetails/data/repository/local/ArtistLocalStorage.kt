@@ -25,8 +25,10 @@ internal class ArtistLocalStorageImpl(
     private val projection = arrayOf(
         ID_COLUMN,
         ARTIST_COLUMN,
-        INFO_COLUMN,
-        URL_COLUMN
+        DESCRIPTION_COLUMN,
+        INFO_URL_COLUMN,
+        SOURCE_COLUMN,
+        SOURCE_LOGO_COLUMN
     )
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -48,9 +50,8 @@ internal class ArtistLocalStorageImpl(
         val values = ContentValues()
 
         values.put(ARTIST_COLUMN, artist.artistName)
-        values.put(INFO_COLUMN, artist.description)
-        values.put(URL_COLUMN, artist.infoURL)
-        values.put(SOURCE_COLUMN, 1)
+        values.put(DESCRIPTION_COLUMN, artist.description)
+        values.put(INFO_URL_COLUMN, artist.infoURL)
 
         return values
     }
