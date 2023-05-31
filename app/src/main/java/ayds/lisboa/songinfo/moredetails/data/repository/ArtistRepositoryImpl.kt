@@ -12,27 +12,35 @@ class ArtistRepositoryImpl(
     private val broker: ArtistBroker
 ) : ArtistRepository {
 
-    override fun getArtistData(artistName: String): Card {
-        var artistData = artistLocalStorage.getArtist(artistName)
+    override fun getArtistData(artistName: String): List<Card> {
+        var cardList: List<Card> = artistLocalStorage.getArtist(artistName)
 
         when {
-            artistData != null -> artistData.markArtistAsLocal()
+            cardList != null -> {
+                    cardList.markCardsAsLocal()
+            }
             else -> {
-                try {
-                    val cardList = broker.getCard(artistName)
-                    for(card in cardList)
-                        if(card is CardData)
-                            artistLocalStorage.saveArtist(card)
-                } catch (e: Exception) {
-                    artistData = null
-                }
+                cardList = broker.getCard(artistName)
+                cardList.saveCards()
             }
         }
-        return artistData ?: EmptyCard
+        return cardList
     }
 
-    private fun CardData.markArtistAsLocal() {
-        isLocallyStored = true
+    private fun List<Card>.markCardsAsLocal() {
+        for (card in this) {
+            if(card is CardData) {
+                card.isLocallyStored = true
+            }
+        }
+    }
+
+    private fun List<Card>.saveCards() {
+        for (card in this) {
+            if(card is CardData) {
+                artistLocalStorage.saveArtist(card)
+            }
+        }
     }
 }
 
