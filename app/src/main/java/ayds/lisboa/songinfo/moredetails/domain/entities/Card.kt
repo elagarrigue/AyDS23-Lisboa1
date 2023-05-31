@@ -1,9 +1,5 @@
 package ayds.lisboa.songinfo.moredetails.domain.entities
 
-private const val LASTFMSOURCE = "LastFM"
-private const val NYTIMESSOURCE = "New York Times"
-private const val WIKIPEDIASOURCE = "Wikipedia"
-
 sealed class Card {
     data class CardData(
         var artistName: String,
@@ -17,9 +13,9 @@ sealed class Card {
     object EmptyCard : Card()
 
     enum class Source {
-        LASTFMSOURCE,
-        NYTIMESSOURCE,
-        WIKIPEDIASOURCE,
+        LastFM,
+        NYTimes,
+        Wikipedia,
     }
 
 }
