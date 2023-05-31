@@ -6,10 +6,10 @@ import ayds.lisboa.songinfo.moredetails.data.repository.ArtistBroker
 import ayds.lisboa.songinfo.moredetails.data.repository.ArtistBrokerImpl
 import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
 import ayds.lisboa.songinfo.moredetails.data.repository.ArtistRepositoryImpl
-import ayds.lisboa.songinfo.moredetails.data.repository.LastFMProxy
-import ayds.lisboa.songinfo.moredetails.data.repository.NYTimesProxy
+import ayds.lisboa.songinfo.moredetails.data.repository.proxys.LastFMProxy
+import ayds.lisboa.songinfo.moredetails.data.repository.proxys.NYTimesProxy
 import ayds.lisboa.songinfo.moredetails.data.repository.ServiceProxy
-import ayds.lisboa.songinfo.moredetails.data.repository.WikipediaProxy
+import ayds.lisboa.songinfo.moredetails.data.repository.proxys.WikipediaProxy
 import ayds.lisboa.songinfo.moredetails.data.repository.local.ArtistLocalStorage
 import ayds.lisboa.songinfo.moredetails.data.repository.local.ArtistLocalStorageImpl
 import ayds.lisboa.songinfo.moredetails.data.repository.local.CursorToArtistDataMapperImpl
