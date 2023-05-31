@@ -2,14 +2,14 @@ package ayds.lisboa.songinfo.moredetails.injector
 
 import android.content.Context
 import ayds.aknewyork.external.service.injector.NYTimesInjector
-import ayds.lisboa.songinfo.moredetails.data.repository.ArtistBroker
-import ayds.lisboa.songinfo.moredetails.data.repository.ArtistBrokerImpl
+import ayds.lisboa.songinfo.moredetails.broker.ArtistBroker
+import ayds.lisboa.songinfo.moredetails.broker.ArtistBrokerImpl
 import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
 import ayds.lisboa.songinfo.moredetails.data.repository.ArtistRepositoryImpl
-import ayds.lisboa.songinfo.moredetails.data.repository.proxys.LastFMProxy
-import ayds.lisboa.songinfo.moredetails.data.repository.proxys.NYTimesProxy
+import ayds.lisboa.songinfo.moredetails.broker.proxys.LastFMProxy
+import ayds.lisboa.songinfo.moredetails.broker.proxys.NYTimesProxy
 import ayds.lisboa.songinfo.moredetails.data.repository.ServiceProxy
-import ayds.lisboa.songinfo.moredetails.data.repository.proxys.WikipediaProxy
+import ayds.lisboa.songinfo.moredetails.broker.proxys.WikipediaProxy
 import ayds.lisboa.songinfo.moredetails.data.repository.local.ArtistLocalStorage
 import ayds.lisboa.songinfo.moredetails.data.repository.local.ArtistLocalStorageImpl
 import ayds.lisboa.songinfo.moredetails.data.repository.local.CursorToArtistDataMapperImpl

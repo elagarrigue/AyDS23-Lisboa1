@@ -17,7 +17,7 @@ internal class CursorToArtistDataMapperImpl : CursorToArtistDataMapper {
                     CardData(
                         artistName = getString(getColumnIndexOrThrow(ARTIST_COLUMN)),
                         description = getString(getColumnIndexOrThrow(INFO_COLUMN)),
-                        infoURL = getString(getColumnIndexOrThrow(URL_COLUMN))
+                        infoURL = getString(getColumnIndexOrThrow(URL_COLUMN)),
                     )
                 }
                 else {

@@ -1,5 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.data.repository
 
+import ayds.lisboa.songinfo.moredetails.broker.ArtistBroker
 import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
 import ayds.lisboa.songinfo.moredetails.data.repository.local.ArtistLocalStorage
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card

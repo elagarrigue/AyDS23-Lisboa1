@@ -1,5 +1,6 @@
-package ayds.lisboa.songinfo.moredetails.data.repository
+package ayds.lisboa.songinfo.moredetails.broker
 
+import ayds.lisboa.songinfo.moredetails.data.repository.ServiceProxy
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 
 interface ArtistBroker {
@@ -8,7 +9,7 @@ interface ArtistBroker {
 
 internal class ArtistBrokerImpl(
     private val proxyList: MutableList<ServiceProxy>
-): ArtistBroker {
+) : ArtistBroker {
 
     override fun getCard(artist: String): MutableList<Card?> {
         val artistCards: MutableList<Card?> = ArrayList()
@@ -18,4 +19,5 @@ internal class ArtistBrokerImpl(
         }
         return artistCards
     }
+
 }
