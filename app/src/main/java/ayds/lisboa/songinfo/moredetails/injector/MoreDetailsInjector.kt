@@ -8,7 +8,7 @@ import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
 import ayds.lisboa.songinfo.moredetails.data.repository.ArtistRepositoryImpl
 import ayds.lisboa.songinfo.moredetails.broker.proxys.LastFMProxy
 import ayds.lisboa.songinfo.moredetails.broker.proxys.NYTimesProxy
-import ayds.lisboa.songinfo.moredetails.data.repository.ServiceProxy
+import ayds.lisboa.songinfo.moredetails.broker.proxys.ServiceProxy
 import ayds.lisboa.songinfo.moredetails.broker.proxys.WikipediaProxy
 import ayds.lisboa.songinfo.moredetails.data.repository.local.ArtistLocalStorage
 import ayds.lisboa.songinfo.moredetails.data.repository.local.ArtistLocalStorageImpl

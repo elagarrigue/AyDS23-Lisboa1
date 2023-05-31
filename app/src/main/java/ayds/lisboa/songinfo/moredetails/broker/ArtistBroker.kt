@@ -1,6 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.broker
 
-import ayds.lisboa.songinfo.moredetails.data.repository.ServiceProxy
+import ayds.lisboa.songinfo.moredetails.broker.proxys.ServiceProxy
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 
 interface ArtistBroker {

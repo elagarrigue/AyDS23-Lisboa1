@@ -2,7 +2,6 @@ package ayds.lisboa.songinfo.moredetails.broker.proxys
 
 import ayds.aknewyork.external.service.data.NYTimesService
 import ayds.aknewyork.external.service.data.entities.ArtistDataExternal
-import ayds.lisboa.songinfo.moredetails.data.repository.ServiceProxy
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 
 private const val NYTIMESLOGO =

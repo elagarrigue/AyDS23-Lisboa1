@@ -1,6 +1,5 @@
 package ayds.lisboa.songinfo.moredetails.broker.proxys
 
-import ayds.lisboa.songinfo.moredetails.data.repository.ServiceProxy
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 import ayds.winchester2.wikipediaexternal.data.wikipedia.WikipediaTrackService
 import ayds.winchester2.wikipediaexternal.data.wikipedia.entity.ArtistInfo

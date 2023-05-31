@@ -1,12 +1,8 @@
 package ayds.lisboa.songinfo.moredetails.broker.proxys
 
-import ayds.lisboa.songinfo.moredetails.data.repository.ServiceProxy
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 import ayds.lisboa1.lastfm.LastFMArtistData
 import ayds.lisboa1.lastfm.LastFMService
-
-private const val LASTFMLOGO =
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
 
 internal class LastFMProxy(
     private val lastFMService: LastFMService
@@ -23,7 +19,7 @@ internal class LastFMProxy(
             description = lastFMArtistData.artisInfo,
             infoURL = lastFMArtistData.artistUrl,
             source = Card.Source.LastFM,
-            sourceLogoURL = LASTFMLOGO,
+            sourceLogoURL = "",
         )
     }
 }
