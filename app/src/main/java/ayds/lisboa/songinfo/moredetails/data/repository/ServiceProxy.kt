@@ -10,15 +10,10 @@ import ayds.lisboa1.lastfm.LastFMService
 import ayds.winchester2.wikipediaexternal.data.wikipedia.WikipediaTrackService
 import ayds.winchester2.wikipediaexternal.data.wikipedia.entity.ArtistInfo
 
-private const val LASTFMSOURCE = "LastFM"
-private const val LASTFMLOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
-
-private const val NYTIMESSOURCE = "New York Times"
-private const val NYTIMESLOGO = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVioI832nuYIXqzySD8cOXRZEcdlAj3KfxA62UEC4FhrHVe0f7oZXp3_mSFG7nIcUKhg&usqp=CAU"
-
-private const val WIKIPEDIASOURCE = "Wikipedia"
-
-
+private const val LASTFMLOGO =
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
+private const val NYTIMESLOGO =
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVioI832nuYIXqzySD8cOXRZEcdlAj3KfxA62UEC4FhrHVe0f7oZXp3_mSFG7nIcUKhg&usqp=CAU"
 
 interface ServiceProxy {
     fun getCardFromService(artist: String): Card?
@@ -26,7 +21,7 @@ interface ServiceProxy {
 
 internal class LastFMProxy(
     private val lastFMService: LastFMService
-): ServiceProxy {
+) : ServiceProxy {
 
     override fun getCardFromService(artist: String): Card? {
         val artistData = lastFMService.getArtistData(artist)
@@ -34,19 +29,19 @@ internal class LastFMProxy(
     }
 
     private fun mapLastFMArtistToCard(lastFMArtistData: LastFMArtistData): Card {
-            return CardData(
-                artistName = lastFMArtistData.artistName,
-                description = lastFMArtistData.artisInfo,
-                infoURL = lastFMArtistData.artistUrl,
-                source = LASTFMSOURCE,
-                sourceLogoURL = LASTFMLOGO,
-            )
+        return CardData(
+            artistName = lastFMArtistData.artistName,
+            description = lastFMArtistData.artisInfo,
+            infoURL = lastFMArtistData.artistUrl,
+            source = Card.Source.LASTFMSOURCE,
+            sourceLogoURL = LASTFMLOGO,
+        )
     }
 }
 
 internal class NYTimesProxy(
     private val nyTimesService: NYTimesService
-): ServiceProxy {
+) : ServiceProxy {
 
     override fun getCardFromService(artist: String): Card? {
         val artistData = nyTimesService.getArtistInfo(artist)
@@ -59,7 +54,7 @@ internal class NYTimesProxy(
                 artistName = nyTimesArtistData.name.toString(),
                 description = nyTimesArtistData.info.toString(),
                 infoURL = nyTimesArtistData.url,
-                source = NYTIMESSOURCE,
+                source = Card.Source.NYTIMESSOURCE,
                 sourceLogoURL = NYTIMESLOGO,
             )
         }
@@ -68,7 +63,7 @@ internal class NYTimesProxy(
 
 internal class WikipediaProxy(
     private val wikipediaService: WikipediaTrackService
-): ServiceProxy {
+) : ServiceProxy {
 
     override fun getCardFromService(artist: String): Card? {
         val artistData = wikipediaService.getInfo(artist)
@@ -82,8 +77,9 @@ internal class WikipediaProxy(
             artistName = artist,
             description = wikipediaArtistData.description,
             infoURL = wikipediaArtistData.wikipediaURL,
-            source = WIKIPEDIASOURCE,
+            source = Card.Source.WIKIPEDIASOURCE,
             sourceLogoURL = wikipediaArtistData.wikipediaLogoURL,
         )
     }
+    
 }
