@@ -1,6 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.presentation
 data class MoreDetailsUiState(
-    val artistCards: List<CardDataState>
+    var artistCards: List<CardDataState>
 )
 
 data class CardDataState(

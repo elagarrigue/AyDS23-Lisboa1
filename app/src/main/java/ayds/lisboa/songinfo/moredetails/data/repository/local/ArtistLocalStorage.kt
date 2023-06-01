@@ -13,7 +13,7 @@ private const val SORT_ORDER = "artist DESC"
 
 interface ArtistLocalStorage {
     fun saveArtist(artist: CardData)
-    fun getArtist(artist: String): List<CardData>?
+    fun getArtist(artist: String): List<CardData>
 }
 
 internal class ArtistLocalStorageImpl(
