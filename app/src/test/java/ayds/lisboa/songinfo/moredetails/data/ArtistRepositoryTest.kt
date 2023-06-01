@@ -1,10 +1,11 @@
 package ayds.lisboa.songinfo.moredetails.data
 
+import ayds.lisboa.songinfo.moredetails.broker.ArtistBroker
 import ayds.lisboa.songinfo.moredetails.data.repository.ArtistRepositoryImpl
-import ayds.lisboa.songinfo.moredetails.data.repository.external.LastFMService
 import ayds.lisboa.songinfo.moredetails.data.repository.local.ArtistLocalStorage
-import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.ArtistData
-import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.EmptyArtist
+import ayds.lisboa.songinfo.moredetails.domain.entities.Card
+import ayds.lisboa.songinfo.moredetails.domain.entities.Card.CardData
+import ayds.lisboa.songinfo.moredetails.domain.entities.Card.EmptyCard
 import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
 import io.mockk.every
 import io.mockk.mockk
@@ -15,20 +16,20 @@ import org.junit.Test
 class ArtistRepositoryTest {
 
     private val artistLocalStorage : ArtistLocalStorage = mockk(relaxUnitFun = true)
-    private val lastFMService : LastFMService = mockk(relaxUnitFun = true)
+    private val broker : ArtistBroker = mockk(relaxUnitFun = true)
 
     private val artistRepository : ArtistRepository by lazy {
-        ArtistRepositoryImpl(artistLocalStorage, lastFMService)
+        ArtistRepositoryImpl(artistLocalStorage, broker)
     }
 
     @Test
     fun `given existing artist should return artist and mark it as local`() {
-        val artistData = ArtistData("artist", "info", "url", false)
-        every { artistLocalStorage.getArtist("artist") } returns artistData
+        val artistCards: MutableList<CardData> = ArrayList()
+        every { artistLocalStorage.getArtist("artist") } returns artistCards
 
         val result = artistRepository.getArtistData("artist")
 
-        assertEquals(artistData, result)
+        assertEquals(artistCards, result)
         assertTrue(artistData.isLocallyStored)
     }
 

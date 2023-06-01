@@ -9,7 +9,8 @@ private const val FONT_FACE = "<font face=\"arial\">"
 interface ArtistInfoHelper {
     fun textToHtml(text: String, term: String): String
 }
-class ArtistInfoHelperImpl: ArtistInfoHelper {
+
+class ArtistInfoHelperImpl : ArtistInfoHelper {
 
     override fun textToHtml(text: String, term: String): String {
         val builder = StringBuilder()
@@ -22,4 +23,5 @@ class ArtistInfoHelperImpl: ArtistInfoHelper {
         builder.append(HTML_END)
         return builder.toString()
     }
+
 }

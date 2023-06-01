@@ -9,42 +9,69 @@ private const val LOCALLY_SAVED = "[*]"
 private const val NO_RESULTS = "No results"
 
 interface MoreDetailsPresenter {
-    val artistObservable: Observable<MoreDetailsUiState>
+    val uiStateObservable: Observable<MoreDetailsUiState>
     fun getArtistMoreInformation(artistName: String)
 }
 
 internal class MoreDetailsPresenterImpl(
-    private val repository: ArtistRepository,
-    private val artistInfoHelper : ArtistInfoHelper) :
-    MoreDetailsPresenter {
+    private val repository: ArtistRepository, private val artistInfoHelper: ArtistInfoHelper
+) : MoreDetailsPresenter {
 
-    override val artistObservable = Subject<MoreDetailsUiState>()
-    private var uiState : MoreDetailsUiState = MoreDetailsUiState(emptyList())
+    override val uiStateObservable = Subject<MoreDetailsUiState>()
+    private var uiState: MoreDetailsUiState = MoreDetailsUiState(emptyList())
 
     override fun getArtistMoreInformation(artistName: String) {
         Thread {
-            notifyArtist(artistName)
+            notifyUIState(artistName)
         }.start()
     }
 
-    private fun notifyArtist(artistName: String){
+    private fun notifyUIState(artistName: String) {
         val artistCardsData = repository.getArtistData(artistName)
         artistCardsData.formattingDescriptionCardsArtist(artistName)
         artistCardsData.addLocallySavedMarkCardsArtist()
         updateUIState(artistCardsData)
-        artistObservable.notify(uiState)
+        uiStateObservable.notify(uiState)
+    }
+
+    private fun List<CardData>.formattingDescriptionCardsArtist(artistName: String) {
+        this.forEach {
+            it.description = artistInfoHelper.textToHtml(it.description, artistName)
+        }
+    }
+
+    private fun List<CardData>.addLocallySavedMarkCardsArtist() {
+        this.forEach {
+            if (it.isLocallyStored) it.description = LOCALLY_SAVED + it.description
+        }
     }
 
     private fun updateUIState(artistCardList: List<CardData>) {
-        when{
-            artistCardList.isEmpty()  -> updateNoResultsUiState()
-            else -> updateArtistUIState(artistCardList)
+        when {
+            artistCardList.isEmpty() -> updateNoResultsUiState()
+            else -> updateCardsUIState(artistCardList)
         }
     }
-    private fun updateArtistUIState(artistCards: List<CardData>) {
+
+    private fun updateNoResultsUiState() {
+        val cardDataArtistNoResults: MutableList<CardDataState> = mutableListOf()
+        cardDataArtistNoResults.add(
+            CardDataState(
+                artistName = "",
+                description = NO_RESULTS,
+                infoURL = "",
+                source = "",
+                sourceLogo = ""
+            )
+        )
+
+        uiState.artistCards = cardDataArtistNoResults
+    }
+
+    private fun updateCardsUIState(artistCards: List<CardData>) {
         val cardsState: MutableList<CardDataState> = mutableListOf()
 
-        artistCards.forEach{
+        artistCards.forEach {
             cardsState.add(
                 CardDataState(
                     artistName = it.artistName,
@@ -59,31 +86,6 @@ internal class MoreDetailsPresenterImpl(
         uiState.artistCards = cardsState
     }
 
-    private fun updateNoResultsUiState() {
-        val cardDataArtistNoResults: MutableList<CardDataState> = mutableListOf()
-        cardDataArtistNoResults.add(CardDataState(
-            artistName = "",
-            description = NO_RESULTS,
-            infoURL = "",
-            source = "",
-            sourceLogo = ""
-        ))
-
-        uiState.artistCards = cardDataArtistNoResults
-    }
-
-    private fun List<CardData>.formattingDescriptionCardsArtist(artistName: String) {
-        this.forEach{
-            it.description = artistInfoHelper.textToHtml(it.description, artistName)
-        }
-    }
-
-    private fun List<CardData>.addLocallySavedMarkCardsArtist() {
-        this.forEach{
-            if(it.isLocallyStored)
-                it.description= LOCALLY_SAVED + it.description
-        }
-    }
 }
 
 

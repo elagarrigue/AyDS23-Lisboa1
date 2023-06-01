@@ -1,7 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.presentation
+
 data class MoreDetailsUiState(
-    var artistCards: List<CardDataState>,
-    var selectedIndex: Int = 0
+    var artistCards: List<CardDataState>, var selectedIndex: Int = 0
 )
 
 data class CardDataState(

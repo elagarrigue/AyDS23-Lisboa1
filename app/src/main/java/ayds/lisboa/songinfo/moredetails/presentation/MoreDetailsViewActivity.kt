@@ -40,14 +40,13 @@ class MoreDetailsViewActivity : AppCompatActivity() {
         initArtistName()
     }
 
-    private fun initArtistName() {
-        val artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)
-        artistName?.let { moreDetailsPresenter.getArtistMoreInformation(it) }
-    }
-
     private fun initModule() {
         MoreDetailsInjector.initMoreDetailsPresenter(this)
         moreDetailsPresenter = MoreDetailsInjector.getPresenter()
+    }
+
+    private fun initObservers() {
+        moreDetailsPresenter.uiStateObservable.subscribe { value -> updateUiWithArtistInfo(value) }
     }
 
     private fun initProperties() {
@@ -59,11 +58,12 @@ class MoreDetailsViewActivity : AppCompatActivity() {
         imageLogo = findViewById(R.id.imageLogo)
     }
 
-    private fun initObservers() {
-        moreDetailsPresenter.artistObservable.subscribe { value -> updateArtistInfo(value) }
+    private fun initArtistName() {
+        val artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)
+        artistName?.let { moreDetailsPresenter.getArtistMoreInformation(it) }
     }
 
-    private fun updateArtistInfo(uiState: MoreDetailsUiState) {
+    private fun updateUiWithArtistInfo(uiState: MoreDetailsUiState) {
         this.uiState = uiState
         val cardDataStates = uiState.artistCards
         setFullArticleButtonListener(cardDataStates[0].infoURL)
@@ -71,12 +71,37 @@ class MoreDetailsViewActivity : AppCompatActivity() {
         showArtistInfo(cardDataStates[0])
     }
 
+    private fun setFullArticleButtonListener(artistURL: String) {
+        if (artistURL != "") {
+            fullArticleButton.setOnClickListener {
+                openURL(artistURL)
+            }
+        }
+    }
+
+    private fun setNavegationButtonsListeners() {
+        previousCard.setOnClickListener {
+            showPreviousArtistInfo()
+        }
+        nextCard.setOnClickListener {
+            showNextArtistInfo()
+        }
+    }
+
     private fun showArtistInfo(cardUiState: CardDataState) {
         runOnUiThread {
-            if(cardUiState.sourceLogo != "") imageLoader.loadImageIntoView(cardUiState.sourceLogo, imageLogo)
+            if (cardUiState.sourceLogo != "") imageLoader.loadImageIntoView(
+                cardUiState.sourceLogo,
+                imageLogo
+            )
             artistInfoPanel.text = cardUiState.description.let { HtmlCompat.fromHtml(it, 0) }
             sourceText.text = cardUiState.source.let { HtmlCompat.fromHtml(it, 0) }
         }
+    }
+
+    private fun openURL(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
     }
 
     private fun showPreviousArtistInfo() {
@@ -101,25 +126,6 @@ class MoreDetailsViewActivity : AppCompatActivity() {
         showArtistInfo(nextCardUiState)
 
         uiState.selectedIndex = nextIndex
-    }
-
-    private fun setFullArticleButtonListener(artistURL: String) {
-        fullArticleButton.setOnClickListener {
-            openURL(artistURL)
-        }
-    }
-    private fun setNavegationButtonsListeners() {
-        previousCard.setOnClickListener {
-            showPreviousArtistInfo()
-        }
-        nextCard.setOnClickListener {
-            showNextArtistInfo()
-        }
-    }
-
-    private fun openURL(url: String) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        startActivity(intent)
     }
 
 }
