@@ -9,4 +9,5 @@ data class CardDataState(
     val infoURL: String = "",
     val source: String = "",
     val sourceLogo: String = "",
+    var isSelected: Boolean = false
 )
