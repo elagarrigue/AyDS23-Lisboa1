@@ -15,7 +15,7 @@ class ArtistRepositoryImpl(
         var cardList = artistLocalStorage.getArtist(artistName)
 
         when {
-            cardList != null -> {
+            cardList.isNotEmpty() -> {
                     cardList.markCardsAsLocal()
             }
             else -> {
