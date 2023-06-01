@@ -22,7 +22,7 @@ class MoreDetailsViewActivity : AppCompatActivity() {
     private lateinit var nextCard: View
     private lateinit var imageLogo: ImageView
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
-    private lateinit var cardDataStates: List<CardDataState>
+    private lateinit var uiState: MoreDetailsUiState
     private val imageLoader: ImageLoader = UtilsInjector.imageLoader
 
 
@@ -54,16 +54,18 @@ class MoreDetailsViewActivity : AppCompatActivity() {
         artistInfoPanel = findViewById(R.id.artistInfoPanel)
         sourceText = findViewById(R.id.sourceText)
         fullArticleButton = findViewById(R.id.fullArticleButton)
+        previousCard = findViewById(R.id.previousCard)
+        nextCard = findViewById(R.id.nextCard)
         imageLogo = findViewById(R.id.imageLogo)
     }
 
     private fun initObservers() {
-        moreDetailsPresenter.artistObservable.subscribe { value -> updateArtistInfo(value.artistCards) }
+        moreDetailsPresenter.artistObservable.subscribe { value -> updateArtistInfo(value) }
     }
 
-    private fun updateArtistInfo(cardDataStates: List<CardDataState>) {
-        this.cardDataStates = cardDataStates
-        cardDataStates[0].setCardStateSelected()
+    private fun updateArtistInfo(uiState: MoreDetailsUiState) {
+        this.uiState = uiState
+        val cardDataStates = uiState.artistCards
         setFullArticleButtonListener(cardDataStates[0].infoURL)
         setNavegationButtonsListeners()
         showArtistInfo(cardDataStates[0])
@@ -78,35 +80,27 @@ class MoreDetailsViewActivity : AppCompatActivity() {
     }
 
     private fun showPreviousArtistInfo() {
-        val currentIndex = cardDataStates.indexOfFirst { it.isSelected }
-        val previousIndex = if (currentIndex == 0) cardDataStates.size - 1 else currentIndex - 1
+        val cardList = uiState.artistCards
+        val currentIndex = uiState.selectedIndex
+        val previousIndex = if (currentIndex == 0) cardList.size - 1 else currentIndex - 1
 
-        val previousCardUiState = cardDataStates[previousIndex]
+        val previousCardUiState = cardList[previousIndex]
         setFullArticleButtonListener(previousCardUiState.infoURL)
         showArtistInfo(previousCardUiState)
 
-        cardDataStates[currentIndex].setCardStateUnselected()
-        cardDataStates[previousIndex].setCardStateSelected()
+        uiState.selectedIndex = previousIndex
     }
 
     private fun showNextArtistInfo() {
-        val currentIndex = cardDataStates.indexOfFirst { it.isSelected }
-        val nextIndex = (currentIndex + 1) % cardDataStates.size
+        val cardList = uiState.artistCards
+        val currentIndex = uiState.selectedIndex
+        val nextIndex = (currentIndex + 1) % cardList.size
 
-        val nextCardUiState = cardDataStates[nextIndex]
+        val nextCardUiState = cardList[nextIndex]
         setFullArticleButtonListener(nextCardUiState.infoURL)
         showArtistInfo(nextCardUiState)
 
-        cardDataStates[currentIndex].setCardStateUnselected()
-        cardDataStates[nextIndex].setCardStateSelected()
-    }
-
-    private fun CardDataState.setCardStateSelected() {
-        isSelected = true
-    }
-
-    private fun CardDataState.setCardStateUnselected() {
-        isSelected = false
+        uiState.selectedIndex = nextIndex
     }
 
     private fun setFullArticleButtonListener(artistURL: String) {

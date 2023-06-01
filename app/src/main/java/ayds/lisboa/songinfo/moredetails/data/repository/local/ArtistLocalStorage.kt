@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card.CardData
 
 private const val DATABASE_NAME = "dictionary.db"
-private const val DATABASE_VERSION = 2
+private const val DATABASE_VERSION = 3
 private const val SORT_ORDER = "artist DESC"
 
 interface ArtistLocalStorage {
@@ -66,6 +66,7 @@ internal class ArtistLocalStorageImpl(
             val artistCardData = cursorToArtistDataMapper.map(artistCursor)
             artistCardData?.let{artistCards.add(it)}
         }
+
         return artistCards
     }
 

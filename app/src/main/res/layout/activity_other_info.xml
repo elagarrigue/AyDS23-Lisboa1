@@ -54,7 +54,7 @@
     <Button
         android:id="@+id/previousCard"
         android:layout_width="51dp"
-        android:layout_height="37dp"
+        android:layout_height="48dp"
         android:layout_margin="16dp"
         android:text="&lt;"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -68,7 +68,7 @@
     <Button
         android:id="@+id/nextCard"
         android:layout_width="51dp"
-        android:layout_height="37dp"
+        android:layout_height="48dp"
         android:layout_margin="16dp"
         android:text="&gt;"
         app:layout_constraintBottom_toBottomOf="parent"

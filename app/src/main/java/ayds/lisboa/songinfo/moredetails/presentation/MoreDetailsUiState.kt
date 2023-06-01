@@ -1,6 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.presentation
 data class MoreDetailsUiState(
-    var artistCards: List<CardDataState>
+    var artistCards: List<CardDataState>,
+    var selectedIndex: Int = 0
 )
 
 data class CardDataState(
@@ -8,6 +9,5 @@ data class CardDataState(
     val description: String = "",
     val infoURL: String = "",
     val source: String = "",
-    val sourceLogo: String = "",
-    var isSelected: Boolean = false
+    val sourceLogo: String = ""
 )
