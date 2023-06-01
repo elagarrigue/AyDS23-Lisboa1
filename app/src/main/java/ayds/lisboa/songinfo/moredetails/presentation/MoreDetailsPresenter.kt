@@ -37,11 +37,12 @@ internal class MoreDetailsPresenterImpl(
 
     private fun updateUIState(artistCardList: List<CardData>) {
         when{
-            !artistCardList.isEmpty()  -> updateArtistUIState(artistCardList)
+            artistCardList.isEmpty()  -> updateNoResultsUiState()
+            else -> updateArtistUIState(artistCardList)
         }
     }
     private fun updateArtistUIState(artistCards: List<CardData>) {
-        var cardsState: MutableList<CardDataState> = mutableListOf()
+        val cardsState: MutableList<CardDataState> = mutableListOf()
 
         artistCards.forEach{
             cardsState.add(
@@ -56,6 +57,19 @@ internal class MoreDetailsPresenterImpl(
         }
 
         uiState.artistCards = cardsState
+    }
+
+    private fun updateNoResultsUiState() {
+        val cardDataArtistNoResults: MutableList<CardDataState> = mutableListOf()
+        cardDataArtistNoResults.add(CardDataState(
+            artistName = "",
+            description = NO_RESULTS,
+            infoURL = "",
+            source = "",
+            sourceLogo = ""
+        ))
+
+        uiState.artistCards = cardDataArtistNoResults
     }
 
     private fun List<CardData>.formattingDescriptionCardsArtist(artistName: String) {

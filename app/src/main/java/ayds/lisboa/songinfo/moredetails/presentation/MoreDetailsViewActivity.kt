@@ -58,7 +58,7 @@ class MoreDetailsViewActivity : AppCompatActivity() {
     }
 
     private fun initObservers() {
-        moreDetailsPresenter.artistObservable.subscribe { value -> updateArtistInfo(value) }
+        moreDetailsPresenter.artistObservable.subscribe { value -> updateArtistInfo(value.artistCards) }
     }
 
     private fun updateArtistInfo(cardDataStates: List<CardDataState>) {
