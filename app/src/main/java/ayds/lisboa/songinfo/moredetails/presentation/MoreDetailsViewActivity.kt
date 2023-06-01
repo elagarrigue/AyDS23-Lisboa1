@@ -73,7 +73,7 @@ class MoreDetailsViewActivity : AppCompatActivity() {
 
     private fun showArtistInfo(cardUiState: CardDataState) {
         runOnUiThread {
-            imageLoader.loadImageIntoView(cardUiState.sourceLogo, imageLogo)
+            if(cardUiState.sourceLogo != "") imageLoader.loadImageIntoView(cardUiState.sourceLogo, imageLogo)
             artistInfoPanel.text = cardUiState.description.let { HtmlCompat.fromHtml(it, 0) }
             sourceText.text = cardUiState.source.let { HtmlCompat.fromHtml(it, 0) }
         }
