@@ -15,9 +15,7 @@ class CardRepositoryImpl(
         var cardList = cardLocalStorage.getCards(cardName)
 
         when {
-            cardList.isNotEmpty() -> {
-                    cardList.markCardsAsLocal()
-            }
+            cardList.isNotEmpty() -> cardList.markCardsAsLocal()
             else -> {
                 cardList = cardBroker.getCard(cardName)
                 cardList.saveCards()

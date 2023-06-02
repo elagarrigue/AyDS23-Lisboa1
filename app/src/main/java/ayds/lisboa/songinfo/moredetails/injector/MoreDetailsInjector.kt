@@ -13,7 +13,7 @@ import ayds.lisboa.songinfo.moredetails.data.repository.external.proxys.Wikipedi
 import ayds.lisboa.songinfo.moredetails.data.repository.local.CardLocalStorage
 import ayds.lisboa.songinfo.moredetails.data.repository.local.CardLocalStorageImpl
 import ayds.lisboa.songinfo.moredetails.data.repository.local.CursorToCardDataMapperImpl
-import ayds.lisboa.songinfo.moredetails.presentation.CardInfoHelperImpl
+import ayds.lisboa.songinfo.moredetails.presentation.CardDescriptionHelperImpl
 import ayds.lisboa.songinfo.moredetails.presentation.MoreDetailsPresenter
 import ayds.lisboa.songinfo.moredetails.presentation.MoreDetailsPresenterImpl
 import ayds.lisboa1.lastfm.LastFMInjector
@@ -42,7 +42,7 @@ object MoreDetailsInjector {
 
         val repository : CardRepository = CardRepositoryImpl(cardLocalStorage,broker)
 
-        moreDetailsPresenter = MoreDetailsPresenterImpl(repository, CardInfoHelperImpl())
+        moreDetailsPresenter = MoreDetailsPresenterImpl(repository, CardDescriptionHelperImpl())
     }
 
 }

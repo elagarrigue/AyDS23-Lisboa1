@@ -14,7 +14,7 @@ interface MoreDetailsPresenter {
 }
 
 internal class MoreDetailsPresenterImpl(
-    private val repository: CardRepository, private val cardInfoHelper: CardInfoHelper
+    private val repository: CardRepository, private val cardDescriptionHelper: CardDescriptionHelper
 ) : MoreDetailsPresenter {
 
     override val uiStateObservable = Subject<MoreDetailsUiState>()
@@ -36,7 +36,7 @@ internal class MoreDetailsPresenterImpl(
 
     private fun List<CardData>.formattingDescriptionCards(cardName: String) {
         this.forEach {
-            it.description = cardInfoHelper.textToHtml(it.description, cardName)
+            it.description = cardDescriptionHelper.textToHtml(it.description, cardName)
         }
     }
 
@@ -77,7 +77,7 @@ internal class MoreDetailsPresenterImpl(
                     cardName = it.cardName,
                     description = it.description,
                     infoURL = it.infoURL,
-                    sourceName = it.source.name,
+                    sourceName = cardDescriptionHelper.formatSource(it.source),
                     sourceLogo = it.sourceLogoURL
                 )
             )
