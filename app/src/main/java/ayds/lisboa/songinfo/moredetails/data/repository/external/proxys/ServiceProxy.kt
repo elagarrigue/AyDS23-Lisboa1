@@ -1,4 +1,4 @@
-package ayds.lisboa.songinfo.moredetails.broker.proxys
+package ayds.lisboa.songinfo.moredetails.data.repository.external.proxys
 
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 

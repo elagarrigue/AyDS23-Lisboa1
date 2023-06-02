@@ -1,4 +1,4 @@
-package ayds.lisboa.songinfo.moredetails.broker.proxys
+package ayds.lisboa.songinfo.moredetails.data.repository.external.proxys
 
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card.CardData
@@ -18,13 +18,13 @@ class NYTimesProxy(
                 mapNYTimesArtistToCard(artistData)
             }
             catch(e: Exception) {
-                EmptyCard
+                null
             }
-        return card
+        return card?: EmptyCard
     }
 
-    private fun mapNYTimesArtistToCard(nyTimesArtistData: ArtistDataExternal): Card {
-        return (nyTimesArtistData as ArtistDataExternal.ArtistWithDataExternal).let {
+    private fun mapNYTimesArtistToCard(nyTimesArtistData: ArtistDataExternal): Card? {
+        return (nyTimesArtistData as? ArtistDataExternal.ArtistWithDataExternal)?.let {
             CardData(
                 cardName = nyTimesArtistData.name.toString(),
                 description = nyTimesArtistData.info.toString(),
