@@ -6,11 +6,11 @@ private const val HTML_START = "<html><div width=400>"
 private const val HTML_END = "</font></div></html>"
 private const val FONT_FACE = "<font face=\"arial\">"
 
-interface ArtistInfoHelper {
+interface CardInfoHelper {
     fun textToHtml(text: String, term: String): String
 }
 
-class ArtistInfoHelperImpl : ArtistInfoHelper {
+class CardInfoHelperImpl : CardInfoHelper {
 
     override fun textToHtml(text: String, term: String): String {
         val builder = StringBuilder()

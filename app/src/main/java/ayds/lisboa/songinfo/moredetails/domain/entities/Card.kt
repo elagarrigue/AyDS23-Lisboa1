@@ -2,7 +2,7 @@ package ayds.lisboa.songinfo.moredetails.domain.entities
 
 sealed class Card {
     data class CardData(
-        var artistName: String,
+        var cardName: String,
         var description: String,
         var infoURL: String = "",
         var source: Source,

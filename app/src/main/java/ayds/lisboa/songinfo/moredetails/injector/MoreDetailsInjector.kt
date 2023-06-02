@@ -2,18 +2,18 @@ package ayds.lisboa.songinfo.moredetails.injector
 
 import android.content.Context
 import ayds.aknewyork.external.service.injector.NYTimesInjector
-import ayds.lisboa.songinfo.moredetails.broker.ArtistBroker
-import ayds.lisboa.songinfo.moredetails.broker.ArtistBrokerImpl
-import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
-import ayds.lisboa.songinfo.moredetails.data.repository.ArtistRepositoryImpl
+import ayds.lisboa.songinfo.moredetails.broker.CardBroker
+import ayds.lisboa.songinfo.moredetails.broker.CardBrokerImpl
+import ayds.lisboa.songinfo.moredetails.domain.repository.CardRepository
+import ayds.lisboa.songinfo.moredetails.data.repository.CardRepositoryImpl
 import ayds.lisboa.songinfo.moredetails.broker.proxys.LastFMProxy
 import ayds.lisboa.songinfo.moredetails.broker.proxys.NYTimesProxy
 import ayds.lisboa.songinfo.moredetails.broker.proxys.ServiceProxy
 import ayds.lisboa.songinfo.moredetails.broker.proxys.WikipediaProxy
-import ayds.lisboa.songinfo.moredetails.data.repository.local.ArtistLocalStorage
-import ayds.lisboa.songinfo.moredetails.data.repository.local.ArtistLocalStorageImpl
-import ayds.lisboa.songinfo.moredetails.data.repository.local.CursorToArtistDataMapperImpl
-import ayds.lisboa.songinfo.moredetails.presentation.ArtistInfoHelperImpl
+import ayds.lisboa.songinfo.moredetails.data.repository.local.CardLocalStorage
+import ayds.lisboa.songinfo.moredetails.data.repository.local.CardLocalStorageImpl
+import ayds.lisboa.songinfo.moredetails.data.repository.local.CursorToCardDataMapperImpl
+import ayds.lisboa.songinfo.moredetails.presentation.CardInfoHelperImpl
 import ayds.lisboa.songinfo.moredetails.presentation.MoreDetailsPresenter
 import ayds.lisboa.songinfo.moredetails.presentation.MoreDetailsPresenterImpl
 import ayds.lisboa1.lastfm.LastFMInjector
@@ -26,8 +26,8 @@ object MoreDetailsInjector {
     fun getPresenter(): MoreDetailsPresenter = moreDetailsPresenter
 
     fun initMoreDetailsPresenter(context: Context) {
-        val artistLocalStorage : ArtistLocalStorage =
-            ArtistLocalStorageImpl(context, CursorToArtistDataMapperImpl())
+        val cardLocalStorage : CardLocalStorage =
+            CardLocalStorageImpl(context, CursorToCardDataMapperImpl())
 
         val lastFMProxy : ServiceProxy = LastFMProxy(LastFMInjector.getLastFMService())
         val nyTimesProxy : ServiceProxy = NYTimesProxy(NYTimesInjector.nyTimesService)
@@ -38,11 +38,11 @@ object MoreDetailsInjector {
         proxyList.add(nyTimesProxy)
         proxyList.add(wikipediaProxy)
 
-        val broker : ArtistBroker = ArtistBrokerImpl(proxyList)
+        val broker : CardBroker = CardBrokerImpl(proxyList)
 
-        val repository : ArtistRepository = ArtistRepositoryImpl(artistLocalStorage,broker)
+        val repository : CardRepository = CardRepositoryImpl(cardLocalStorage,broker)
 
-        moreDetailsPresenter = MoreDetailsPresenterImpl(repository, ArtistInfoHelperImpl())
+        moreDetailsPresenter = MoreDetailsPresenterImpl(repository, CardInfoHelperImpl())
     }
 
 }

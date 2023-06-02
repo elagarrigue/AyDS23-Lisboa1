@@ -15,7 +15,7 @@ import ayds.lisboa.songinfo.utils.view.ImageLoader
 
 class MoreDetailsViewActivity : AppCompatActivity() {
 
-    private lateinit var artistInfoPanel: TextView
+    private lateinit var cardInfoPanel: TextView
     private lateinit var sourceText: TextView
     private lateinit var fullArticleButton: View
     private lateinit var previousCard: View
@@ -27,7 +27,7 @@ class MoreDetailsViewActivity : AppCompatActivity() {
 
 
     companion object {
-        const val ARTIST_NAME_EXTRA = "artistName"
+        const val CARD_NAME_EXTRA = "cardName"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +37,7 @@ class MoreDetailsViewActivity : AppCompatActivity() {
         initObservers()
         setContentView(R.layout.activity_other_info)
         initProperties()
-        initArtistName()
+        initCardName()
     }
 
     private fun initModule() {
@@ -46,11 +46,11 @@ class MoreDetailsViewActivity : AppCompatActivity() {
     }
 
     private fun initObservers() {
-        moreDetailsPresenter.uiStateObservable.subscribe { value -> updateUiWithArtistInfo(value) }
+        moreDetailsPresenter.uiStateObservable.subscribe { value -> updateUiWithCardInfo(value) }
     }
 
     private fun initProperties() {
-        artistInfoPanel = findViewById(R.id.artistInfoPanel)
+        cardInfoPanel = findViewById(R.id.cardInfoPanel)
         sourceText = findViewById(R.id.sourceText)
         fullArticleButton = findViewById(R.id.fullArticleButton)
         previousCard = findViewById(R.id.previousCard)
@@ -58,44 +58,44 @@ class MoreDetailsViewActivity : AppCompatActivity() {
         imageLogo = findViewById(R.id.imageLogo)
     }
 
-    private fun initArtistName() {
-        val artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)
-        artistName?.let { moreDetailsPresenter.getArtistMoreInformation(it) }
+    private fun initCardName() {
+        val cardName = intent.getStringExtra(CARD_NAME_EXTRA)
+        cardName?.let { moreDetailsPresenter.getCardMoreInformation(it) }
     }
 
-    private fun updateUiWithArtistInfo(uiState: MoreDetailsUiState) {
+    private fun updateUiWithCardInfo(uiState: MoreDetailsUiState) {
         this.uiState = uiState
-        val cardDataStates = uiState.artistCards
+        val cardDataStates = uiState.cardsDataState
         setFullArticleButtonListener(cardDataStates[0].infoURL)
         setNavegationButtonsListeners()
-        showArtistInfo(cardDataStates[0])
+        showCardInfo(cardDataStates[0])
     }
 
-    private fun setFullArticleButtonListener(artistURL: String) {
-        if (artistURL != "") {
+    private fun setFullArticleButtonListener(cardURL: String) {
+        if (cardURL != "") {
             fullArticleButton.setOnClickListener {
-                openURL(artistURL)
+                openURL(cardURL)
             }
         }
     }
 
     private fun setNavegationButtonsListeners() {
         previousCard.setOnClickListener {
-            showPreviousArtistInfo()
+            showPreviousCardInfo()
         }
         nextCard.setOnClickListener {
-            showNextArtistInfo()
+            showNextCardInfo()
         }
     }
 
-    private fun showArtistInfo(cardUiState: CardDataState) {
+    private fun showCardInfo(cardUiState: CardDataState) {
         runOnUiThread {
             if (cardUiState.sourceLogo != "") imageLoader.loadImageIntoView(
                 cardUiState.sourceLogo,
                 imageLogo
             )
-            artistInfoPanel.text = cardUiState.description.let { HtmlCompat.fromHtml(it, 0) }
-            sourceText.text = cardUiState.source.let { HtmlCompat.fromHtml(it, 0) }
+            cardInfoPanel.text = cardUiState.description.let { HtmlCompat.fromHtml(it, 0) }
+            sourceText.text = cardUiState.sourceName.let { HtmlCompat.fromHtml(it, 0) }
         }
     }
 
@@ -104,26 +104,26 @@ class MoreDetailsViewActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun showPreviousArtistInfo() {
-        val cardList = uiState.artistCards
+    private fun showPreviousCardInfo() {
+        val cardList = uiState.cardsDataState
         val currentIndex = uiState.selectedIndex
         val previousIndex = if (currentIndex == 0) cardList.size - 1 else currentIndex - 1
 
         val previousCardUiState = cardList[previousIndex]
         setFullArticleButtonListener(previousCardUiState.infoURL)
-        showArtistInfo(previousCardUiState)
+        showCardInfo(previousCardUiState)
 
         uiState.selectedIndex = previousIndex
     }
 
-    private fun showNextArtistInfo() {
-        val cardList = uiState.artistCards
+    private fun showNextCardInfo() {
+        val cardList = uiState.cardsDataState
         val currentIndex = uiState.selectedIndex
         val nextIndex = (currentIndex + 1) % cardList.size
 
         val nextCardUiState = cardList[nextIndex]
         setFullArticleButtonListener(nextCardUiState.infoURL)
-        showArtistInfo(nextCardUiState)
+        showCardInfo(nextCardUiState)
 
         uiState.selectedIndex = nextIndex
     }

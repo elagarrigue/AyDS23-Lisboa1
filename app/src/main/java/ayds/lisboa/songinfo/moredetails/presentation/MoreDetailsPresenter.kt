@@ -1,7 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.presentation
 
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card.CardData
-import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
+import ayds.lisboa.songinfo.moredetails.domain.repository.CardRepository
 import ayds.observer.Observable
 import ayds.observer.Subject
 
@@ -10,80 +10,80 @@ private const val NO_RESULTS = "No results"
 
 interface MoreDetailsPresenter {
     val uiStateObservable: Observable<MoreDetailsUiState>
-    fun getArtistMoreInformation(artistName: String)
+    fun getCardMoreInformation(cardName: String)
 }
 
 internal class MoreDetailsPresenterImpl(
-    private val repository: ArtistRepository, private val artistInfoHelper: ArtistInfoHelper
+    private val repository: CardRepository, private val cardInfoHelper: CardInfoHelper
 ) : MoreDetailsPresenter {
 
     override val uiStateObservable = Subject<MoreDetailsUiState>()
     private var uiState: MoreDetailsUiState = MoreDetailsUiState(emptyList())
 
-    override fun getArtistMoreInformation(artistName: String) {
+    override fun getCardMoreInformation(cardName: String) {
         Thread {
-            notifyUIState(artistName)
+            notifyUIState(cardName)
         }.start()
     }
 
-    private fun notifyUIState(artistName: String) {
-        val artistCardsData = repository.getArtistData(artistName)
-        artistCardsData.formattingDescriptionCardsArtist(artistName)
-        artistCardsData.addLocallySavedMarkCardsArtist()
-        updateUIState(artistCardsData)
+    private fun notifyUIState(cardName: String) {
+        val cardsData = repository.getCardData(cardName)
+        cardsData.formattingDescriptionCards(cardName)
+        cardsData.addLocallySavedMarkCards()
+        updateUIState(cardsData)
         uiStateObservable.notify(uiState)
     }
 
-    private fun List<CardData>.formattingDescriptionCardsArtist(artistName: String) {
+    private fun List<CardData>.formattingDescriptionCards(cardName: String) {
         this.forEach {
-            it.description = artistInfoHelper.textToHtml(it.description, artistName)
+            it.description = cardInfoHelper.textToHtml(it.description, cardName)
         }
     }
 
-    private fun List<CardData>.addLocallySavedMarkCardsArtist() {
+    private fun List<CardData>.addLocallySavedMarkCards() {
         this.forEach {
             if (it.isLocallyStored) it.description = LOCALLY_SAVED + it.description
         }
     }
 
-    private fun updateUIState(artistCardList: List<CardData>) {
+    private fun updateUIState(cardList: List<CardData>) {
         when {
-            artistCardList.isEmpty() -> updateNoResultsUiState()
-            else -> updateCardsUIState(artistCardList)
+            cardList.isEmpty() -> updateNoResultsUiState()
+            else -> updateCardsUIState(cardList)
         }
     }
 
     private fun updateNoResultsUiState() {
-        val cardDataArtistNoResults: MutableList<CardDataState> = mutableListOf()
-        cardDataArtistNoResults.add(
+        val cardDataNoResults: MutableList<CardDataState> = mutableListOf()
+        cardDataNoResults.add(
             CardDataState(
-                artistName = "",
+                cardName = "",
                 description = NO_RESULTS,
                 infoURL = "",
-                source = "",
+                sourceName = "",
                 sourceLogo = ""
             )
         )
 
-        uiState.artistCards = cardDataArtistNoResults
+        uiState.cardsDataState = cardDataNoResults
     }
 
-    private fun updateCardsUIState(artistCards: List<CardData>) {
+    private fun updateCardsUIState(cardsData: List<CardData>) {
         val cardsState: MutableList<CardDataState> = mutableListOf()
 
-        artistCards.forEach {
+        cardsData.forEach {
             cardsState.add(
                 CardDataState(
-                    artistName = it.artistName,
+                    cardName = it.cardName,
                     description = it.description,
                     infoURL = it.infoURL,
-                    source = it.source.name,
+                    sourceName = it.source.name,
                     sourceLogo = it.sourceLogoURL
                 )
             )
         }
 
-        uiState.artistCards = cardsState
+        uiState.cardsDataState = cardsState
     }
 
 }

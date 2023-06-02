@@ -1,35 +1,34 @@
 package ayds.lisboa.songinfo.moredetails.data
 
-import ayds.lisboa.songinfo.moredetails.broker.ArtistBroker
-import ayds.lisboa.songinfo.moredetails.data.repository.ArtistRepositoryImpl
+import ayds.lisboa.songinfo.moredetails.data.repository.CardRepositoryImpl
+import ayds.lisboa.songinfo.moredetails.data.repository.external.LastFMService
 import ayds.lisboa.songinfo.moredetails.data.repository.local.ArtistLocalStorage
-import ayds.lisboa.songinfo.moredetails.domain.entities.Card
-import ayds.lisboa.songinfo.moredetails.domain.entities.Card.CardData
-import ayds.lisboa.songinfo.moredetails.domain.entities.Card.EmptyCard
-import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
+import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.ArtistData
+import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.EmptyArtist
+import ayds.lisboa.songinfo.moredetails.domain.repository.CardRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Assert.*
 import org.junit.Test
 
-class ArtistRepositoryTest {
+class CardRepositoryTest {
 
     private val artistLocalStorage : ArtistLocalStorage = mockk(relaxUnitFun = true)
-    private val broker : ArtistBroker = mockk(relaxUnitFun = true)
+    private val lastFMService : LastFMService = mockk(relaxUnitFun = true)
 
-    private val artistRepository : ArtistRepository by lazy {
-        ArtistRepositoryImpl(artistLocalStorage, broker)
+    private val cardRepository : CardRepository by lazy {
+        CardRepositoryImpl(artistLocalStorage, lastFMService)
     }
 
     @Test
     fun `given existing artist should return artist and mark it as local`() {
-        val artistCards: MutableList<CardData> = ArrayList()
-        every { artistLocalStorage.getArtist("artist") } returns artistCards
+        val artistData = ArtistData("artist", "info", "url", false)
+        every { artistLocalStorage.getArtist("artist") } returns artistData
 
-        val result = artistRepository.getArtistData("artist")
+        val result = cardRepository.getArtistData("artist")
 
-        assertEquals(artistCards, result)
+        assertEquals(artistData, result)
         assertTrue(artistData.isLocallyStored)
     }
 
@@ -39,7 +38,7 @@ class ArtistRepositoryTest {
         every { artistLocalStorage.getArtist("artist") } returns null
         every { lastFMService.getArtist("artist") } returns artistData
 
-        val result = artistRepository.getArtistData("artist")
+        val result = cardRepository.getArtistData("artist")
 
         assertEquals(artistData, result)
         assertFalse(artistData.isLocallyStored)
@@ -51,7 +50,7 @@ class ArtistRepositoryTest {
         every { artistLocalStorage.getArtist("artist") } returns null
         every { lastFMService.getArtist("artist") } returns null
 
-        val result = artistRepository.getArtistData("artist")
+        val result = cardRepository.getArtistData("artist")
 
         assertEquals(EmptyArtist, result)
     }
@@ -61,7 +60,7 @@ class ArtistRepositoryTest {
         every { artistLocalStorage.getArtist("artist") } returns null
         every { lastFMService.getArtist("artist") } throws mockk<Exception>()
 
-        val result = artistRepository.getArtistData("artist")
+        val result = cardRepository.getArtistData("artist")
 
         assertEquals(EmptyArtist, result)
     }

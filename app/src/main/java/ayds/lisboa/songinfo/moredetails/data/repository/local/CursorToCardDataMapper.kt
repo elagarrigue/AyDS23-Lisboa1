@@ -5,17 +5,17 @@ import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card.CardData
 import java.sql.SQLException
 
-interface CursorToArtistDataMapper {
+interface CursorToCardDataMapper {
     fun map(cursor: Cursor): CardData?
 }
 
-internal class CursorToArtistDataMapperImpl : CursorToArtistDataMapper {
+internal class CursorToCardDataMapperImpl : CursorToCardDataMapper {
 
     override fun map(cursor: Cursor): CardData? =
         try {
             with(cursor) {
                     CardData(
-                        artistName = getString(getColumnIndexOrThrow(ARTIST_COLUMN)),
+                        cardName = getString(getColumnIndexOrThrow(CARD_COLUMN)),
                         description = getString(getColumnIndexOrThrow(DESCRIPTION_COLUMN)),
                         infoURL = getString(getColumnIndexOrThrow(INFO_URL_COLUMN)),
                         source = Card.Source.values()[getInt(getColumnIndexOrThrow(SOURCE_COLUMN))],

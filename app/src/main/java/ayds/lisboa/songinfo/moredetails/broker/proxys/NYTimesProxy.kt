@@ -11,22 +11,22 @@ class NYTimesProxy(
     private val nyTimesService: NYTimesService
 ) : ServiceProxy {
 
-    override fun getCardFromService(artist: String): Card {
-        val artistCard =
+    override fun getCardFromService(cardName: String): Card {
+        val card =
             try {
-                val artistData = nyTimesService.getArtistInfo(artist)
+                val artistData = nyTimesService.getArtistInfo(cardName)
                 mapNYTimesArtistToCard(artistData)
             }
             catch(e: Exception) {
                 EmptyCard
             }
-        return artistCard
+        return card
     }
 
     private fun mapNYTimesArtistToCard(nyTimesArtistData: ArtistDataExternal): Card {
         return (nyTimesArtistData as ArtistDataExternal.ArtistWithDataExternal).let {
             CardData(
-                artistName = nyTimesArtistData.name.toString(),
+                cardName = nyTimesArtistData.name.toString(),
                 description = nyTimesArtistData.info.toString(),
                 infoURL = nyTimesArtistData.url,
                 source = Card.Source.NYTimes,

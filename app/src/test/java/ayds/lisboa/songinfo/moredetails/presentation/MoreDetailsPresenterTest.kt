@@ -1,14 +1,14 @@
 package ayds.lisboa.songinfo.moredetails.presentation
 
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
-import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
+import ayds.lisboa.songinfo.moredetails.domain.repository.CardRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 
 class MoreDetailsPresenterTest {
-    private val repository : ArtistRepository = mockk(relaxUnitFun = true)
+    private val repository : CardRepository = mockk(relaxUnitFun = true)
     private val helper: ArtistInfoHelper = mockk(relaxUnitFun = true)
 
     private val moreDetailsPresenter: MoreDetailsPresenter by lazy {

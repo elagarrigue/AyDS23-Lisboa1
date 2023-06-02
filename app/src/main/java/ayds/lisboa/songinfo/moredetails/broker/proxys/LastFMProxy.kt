@@ -11,21 +11,21 @@ internal class LastFMProxy(
     private val lastFMService: LastFMService
 ) : ServiceProxy {
 
-    override fun getCardFromService(artist: String): Card {
-        val artistCard =
+    override fun getCardFromService(cardName: String): Card {
+        val card =
         try {
-            val artistData = (lastFMService.getArtistData(artist) as LastFMArtistData)
+            val artistData = (lastFMService.getArtistData(cardName) as LastFMArtistData)
             mapLastFMArtistToCard(artistData)
         }
         catch(e: Exception) {
             EmptyCard
         }
-        return artistCard
+        return card
     }
 
     private fun mapLastFMArtistToCard(lastFMArtistData: LastFMArtistData): Card {
         return CardData(
-            artistName = lastFMArtistData.artistName,
+            cardName = lastFMArtistData.artistName,
             description = lastFMArtistData.artisInfo,
             infoURL = lastFMArtistData.artistUrl,
             source = Card.Source.LastFM,

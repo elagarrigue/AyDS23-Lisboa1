@@ -1,25 +1,25 @@
 package ayds.lisboa.songinfo.moredetails.data.repository
 
-import ayds.lisboa.songinfo.moredetails.broker.ArtistBroker
-import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
-import ayds.lisboa.songinfo.moredetails.data.repository.local.ArtistLocalStorage
+import ayds.lisboa.songinfo.moredetails.broker.CardBroker
+import ayds.lisboa.songinfo.moredetails.domain.repository.CardRepository
+import ayds.lisboa.songinfo.moredetails.data.repository.local.CardLocalStorage
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card.CardData
 
-class ArtistRepositoryImpl(
-    private val artistLocalStorage: ArtistLocalStorage,
-    private val broker: ArtistBroker
-) : ArtistRepository {
+class CardRepositoryImpl(
+    private val cardLocalStorage: CardLocalStorage,
+    private val cardBroker: CardBroker
+) : CardRepository {
 
-    override fun getArtistData(artistName: String): List<CardData> {
-        var cardList = artistLocalStorage.getArtist(artistName)
+    override fun getCardData(cardName: String): List<CardData> {
+        var cardList = cardLocalStorage.getCards(cardName)
 
         when {
             cardList.isNotEmpty() -> {
                     cardList.markCardsAsLocal()
             }
             else -> {
-                cardList = broker.getCard(artistName)
+                cardList = cardBroker.getCard(cardName)
                 cardList.saveCards()
             }
         }
@@ -37,7 +37,7 @@ class ArtistRepositoryImpl(
     private fun List<Card>.saveCards() {
         for (card in this) {
             if(card is CardData) {
-                artistLocalStorage.saveArtist(card)
+                cardLocalStorage.saveCard(card)
             }
         }
     }
