@@ -28,8 +28,7 @@ class CardDescriptionHelperImpl(private val sourceFactory: SourceFactory) : Card
     }
 
     override fun getSourceSring(source: Source): String {
-        val formatter = sourceFactory.getSourceWrapper(source)
-        return formatter.getSource()
+        return sourceFactory.getSourceString(source)
     }
 
 }
