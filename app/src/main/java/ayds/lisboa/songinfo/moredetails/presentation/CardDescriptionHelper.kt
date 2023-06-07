@@ -10,7 +10,7 @@ private const val FONT_FACE = "<font face=\"arial\">"
 interface CardDescriptionHelper {
     fun textToHtml(text: String, term: String): String
 
-    fun getSourceSring(source: Source): String
+    fun getSourceString(source: Source): String
 }
 
 class CardDescriptionHelperImpl(private val sourceFactory: SourceFactory) : CardDescriptionHelper {
@@ -27,7 +27,7 @@ class CardDescriptionHelperImpl(private val sourceFactory: SourceFactory) : Card
         return builder.toString()
     }
 
-    override fun getSourceSring(source: Source): String {
+    override fun getSourceString(source: Source): String {
         return sourceFactory.getSourceString(source)
     }
 
