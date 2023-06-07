@@ -77,7 +77,7 @@ internal class MoreDetailsPresenterImpl(
                     cardName = it.cardName,
                     description = it.description,
                     infoURL = it.infoURL,
-                    sourceName = cardDescriptionHelper.formatSource(it.source),
+                    sourceName = cardDescriptionHelper.getSourceSring(it.source),
                     sourceLogo = it.sourceLogoURL
                 )
             )

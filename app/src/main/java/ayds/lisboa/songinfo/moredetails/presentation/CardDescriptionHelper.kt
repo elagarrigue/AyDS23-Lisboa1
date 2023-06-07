@@ -7,14 +7,13 @@ private const val HTML_START = "<html><div width=400>"
 private const val HTML_END = "</font></div></html>"
 private const val FONT_FACE = "<font face=\"arial\">"
 
-private const val SOURCE_STRING = "Fuente: "
 interface CardDescriptionHelper {
     fun textToHtml(text: String, term: String): String
 
-    fun formatSource(source: Source): String
+    fun getSourceSring(source: Source): String
 }
 
-class CardDescriptionHelperImpl : CardDescriptionHelper {
+class CardDescriptionHelperImpl(private val sourceFactory: SourceFactory) : CardDescriptionHelper {
 
     override fun textToHtml(text: String, term: String): String {
         val builder = StringBuilder()
@@ -28,13 +27,9 @@ class CardDescriptionHelperImpl : CardDescriptionHelper {
         return builder.toString()
     }
 
-    override fun formatSource(source: Source): String {
-        return SOURCE_STRING +
-                when(source) {
-            Source.LastFM -> "LastFM"
-            Source.NYTimes -> "New York Times"
-            Source.Wikipedia -> "Wikipedia"
-        }
+    override fun getSourceSring(source: Source): String {
+        val formatter = sourceFactory.getSourceWrapper(source)
+        return formatter.getSource()
     }
 
 }

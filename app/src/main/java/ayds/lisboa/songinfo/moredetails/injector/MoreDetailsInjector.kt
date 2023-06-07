@@ -16,6 +16,7 @@ import ayds.lisboa.songinfo.moredetails.data.repository.local.CursorToCardDataMa
 import ayds.lisboa.songinfo.moredetails.presentation.CardDescriptionHelperImpl
 import ayds.lisboa.songinfo.moredetails.presentation.MoreDetailsPresenter
 import ayds.lisboa.songinfo.moredetails.presentation.MoreDetailsPresenterImpl
+import ayds.lisboa.songinfo.moredetails.presentation.SourceFactoryImpl
 import ayds.lisboa1.lastfm.LastFMInjector
 import ayds.winchester2.wikipediaexternal.injector.WikipediaInjector
 
@@ -42,7 +43,9 @@ object MoreDetailsInjector {
 
         val repository : CardRepository = CardRepositoryImpl(cardLocalStorage,broker)
 
-        moreDetailsPresenter = MoreDetailsPresenterImpl(repository, CardDescriptionHelperImpl())
+        moreDetailsPresenter = MoreDetailsPresenterImpl(repository, CardDescriptionHelperImpl(
+            SourceFactoryImpl()
+        ))
     }
 
 }
