@@ -8,12 +8,14 @@ import org.junit.Test
 
 class CardInfoHelperImplTest {
 
-    private val sourceFactory :  SourceFactory = mockk(relaxUnitFun = true)
-    private val cardDescriptionHelper: CardDescriptionHelper = CardDescriptionHelperImpl(sourceFactory)
+    private val sourceFactory: SourceFactory = mockk(relaxUnitFun = true)
+    private val cardDescriptionHelper: CardDescriptionHelper =
+        CardDescriptionHelperImpl(sourceFactory)
 
     @Test
     fun `given text with the term, it should should handle special characters and line breaks correctly to return formatted HTML`() {
-        val text = "Este es un ejemplo que contiene\nsaltos de líneas que deben\nrespetarse en el formato final\n devuelto"
+        val text =
+            "Este es un ejemplo que contiene\nsaltos de líneas que deben\nrespetarse en el formato final\n devuelto"
         val term = "líneas"
 
         val expectedResult =
@@ -26,8 +28,8 @@ class CardInfoHelperImplTest {
 
     @Test
     fun `given source, it should return source formatted to String`() {
-        val source: Card.Source = mockk ()
-        every {sourceFactory.getSourceString(source)} returns "source"
+        val source: Card.Source = mockk()
+        every { sourceFactory.getSourceString(source) } returns "source"
 
         val expectedResult = "source"
         val result = cardDescriptionHelper.getSourceString(source)

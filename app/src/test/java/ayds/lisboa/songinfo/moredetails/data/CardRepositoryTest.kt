@@ -13,18 +13,24 @@ import org.junit.Test
 
 class CardRepositoryTest {
 
-    private val cardLocalStorage : CardLocalStorage = mockk(relaxUnitFun = true)
-    private val cardBroker : CardBroker = mockk(relaxUnitFun = true)
+    private val cardLocalStorage: CardLocalStorage = mockk(relaxUnitFun = true)
+    private val cardBroker: CardBroker = mockk(relaxUnitFun = true)
 
-    private val cardRepository : CardRepository by lazy {
+    private val cardRepository: CardRepository by lazy {
         CardRepositoryImpl(cardLocalStorage, cardBroker)
     }
 
     @Test
     fun `given existing card should return list of cards and mark them as local`() {
-        val cardData1 = Card.CardData("card", "description1", "url1", Card.Source.LastFM, "sourceLogoURL1", false)
-        val cardData2 = Card.CardData("card", "description2", "url2", Card.Source.NYTimes, "sourceLogoURL2", false)
-        val cardData3 = Card.CardData("card", "description3", "url3", Card.Source.Wikipedia, "sourceLogoURL3", false)
+        val cardData1 = Card.CardData(
+            "card", "description1", "url1", Card.Source.LastFM, "sourceLogoURL1", false
+        )
+        val cardData2 = Card.CardData(
+            "card", "description2", "url2", Card.Source.NYTimes, "sourceLogoURL2", false
+        )
+        val cardData3 = Card.CardData(
+            "card", "description3", "url3", Card.Source.Wikipedia, "sourceLogoURL3", false
+        )
         val cardsData = listOf(cardData1, cardData2, cardData3)
         every { cardLocalStorage.getCards("card") } returns cardsData
 
@@ -36,9 +42,15 @@ class CardRepositoryTest {
 
     @Test
     fun `given non-existent card should get the list of cards and save each card`() {
-        val cardData1 = Card.CardData("card", "description1", "url1", Card.Source.LastFM, "sourceLogoURL1", false)
-        val cardData2 = Card.CardData("card", "description2", "url2", Card.Source.NYTimes, "sourceLogoURL2", false)
-        val cardData3 = Card.CardData("card", "description3", "url3", Card.Source.Wikipedia, "sourceLogoURL3", false)
+        val cardData1 = Card.CardData(
+            "card", "description1", "url1", Card.Source.LastFM, "sourceLogoURL1", false
+        )
+        val cardData2 = Card.CardData(
+            "card", "description2", "url2", Card.Source.NYTimes, "sourceLogoURL2", false
+        )
+        val cardData3 = Card.CardData(
+            "card", "description3", "url3", Card.Source.Wikipedia, "sourceLogoURL3", false
+        )
         val cardsData = listOf(cardData1, cardData2, cardData3)
         every { cardLocalStorage.getCards("card") } returns emptyList()
         every { cardBroker.getCard("card") } returns cardsData
