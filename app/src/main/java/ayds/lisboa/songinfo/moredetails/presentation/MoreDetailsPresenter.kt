@@ -1,8 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.presentation
 
-import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.ArtistData
-import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
-import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
+import ayds.lisboa.songinfo.moredetails.domain.entities.Card.CardData
+import ayds.lisboa.songinfo.moredetails.domain.repository.CardRepository
 import ayds.observer.Observable
 import ayds.observer.Subject
 
@@ -10,67 +9,83 @@ private const val LOCALLY_SAVED = "[*]"
 private const val NO_RESULTS = "No results"
 
 interface MoreDetailsPresenter {
-    val artistObservable: Observable<MoreDetailsUiState>
-    fun getArtistMoreInformation(artistName: String)
+    val uiStateObservable: Observable<MoreDetailsUiState>
+    fun getCardMoreInformation(cardName: String)
 }
 
 internal class MoreDetailsPresenterImpl(
-    private val repository: ArtistRepository,
-    private val artistInfoHelper : ArtistInfoHelper) :
-    MoreDetailsPresenter {
+    private val repository: CardRepository, private val cardDescriptionHelper: CardDescriptionHelper
+) : MoreDetailsPresenter {
 
-    override val artistObservable = Subject<MoreDetailsUiState>()
-    private var uiState: MoreDetailsUiState = MoreDetailsUiState()
+    override val uiStateObservable = Subject<MoreDetailsUiState>()
+    private var uiState: MoreDetailsUiState = MoreDetailsUiState(emptyList())
 
-    override fun getArtistMoreInformation(artistName: String) {
+    override fun getCardMoreInformation(cardName: String) {
         Thread {
-            notifyArtist(artistName)
+            notifyUIState(cardName)
         }.start()
     }
 
-    private fun notifyArtist(artistName: String){
-        val artistData: Artist = repository.getArtistData(artistName)
-        artistData.applyFormattingInfoArtist(artistName)
-        artistData.addLocallySavedMarkToInfo()
-        updateUIState(artistData)
-        artistObservable.notify(uiState)
+    private fun notifyUIState(cardName: String) {
+        val cardsData = repository.getCardData(cardName)
+        cardsData.formattingDescriptionCards(cardName)
+        cardsData.addLocallySavedMarkCards()
+        updateUIState(cardsData)
+        uiStateObservable.notify(uiState)
     }
 
-    private fun updateUIState(artist: Artist) {
-        when (artist) {
-            is ArtistData -> updateArtistUIState(artist)
-            Artist.EmptyArtist -> updateNoResultsUiState()
+    private fun List<CardData>.formattingDescriptionCards(cardName: String) {
+        this.forEach {
+            it.description = cardDescriptionHelper.textToHtml(it.description, cardName)
         }
     }
-    private fun updateArtistUIState(artist: ArtistData) {
 
-        uiState = uiState.copy(
-            artistName = artist.artistName,
-            infoArtist = artist.infoArtist,
-            url = artist.url
-        )
+    private fun List<CardData>.addLocallySavedMarkCards() {
+        this.forEach {
+            if (it.isLocallyStored) it.description = LOCALLY_SAVED + it.description
+        }
+    }
+
+    private fun updateUIState(cardList: List<CardData>) {
+        when {
+            cardList.isEmpty() -> updateNoResultsUiState()
+            else -> updateCardsUIState(cardList)
+        }
     }
 
     private fun updateNoResultsUiState() {
-        uiState = uiState.copy(
-            artistName = "",
-            infoArtist = NO_RESULTS,
-            url = ""
+        val cardDataNoResults: MutableList<CardDataState> = mutableListOf()
+        cardDataNoResults.add(
+            CardDataState(
+                cardName = "",
+                description = NO_RESULTS,
+                infoURL = "",
+                sourceName = "",
+                sourceLogo = ""
+            )
         )
+
+        uiState.cardsDataState = cardDataNoResults
     }
 
-    private fun Artist.applyFormattingInfoArtist(artistName: String) {
-        if( this is ArtistData){
-            this.infoArtist = artistInfoHelper.textToHtml(this.infoArtist, artistName)
+    private fun updateCardsUIState(cardsData: List<CardData>) {
+        val cardsState: MutableList<CardDataState> = mutableListOf()
+
+        cardsData.forEach {
+            cardsState.add(
+                CardDataState(
+                    cardName = it.cardName,
+                    description = it.description,
+                    infoURL = it.infoURL,
+                    sourceName = cardDescriptionHelper.getSourceString(it.source),
+                    sourceLogo = it.sourceLogoURL
+                )
+            )
         }
+
+        uiState.cardsDataState = cardsState
     }
 
-    private fun Artist.addLocallySavedMarkToInfo() {
-     if (this is ArtistData) {
-         if(isLocallyStored)
-             infoArtist = "$LOCALLY_SAVED $infoArtist"
-     }
- }
 }
 
 

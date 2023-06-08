@@ -1,15 +1,19 @@
 package ayds.lisboa.songinfo.moredetails.presentation
 
+import ayds.lisboa.songinfo.moredetails.domain.entities.Card.Source
 import java.util.*
 
 private const val HTML_START = "<html><div width=400>"
 private const val HTML_END = "</font></div></html>"
 private const val FONT_FACE = "<font face=\"arial\">"
 
-interface ArtistInfoHelper {
+interface CardDescriptionHelper {
     fun textToHtml(text: String, term: String): String
+
+    fun getSourceString(source: Source): String
 }
-class ArtistInfoHelperImpl: ArtistInfoHelper {
+
+class CardDescriptionHelperImpl(private val sourceFactory: SourceFactory) : CardDescriptionHelper {
 
     override fun textToHtml(text: String, term: String): String {
         val builder = StringBuilder()
@@ -22,4 +26,9 @@ class ArtistInfoHelperImpl: ArtistInfoHelper {
         builder.append(HTML_END)
         return builder.toString()
     }
+
+    override fun getSourceString(source: Source): String {
+        return sourceFactory.getSourceString(source)
+    }
+
 }

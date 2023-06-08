@@ -1,22 +1,24 @@
 package ayds.lisboa.songinfo.moredetails.injector
 
 import android.content.Context
-import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
-import ayds.lisboa.songinfo.moredetails.data.repository.ArtistRepositoryImpl
-import ayds.lisboa.songinfo.moredetails.data.repository.external.LastFMServiceImpl
-import ayds.lisboa.songinfo.moredetails.data.repository.local.ArtistLocalStorage
-import ayds.lisboa.songinfo.moredetails.data.repository.local.ArtistLocalStorageImpl
-import ayds.lisboa.songinfo.moredetails.data.repository.external.JSONToArtistDataResolver
-import ayds.lisboa.songinfo.moredetails.data.repository.external.LastFMAPI
-import ayds.lisboa.songinfo.moredetails.data.repository.external.LastFMService
-import ayds.lisboa.songinfo.moredetails.data.repository.local.CursorToArtistDataMapperImpl
-import ayds.lisboa.songinfo.moredetails.presentation.ArtistInfoHelperImpl
+import ayds.aknewyork.external.service.injector.NYTimesInjector
+import ayds.lisboa.songinfo.moredetails.data.repository.external.CardBroker
+import ayds.lisboa.songinfo.moredetails.data.repository.external.CardBrokerImpl
+import ayds.lisboa.songinfo.moredetails.domain.repository.CardRepository
+import ayds.lisboa.songinfo.moredetails.data.repository.CardRepositoryImpl
+import ayds.lisboa.songinfo.moredetails.data.repository.external.proxys.LastFMProxy
+import ayds.lisboa.songinfo.moredetails.data.repository.external.proxys.NYTimesProxy
+import ayds.lisboa.songinfo.moredetails.data.repository.external.proxys.ServiceProxy
+import ayds.lisboa.songinfo.moredetails.data.repository.external.proxys.WikipediaProxy
+import ayds.lisboa.songinfo.moredetails.data.repository.local.CardLocalStorage
+import ayds.lisboa.songinfo.moredetails.data.repository.local.CardLocalStorageImpl
+import ayds.lisboa.songinfo.moredetails.data.repository.local.CursorToCardDataMapperImpl
+import ayds.lisboa.songinfo.moredetails.presentation.CardDescriptionHelperImpl
 import ayds.lisboa.songinfo.moredetails.presentation.MoreDetailsPresenter
 import ayds.lisboa.songinfo.moredetails.presentation.MoreDetailsPresenterImpl
-import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
-
-private const val ARTIST_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
+import ayds.lisboa.songinfo.moredetails.presentation.SourceFactoryImpl
+import ayds.lisboa1.lastfm.LastFMInjector
+import ayds.winchester2.wikipediaexternal.injector.WikipediaInjector
 
 object MoreDetailsInjector {
 
@@ -25,21 +27,25 @@ object MoreDetailsInjector {
     fun getPresenter(): MoreDetailsPresenter = moreDetailsPresenter
 
     fun initMoreDetailsPresenter(context: Context) {
-        val artistLocalStorage : ArtistLocalStorage =
-            ArtistLocalStorageImpl(context, CursorToArtistDataMapperImpl())
+        val cardLocalStorage : CardLocalStorage =
+            CardLocalStorageImpl(context, CursorToCardDataMapperImpl())
 
-        val lastFMAPI = createLastFMAPI()
-        val lastFMService : LastFMService = LastFMServiceImpl(lastFMAPI, JSONToArtistDataResolver())
+        val lastFMProxy : ServiceProxy = LastFMProxy(LastFMInjector.getLastFMService())
+        val nyTimesProxy : ServiceProxy = NYTimesProxy(NYTimesInjector.nyTimesService)
+        val wikipediaProxy: ServiceProxy = WikipediaProxy(WikipediaInjector.wikipediaTrackService)
 
-        val repository : ArtistRepository = ArtistRepositoryImpl(artistLocalStorage, lastFMService)
+        val proxyList: MutableList<ServiceProxy> = ArrayList()
+        proxyList.add(lastFMProxy)
+        proxyList.add(nyTimesProxy)
+        proxyList.add(wikipediaProxy)
 
-        moreDetailsPresenter = MoreDetailsPresenterImpl(repository, ArtistInfoHelperImpl())
-    }
+        val broker : CardBroker = CardBrokerImpl(proxyList)
 
-    private fun createLastFMAPI(): LastFMAPI {
-        val retrofit = Retrofit.Builder().baseUrl(ARTIST_BASE_URL)
-            .addConverterFactory(ScalarsConverterFactory.create()).build()
-        return retrofit.create(LastFMAPI::class.java)
+        val repository : CardRepository = CardRepositoryImpl(cardLocalStorage,broker)
+
+        moreDetailsPresenter = MoreDetailsPresenterImpl(repository, CardDescriptionHelperImpl(
+            SourceFactoryImpl()
+        ))
     }
 
 }

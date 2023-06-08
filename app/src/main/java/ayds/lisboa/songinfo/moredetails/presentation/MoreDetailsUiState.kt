@@ -1,12 +1,13 @@
 package ayds.lisboa.songinfo.moredetails.presentation
-data class MoreDetailsUiState (
-    val artistName: String = "",
-    var infoArtist: String = "",
-    val url: String = "",
-    val imageUrl: String = DEFAULT_IMAGE
-){
-    companion object {
-        const val DEFAULT_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
-    }
 
-}
+data class MoreDetailsUiState(
+    var cardsDataState: List<CardDataState>, var selectedIndex: Int = 0
+)
+
+data class CardDataState(
+    val cardName: String = "",
+    val description: String = "",
+    val infoURL: String = "",
+    val sourceName: String = "",
+    val sourceLogo: String = ""
+)

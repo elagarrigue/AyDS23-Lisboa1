@@ -1,3 +1,9 @@
 include ':app'
 include 'observer'
 rootProject.name = "AK Lisboa"
+include ':lastfmdata'
+project(':lastfmdata').projectDir = new File('libs/LastFMData')
+include ':nytimesdata'
+project(':nytimesdata').projectDir = new File('libs/NYTimesData')
+include ':wikipediadata'
+project(':wikipediadata').projectDir = new File('libs/WikipediaData')
